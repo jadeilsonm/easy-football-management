@@ -3,6 +3,7 @@ import { connectAuthEmulator, getAuth } from "firebase/auth";
 import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 
 const mode = import.meta.env.MODE;
+console.log('mode:', mode);
 
 export const firebaseConfig = {
   apiKey: "AIzaSyB6DT1ueMDOPNFJAt3aHKvX_XAnjM2Qdag",
@@ -14,14 +15,16 @@ export const firebaseConfig = {
   measurementId: "G-2F6QVC69S0"
 };
 
-const app = initializeApp(firebaseConfig);
+export const firebaseApp = initializeApp(firebaseConfig);
 
-export const auth = getAuth(app);
 
-export const db = getFirestore(app);
+const auth = getAuth(firebaseApp);
+
+export const db = getFirestore(firebaseApp);
 
 if ( mode === 'development') {
   connectFirestoreEmulator(db, 'localhost', 8080);
-  connectAuthEmulator(auth, 'http://localhost:9099');
+  connectAuthEmulator(auth, "http://127.0.0.1:9099");
+
 }
 

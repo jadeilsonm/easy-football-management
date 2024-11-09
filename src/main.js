@@ -5,14 +5,16 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
-import { VueFire, VueFireFirestoreOptionsAPI } from 'vuefire'
-import { db } from './firebase'
+import { VueFire, VueFireAuth, VueFireFirestoreOptionsAPI } from 'vuefire'
+import { firebaseApp } from './firebase'
 
 const app = createApp(App)
 
 app.use(VueFire, {
-  firebaseApp: db,
-  modules: [VueFireFirestoreOptionsAPI]
+  firebaseApp,
+  modules: [
+    VueFireFirestoreOptionsAPI,
+    VueFireAuth()]
 });
 
 app.use(createPinia())

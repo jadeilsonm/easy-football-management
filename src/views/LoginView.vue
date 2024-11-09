@@ -1,4 +1,24 @@
 <script setup >
+import router from '@/router';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { ref } from 'vue';
+
+
+const auth = getAuth();
+
+const email = ref('');
+const password = ref('');
+
+const login = async () => {
+  signInWithEmailAndPassword(auth, email.value, password.value)
+        .then((userCredential) => {
+          console.log('Usuário autenticado:', userCredential.user);
+        })
+        .catch((error) => {
+          console.error('Erro na autenticação:', error.code, error.message);
+        });
+}
+
 </script>
 
 <template>
@@ -8,21 +28,21 @@
         <img src="../assets/logo_oficial.png" alt="" srcset="">
       </div>
 
-      <form action="" class="form">
-        
+      <div  class="form">
+
           <h1>Bem-vindo!</h1>
           <p>Gerencie suas equipes e torneios com facilidade</p>
           <p>e eficiência. Entre na sua conta para ter acesso a todas as </p>
           <p>ferramentas necessárias para organizar e acompanhar o </p>
           <p>desempenho do seu time, tudo em um só lugar.</p>
           <h2>Faça login para começar!</h2>
-        
-        
-          <input type="text" placeholder="Email">
-          <input type="password" placeholder="Senha">
-        
-          <RouterLink to="/login">Entrar</RouterLink>
-      </form>
+
+
+          <input type="text" placeholder="Email" v-model="email">
+          <input type="password" placeholder="Senha" v-model="password">
+
+          <button @click="login">Entrar</button>
+      </div>
     </div>
   </div>
 </template>
