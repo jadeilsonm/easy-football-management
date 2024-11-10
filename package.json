@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "ci": "npm run lint && npm run build",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
