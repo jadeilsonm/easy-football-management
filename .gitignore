@@ -29,9 +29,11 @@ coverage
 
 *.tsbuildinfo
 
-# Enviroment
+# dotenv environment variables file
 .env
+.env.test
 .env.local
+
 
 # Build files
 build
