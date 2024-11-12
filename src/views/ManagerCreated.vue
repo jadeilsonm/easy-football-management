@@ -33,8 +33,8 @@ const createLeague = async () => {
 </script>
 
 <template>
-    <NavBar :buttonsValues=buttonsValues />
-    <main>
+  <NavBar :buttonsValues=buttonsValues />
+  <main>
       <div class="container">
         <Input inputType="text" label="Nome do campeonato:" cssApply="input" v-model="inputName" />
         <Input inputType="number" label="Premiação:" cssApply="input" v-model="inputValue" />
@@ -52,22 +52,37 @@ const createLeague = async () => {
 
 
 <style scoped>
-#app{
+
+.button {
+  padding: 10px;
+  border-radius: 7px;
+  width: 50%;
+  box-shadow: none;
+  background-color: #42b883;
+  color: white;
+  margin: 10px;
+}
+
+main {
   display: flex;
   flex-direction: column;
-  height: 100dvh;
+  align-items: center;
+  justify-content: center;
   width: 100%;
+  height: 90dvh;
 }
+
 
 .select {
   display: flex;
   flex-direction: row;
   margin: 10px;
-  width: 50%;
+  width: 70%;
   align-items: center;
   justify-content: space-between
 
 }
+
 select {
   padding: 10px;
   border-radius: 7px;
@@ -76,18 +91,10 @@ select {
 
 .container {
   display: flex;
+  width: 40%;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 25%;
 }
 
-
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
 </style>

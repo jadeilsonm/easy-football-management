@@ -40,12 +40,12 @@ function updateInputValue(event) {
 
 <style scoped>
 .input {
-  width: 50%;
+  width: 70%;
   display: flex;
   flex-direction: row;
   margin: 10px;
   align-items: center;
-  justify-content: space-between
+  justify-content: space-between;
 }
 
 input {

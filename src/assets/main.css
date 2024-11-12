@@ -1,10 +1,17 @@
 @import './base.css';
 
 #app {
-  max-width: 1280px;
+  width: 100%;
   /* margin: 0 auto; */
   /* padding: 2rem; */
   font-weight: normal;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 a,
@@ -27,9 +34,4 @@ a,
     /* place-items: center; */
   }
 
-  #app {
-    display: grid;
-    /* grid-template-columns: 1fr 1fr; */
-    /* padding: 0 2rem; */
-  }
 }

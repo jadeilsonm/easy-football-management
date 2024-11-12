@@ -1,6 +1,6 @@
 <template>
   <nav class="navBar">
-    <img v-if="imgProfile != null" :src=imgProfile alt="imagem de perfil do usuario" srcset="">
+    <img v-if="imgProfile" :src=imgProfile alt="imagem de perfil do usuario" srcset="">
     <img v-else src="../assets/profil.png" alt="imagem de perfil do usuario">
     <ul>
       <li v-for="item in buttonsValues" :key="item.value">
@@ -34,14 +34,16 @@ defineProps({
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 15px;
 }
 
 img {
-  margin-top: 10px;
   display: flex;
   width: 50px;
   height: 50px;
   border-radius: 50%;
+  margin-left: 20px;
+  margin-top: 10px;
 }
 
 ul {
@@ -50,12 +52,7 @@ ul {
   flex-direction: row;
   justify-content: space-around;
   list-style: none;
-  width: 50%;
-
+  width: 25%;
 }
 
-li {
-  padding: 10px;
-  color: red;
-}
 </style>
