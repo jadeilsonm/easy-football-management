@@ -40,17 +40,21 @@ function updateInputValue(event) {
 
 <style scoped>
 .input {
-  width: 50%;
+  width: 40%;
   display: flex;
   flex-direction: row;
   margin: 10px;
   align-items: center;
-  justify-content: space-between
+  justify-content: space-between;
+
 }
 
 input {
   padding: 10px;
   border-radius: 7px;
   box-shadow: none;
+  background-color: #1c1e21;
+  border: 1px solid #42b883;
+  color: white;
 }
 </style>

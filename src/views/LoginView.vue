@@ -34,9 +34,6 @@ const login = async () => {
 
       <div  class="form">
 
-
-
-
         <h1>Bem-vindo!</h1>
         <p>Gerencie suas equipes e torneios com facilidade</p>
         <p>e eficiência. Entre na sua conta para ter acesso a todas as </p>
