@@ -58,21 +58,19 @@ const createLeague = async () => {
 
 .button {
   padding: 10px;
-  border-radius: 7px;
+  border-radius: 26px;
+  border: none;
   width: 30%;
   box-shadow: none;
   font-size: medium;
   background-color: #42b883;
-  border: 2px solid #ffffff;
   color: white;
   margin: 20px;
   cursor: pointer;
 }
 
 .button:hover {
-  background-color: #1c1e21;
-  border: 2px solid #42b883;
-  color: #ffffff;
+    background-color: hsla(160, 100%, 37%, 0.2);
 }
 
 main {
@@ -108,6 +106,7 @@ select {
 
 .container {
   border: 1px solid #42b883;
+  background-color: #1c1e21;
   padding: 80px;
   display: flex;
   width: 80%;

@@ -46,7 +46,6 @@ function updateInputValue(event) {
   margin: 10px;
   align-items: center;
   justify-content: space-between;
-
 }
 
 input {
@@ -56,5 +55,6 @@ input {
   background-color: #1c1e21;
   border: 1px solid #42b883;
   color: white;
+  width: 190px;
 }
 </style>

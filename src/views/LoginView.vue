@@ -82,6 +82,10 @@ const login = async () => {
     cursor: pointer;
     border-radius: 26px;
   }
+
+  button:hover {
+    background-color: hsla(160, 100%, 37%, 0.2);
+  }
 }
 
 
