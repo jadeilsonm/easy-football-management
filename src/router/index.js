@@ -2,6 +2,11 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import ManagerCreated from '@/views/ManagerCreated.vue'
 import LoginView from '../views/LoginView.vue'
+import PlayersComponent from '../components/TeamComponent.vue'
+import SubscribeComponent from '../components/SubscribeComponent.vue'
+import SearchComponent from '../components/SearchComponent.vue'
+import StatisticPlayersComponent from '@/components/StatisticPlayersComponent.vue'
+import EditPlayersComponent from '@/components/EditPlayersComponent.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,7 +24,24 @@ const router = createRouter({
     {
       path: '/home',
       name: 'home',
-      component: HomeView
+      component: HomeView,
+      children: [
+        { 
+          path: 'team', name: 'team', component: PlayersComponent,
+          children: [
+            {
+              path: 'editteam',
+              component: EditPlayersComponent,
+            },
+            {
+              path: 'statistics',
+              component: StatisticPlayersComponent,
+            }
+          ]
+        },
+        { path: 'subscribe', name: 'subscribe', component: SubscribeComponent },
+        { path: 'search', name: 'search', component: SearchComponent },
+      ]
     },
     {
       path: '/login',

@@ -35,6 +35,7 @@ defineProps({
   align-items: center;
   justify-content: space-between;
   padding: 15px;
+  border: 1px solid #42b883;
 }
 
 img {
