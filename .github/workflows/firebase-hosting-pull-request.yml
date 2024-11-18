@@ -13,6 +13,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - run: |
+          echo "repository variable : $VITE_AUTH_DOMAIN"
+          echo "organization variable : $VITE_APP_ID"
+          echo "overridden variable : $VITE_API_KEY"
+          echo "VITE_MEASUREMENT_ID" : $VITE_MEASUREMENT_ID
+          echo "variable from shell environment : $env_var"
+      - env:
+          VITE_API_KEY: ${{ vars.VITE_API_KEY }}
+          VITE_APP_ID: ${{ vars.VITE_APP_ID }}
+          VITE_AUTH_DOMAIN: ${{ vars.VITE_AUTH_DOMAIN }}
+          VITE_MEASUREMENT_ID: ${{ vars.VITE_MEASUREMENT_ID }}
       - run: npm i -g yarn && yarn install && yarn run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
