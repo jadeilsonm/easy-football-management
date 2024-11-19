@@ -26,7 +26,7 @@ jobs:
           echo "VITE_PROJECT_ID=$VITE_PROJECT_ID" >> .env
           echo "VITE_MESSAGING_SENDER_ID=$VITE_MESSAGING_SENDER_ID" >> .env
         env:
-          API_KEY: TESTE
+          API_KEY: ${{ vars.MY_VARIABLE }}
           VITE_API_KEY: ${{ vars.VITE_API_KEY }}
           VITE_APP_ID: ${{ vars.VITE_APP_ID }}
           VITE_AUTH_DOMAIN: ${{ vars.VITE_AUTH_DOMAIN }}
