@@ -4,9 +4,6 @@
 name: Deploy to Firebase Hosting on PR
 on: pull_request
 
-env:
-  # Setting an environment variable with the value of a configuration variable
-  env_var: VITE_API_KEY
 permissions:
   checks: write
   contents: read
