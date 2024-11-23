@@ -1,11 +1,10 @@
 <script setup>
 import NavBar from '@/components/NavBar.vue';
 import Input from '@/components/InputGeneric.vue';
-import { db } from '@/firebase';
-import { addDoc, collection } from 'firebase/firestore';
 import { STATUS } from '@/Enums/status';
 import { reactive } from 'vue';
 import { getAuth } from 'firebase/auth';
+import { DAOService } from '@/services/DAOService';
 
 const reactiveInputManager = reactive({
   inputName: '',
@@ -15,14 +14,15 @@ const reactiveInputManager = reactive({
 })
 
 const user = getAuth().currentUser;
+console.log("user", user);
 
 const select = [{ text: "COPA", value: "copa" }, { text: "LIGA", value: "liga" }]
 const buttonsValues = [{path:'/',value:'Home'}, {path:'/manager/created',value:'Criar Campeonato'}, {path:'/manager/league',value:'Campeonatos'}, {path:'/login',value:'Sair'}]
 
+const dao = new DAOService('leagues');
 
 const createLeague = async () => {
-
-  await addDoc(collection(db, 'leagues'), {
+  const payload = {
     name: reactiveInputManager.inputName,
     value: reactiveInputManager.inputValue,
     type: reactiveInputManager.selectValue,
@@ -30,7 +30,30 @@ const createLeague = async () => {
     status: STATUS[1],
     createdAt: new Date(),
     userOwner: user.uid
-  })
+  }
+
+  console.log(payload);
+
+  if (payload.name === '' || payload.value === '' || payload.type === '' || payload.qntTime === '') {
+    alert('Preencha todos os campos');
+    return;
+  }
+
+  if (payload.qntTime < 2) {
+    alert('Quantidade de times deve ser maior que 1');
+    return;
+  }
+
+  if (payload.userOwner === null) {
+    alert('Usuário não autenticado');
+    return;
+  }
+
+  try {
+    await dao.create(payload);
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 </script>
