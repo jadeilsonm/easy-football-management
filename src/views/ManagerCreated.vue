@@ -14,6 +14,7 @@ const reactiveInputManager = reactive({
 })
 
 const user = getAuth().currentUser;
+console.log("user", user);
 
 const select = [{ text: "COPA", value: "copa" }, { text: "LIGA", value: "liga" }]
 const buttonsValues = [{path:'/',value:'Home'}, {path:'/manager/created',value:'Criar Campeonato'}, {path:'/manager/league',value:'Campeonatos'}, {path:'/login',value:'Sair'}]
@@ -30,6 +31,8 @@ const createLeague = async () => {
     createdAt: new Date(),
     userOwner: user.uid
   }
+
+  console.log(payload);
 
   if (payload.name === '' || payload.value === '' || payload.type === '' || payload.qntTime === '') {
     alert('Preencha todos os campos');

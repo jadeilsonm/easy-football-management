@@ -34,8 +34,6 @@ const reactiveInputRegisterUser = reactive({
   error:'',
 })
 
-
-
 const dao = new DAOService('users');
 
 const register = async () => {
@@ -48,10 +46,11 @@ const register = async () => {
   try {
     const user = await createUserWithEmailAndPassword(auth, reactiveInputRegisterUser.email, reactiveInputRegisterUser.password)
     if (!user) {
-      console.error('Erro ao criar usuário');
+      alert('Erro ao criar usuário');
+      throw new Error('Erro ao criar usuário');
     }
-    payload.userId = user.uid;
-    await dao.create(payload);
+    const uid = user.user.uid;
+    await dao.create({ userId: uid ,...payload });
     router.push('/login');
   } catch (error) {
     console.error(error);
@@ -61,11 +60,10 @@ const register = async () => {
 </script>
 
 <template>
-  <div class="login">
+  <div class="register">
     <div class="container">
 
       <div  class="form">
-          <p>{{ reactiveInputRegisterUser.name }}</p>
         <h1>Bem-vindo ao<br>Easy Football Management!</h1>
         <p>Gerencie suas equipes e torneios com facilidade</p>
         <p>e eficiência. Entre na sua conta para ter acesso a todas as </p>
@@ -129,7 +127,7 @@ const register = async () => {
 
 
 
-.login {
+.register {
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -155,7 +153,7 @@ const register = async () => {
       }
 }
 @media (min-width: 1024px) {
-  .login {
+  .register {
     min-height: 100vh;
     display: flex;
     align-items: center;

@@ -8,6 +8,7 @@ import SearchComponent from '../components/SearchComponent.vue'
 import StatisticPlayersComponent from '@/components/StatisticPlayersComponent.vue'
 import EditPlayersComponent from '@/components/EditPlayersComponent.vue'
 import RegisterView from '@/views/RegisterView.vue'
+import ManagerProfile from '@/views/ManagerProfile.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,6 +22,11 @@ const router = createRouter({
       path: '/manager/created',
       name: 'manager/created',
       component: ManagerCreated
+    },
+    {
+      path: '/manager/Profile',
+      name: 'manager/Profile',
+      component: ManagerProfile
     },
     {
       path: '/home',
