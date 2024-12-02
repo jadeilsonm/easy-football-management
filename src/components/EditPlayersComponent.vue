@@ -53,7 +53,7 @@ export default {
     const insertPlayers = async () => {
       // stateListPlayers.currentListPlayers.push(stateListPlayers.currentListInput)
       try {
-        await DAOServiceInstance.seedDatabase();
+      //  await DAOServiceInstance.seedDatabase();
         await DAOServiceInstance.create(stateListPlayers.currentListInput);
         stateListPlayers.currentListInput = { name: '', position: '', number: '' };
         await reSeedsPlayersInList();
