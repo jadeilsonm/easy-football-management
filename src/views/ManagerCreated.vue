@@ -3,36 +3,46 @@ import NavBar from '@/components/NavBar.vue';
 import Input from '@/components/InputGeneric.vue';
 import { STATUS } from '@/Enums/status';
 import { reactive } from 'vue';
-import { getAuth } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { DAOService } from '@/services/DAOService';
+import router from '@/router';
 
 const reactiveInputManager = reactive({
   inputName: '',
   inputValue: '',
   inputQntTime: '',
-  selectValue: ''
+  selectValue: '',
+  userAuth: ''
 })
 
-const user = getAuth().currentUser;
-console.log("user", user);
+const auth = getAuth();
 
-const select = [{ text: "COPA", value: "copa" }, { text: "LIGA", value: "liga" }]
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    console.log('Usuário autenticado');
+    console.log(user);
+    reactiveInputManager.userAuth = user;
+  } else {
+    router.push('/login');
+  }
+});
+
+const select = [{ text: "COPA", value: "cup" }, { text: "LIGA", value: "ligue" }]
 const buttonsValues = [{path:'/',value:'Home'}, {path:'/manager/created',value:'Criar Campeonato'}, {path:'/manager/league',value:'Campeonatos'}, {path:'/login',value:'Sair'}]
 
-const dao = new DAOService('leagues');
+
 
 const createLeague = async () => {
+  const dao = new DAOService("chanpions_ships");
   const payload = {
     name: reactiveInputManager.inputName,
     value: reactiveInputManager.inputValue,
-    type: reactiveInputManager.selectValue,
+    type: reactiveInputManager.selectValue.value,
     qntTime: reactiveInputManager.inputQntTime,
     status: STATUS[1],
     createdAt: new Date(),
-    userOwner: user.uid
+    userOwner: reactiveInputManager.userAuth.uid
   }
-
-  console.log(payload);
 
   if (payload.name === '' || payload.value === '' || payload.type === '' || payload.qntTime === '') {
     alert('Preencha todos os campos');
@@ -51,9 +61,19 @@ const createLeague = async () => {
 
   try {
     await dao.create(payload);
+    alert('Campeonato criado com sucesso');
+    clearReactive();
   } catch (error) {
     console.error(error);
   }
+}
+
+
+const clearReactive = () => {
+  reactiveInputManager.inputName = '';
+  reactiveInputManager.inputValue = '';
+  reactiveInputManager.inputQntTime = '';
+  reactiveInputManager.selectValue = '';
 }
 
 </script>
@@ -70,7 +90,7 @@ const createLeague = async () => {
             <option v-for="(value, index) in select" :key="index" :value="value">{{ value.text }}</option>
           </select>
         </label>
-        <Input inputType="number" label="Quantidade de times:" cssApply="input" v-model="inputQntTime" />
+        <Input inputType="number" label="Quantidade de times:" cssApply="input" v-model="reactiveInputManager.inputQntTime" />
         <button class="button" @click="createLeague">Criar</button>
       </div>
     </main>

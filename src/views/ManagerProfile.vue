@@ -1,13 +1,14 @@
 <script setup>
 import NavBar from '@/components/NavBar.vue';
-import { reactive } from 'vue';
-import { getAuth } from 'firebase/auth';
+import { onMounted, reactive } from 'vue';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { DAOService } from '@/services/DAOService';
 import { uploadFile } from '@/services/S3Bucket';
 import ModelEditProfile from '@/components/ModelEditProfile.vue';
+import router from '@/router';
+import LoadComponent from '@/components/LoadComponent.vue';
 
-const currentUser = getAuth().currentUser;
-console.log("user", currentUser);
+const auth = getAuth();
 
 const dao = new DAOService('users');
 
@@ -21,6 +22,8 @@ const reactiveProfile = reactive({
   country: '',
   teamFavorite: '',
   isActivateModal: false,
+  currentUser: '',
+  isLoad: true,
   uploadImage: async (e) => {
     const file = e.target.files[0];
     const dataUpload = await uploadFile(file);
@@ -28,7 +31,7 @@ const reactiveProfile = reactive({
     reactiveProfile.imgProfile = dataUpload;
   },
   save: () => {
-    dao.update(currentUser.uid, {
+    dao.update(reactiveProfile.currentUser.uid, {
       name: reactiveProfile.name,
       email: reactiveProfile.email,
       imgProfile: reactiveProfile.imgProfile,
@@ -44,8 +47,12 @@ const reactiveProfile = reactive({
   }
 })
 
-const getUserValues = async () => {
-  const user = await dao.get(currentUser.uid);
+const getUserValues = async (userId) => {
+  console.log('currentUser', userId);
+  const resultUser = await dao.getByField('userId', userId);
+  const user = resultUser[0];
+  console.log('fecth result ',user);
+  reactiveProfile.currentUser = user;
   reactiveProfile.name = user.name;
   reactiveProfile.email = user.email;
   reactiveProfile.imgProfile = user.imgProfile || '../assets/profil.png';
@@ -54,16 +61,29 @@ const getUserValues = async () => {
   reactiveProfile.state = user.state || '';
   reactiveProfile.country = user.country || '';
   reactiveProfile.teamFavorite = user.teamFavorite || '';
+  reactiveProfile.isLoad = false;
 }
 
-(async () => await getUserValues())();
+onMounted(() => {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log('Usuário autenticado');
+      const uuid = user.uid;
+      getUserValues(uuid);
+    } else {
+      router.push('/login');
+    }
+  });
+})
+
 
 </script>
 
 <template>
   <NavBar :buttonsValues=buttonsValues />
-  <main>
-      <ModelEditProfile :reactiveProfile="reactiveProfile" />
+  <LoadComponent v-if="reactiveProfile.isLoad" :isLoading="reactiveProfile.isLoad" />
+  <main v-else>
+      <ModelEditProfile v-if="reactiveProfile.changeModal" :reactiveProfile="reactiveProfile" />
       <div class="container">
         <h2>Perfil</h2>
         <img :src="reactiveProfile.imgProfile" alt="" srcset="">
