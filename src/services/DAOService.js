@@ -1,6 +1,5 @@
 import { db } from '@/firebase';
 import { collection, addDoc, updateDoc, deleteDoc, getDocs, getDoc, doc, query, where } from 'firebase/firestore';
-
 export class DAOService {
   constructor(path) {
     if (!path) {
