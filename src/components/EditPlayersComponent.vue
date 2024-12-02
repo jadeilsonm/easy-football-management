@@ -1,15 +1,18 @@
 <template>
   <div class="edit-team">
+    <span v-if="editingPlayerIndex === null">true</span>
+    <span v-else>false</span>
+    <!-- condição mal declarada, editar posteriormente após dar bom !edintingPlayersActive -->
     <div v-if="editingPlayerIndex === null">
       <input v-model="stateListPlayers.currentListInput.name" placeholder="Nome" />
-      <input v-model="stateListPlayers.currentListInput.cpf" placeholder="CPF" />
+      <input v-model="stateListPlayers.currentListInput.position" placeholder="Posição" />
       <input v-model="stateListPlayers.currentListInput.number" placeholder="Número" type="number" min="1" />
       <button @click="insertPlayers">Inserir</button>
     </div>
-    <div v-if="editingPlayerIndex !== null">
-      <input v-model="stateListPlayers.currentListInput.name" placeholder="Nome" />
-      <input v-model="stateListPlayers.currentListInput.cpf" placeholder="CPF" />
-      <input v-model="stateListPlayers.currentListInput.number" placeholder="Número" type="number" min="1" />
+    <div v-else>
+      <input v-model="stateListPlayers.currentListInputUpdate.name" placeholder="Nome" />
+      <input v-model="stateListPlayers.currentListInputUpdate.position" placeholder="Posição" />
+      <input v-model="stateListPlayers.currentListInputUpdate.number" placeholder="Número" type="number" min="1" />
       <button @click="updatePlayer">Atualizar Jogador</button>
       <button @click="cancelEdit">Cancelar</button>
     </div>
@@ -17,12 +20,12 @@
       <tbody>
       <tr>
         <th>Nome</th>
-        <th>cpf</th>
+        <th>Posição</th>
         <th>numero</th>
       </tr>
       <tr v-for="(players, index) in stateListPlayers.currentListPlayers" :key="index">
         <th>{{ players.name }} </th>
-        <th>{{ players.cpf }} </th>
+        <th>{{ players.position }} </th>
         <th>{{ players.number }} </th>
         <th><button @click="editPlayer(index)">Editar</button></th>
         <th><button @click="DeletePlayer(index)">Excluir</button></th>
@@ -33,49 +36,94 @@
 </template>
 
 <script>
-import { reactive } from "vue";
+import { ref, reactive, onBeforeMount } from "vue";
+import { DAOService } from "@/services/DAOService"
 export default {
   setup() {
+    const DAOServiceInstance = new DAOService('players');
+    // DAOServiceInstance.seedDatabase();
+    // const edintingPlayersActive = ref(false)
+    const editingPlayerIndex = ref(null)
     const stateListPlayers = reactive({
-      currentListInput: { name: '', cpf: '', number: '' },
-      currentListPlayers: [
-        { name: 'Peter', cpf: 999999999999, number: 11 },
-        { name: 'cr7', cpf: 999999999999, number: 7 },
-        { name: 'messi', cpf: 999999999999, number: 10 }
-      ]
+      currentListInput: { name: '', position: '', number: '' },
+      currentListInputUpdate: { name: '', position: '', number: '' },
+      currentListPlayers: []
     });
 
-    const insertPlayers = () => {
-      stateListPlayers.currentListPlayers.push(stateListPlayers.currentListInput)
-      stateListPlayers.currentListInput = { name: '', cpf: '', number: '' };
-    };
-
-    let editingPlayerIndex = null;
-
-    // Função para iniciar a edição de um jogador
-    const editPlayer = (index) => {
-      console.log(editingPlayerIndex !== null)
-      editingPlayerIndex = index;
-      stateListPlayers.currentListInput = { ...stateListPlayers.currentListPlayers[index] };
-    };
-
-    // Função para atualizar o jogador editado
-    const updatePlayer = () => {
-      if (editingPlayerIndex !== null) {
-        stateListPlayers.currentListPlayers[editingPlayerIndex] = { ...stateListPlayers.currentListInput };
-        cancelEdit();
+    const insertPlayers = async () => {
+      // stateListPlayers.currentListPlayers.push(stateListPlayers.currentListInput)
+      try {
+        await DAOServiceInstance.seedDatabase();
+        await DAOServiceInstance.create(stateListPlayers.currentListInput);
+        stateListPlayers.currentListInput = { name: '', position: '', number: '' };
+        await reSeedsPlayersInList();
+      } catch (error) {
+        console.error('Erro ao inserir os dados:', error);
       }
     };
 
-    const DeletePlayer = (indexDeletePlayer) => {
-      stateListPlayers.currentListPlayers = stateListPlayers.currentListPlayers.filter((player,index) => index !== indexDeletePlayer)
+    const editPlayer = (index) => {
+      editingPlayerIndex.value = index;
+      stateListPlayers.currentListInputUpdate = { ...stateListPlayers.currentListPlayers[index] };
     };
 
-    // Função para cancelar a edição
-    const cancelEdit = () => {
-      editingPlayerIndex = null;
-      stateListPlayers.currentListInput = { name: '', cpf: '', number: '' };
+    const updatePlayer = async () => {
+      // console.log("index " ,editingPlayerIndex.value)
+      const { id } = stateListPlayers.currentListPlayers[editingPlayerIndex.value]
+      // console.log("index data todo ", stateListPlayers.currentListPlayers[editingPlayerIndex.value])
+      // console.log("index data ", playerCurrentUpdate)
+      if (editingPlayerIndex.value !== null) {
+        await DAOServiceInstance.update(id,stateListPlayers.currentListInputUpdate);
+        // stateListPlayers.currentListPlayers[editingPlayerIndex] = { ...stateListPlayers.currentListInputUpdate };
+        cancelEdit();
+      }
+
+      try {
+        const { id, name, position, number  } = stateListPlayers.currentListInputUpdate
+        await DAOServiceInstance.update(id,{name, position, number});
+      } catch (error) {
+        console.error('Erro ao editar os dados:', error);
+      }
+      await reSeedsPlayersInList();
     };
+
+    const DeletePlayer = async (indexDeletePlayer) => {
+      console.log(stateListPlayers.currentListPlayers[indexDeletePlayer].id)
+      await DAOServiceInstance.delete(stateListPlayers.currentListPlayers[indexDeletePlayer].id);
+      await reSeedsPlayersInList();
+      // stateListPlayers.currentListPlayers = stateListPlayers.currentListPlayers.filter((player,index) => index !== indexDeletePlayer)
+    };
+
+    const cancelEdit = () => {
+      editingPlayerIndex.value = null;
+      stateListPlayers.currentListInputUpdate = { name: '', cpf: '', number: '' };
+    };
+
+    const reSeedsPlayersInList = async () => {
+      try {
+        const response = await DAOServiceInstance.getAll();
+        console.log(response)
+        // console.log("response edited")
+        // console.log(response[0])
+        stateListPlayers.currentListPlayers = response;
+        // console.log(response);
+      } catch (error) {
+        console.error('Erro ao carregar os dados:', error);
+      }
+    };
+
+    onBeforeMount(async () => {
+      try {
+        const response = await DAOServiceInstance.getAll();
+        console.log(response)
+        // console.log("response edited")
+        // console.log(response[0])
+        stateListPlayers.currentListPlayers = response;
+        // console.log(response);
+      } catch (error) {
+        console.error('Erro ao carregar os dados:', error);
+      }
+    });
 
     return {
       stateListPlayers,
@@ -84,7 +132,11 @@ export default {
       editPlayer,
       DeletePlayer,
       updatePlayer,
-      cancelEdit
+      cancelEdit,
+      onBeforeMount,
+      DAOServiceInstance,
+      // edintingPlayersActive,
+      reSeedsPlayersInList
     };
   }
 };
@@ -98,95 +150,3 @@ export default {
 
   
 </style>
-<!-- 
-<template>
-  <div>
-    <ul>
-      
-      <li v-for="(player, index) in stateListPlayers.currentListPlayers" :key="index">
-        {{ player.name }} - CPF: {{ player.cpf }} - Número: {{ player.number }}
-        <button @click="editPlayer(index)">Editar</button>
-      </li>
-    </ul>
-
-    
-    <div v-if="editingPlayerIndex !== null">
-      <input v-model="stateListPlayers.currentListInput.name" placeholder="Nome" />
-      <input v-model="stateListPlayers.currentListInput.cpf" placeholder="CPF" />
-      <input v-model="stateListPlayers.currentListInput.number" placeholder="Número" type="number" />
-      <button @click="updatePlayer">Atualizar Jogador</button>
-      <button @click="cancelEdit">Cancelar</button>
-    </div>
-  </div>
-</template>
-
-<script>
-import { reactive } from 'vue';
-
-export default {
-  setup() {
-    const stateListPlayers = reactive({
-      currentListInput: { name: '', cpf: '', number: '' },
-      currentListPlayers: [
-        { name: 'Peter', cpf: 999999999999, number: 11 },
-        { name: 'cr7', cpf: 999999999999, number: 7 },
-        { name: 'messi', cpf: 999999999999, number: 10 }
-      ]
-    });
-
-    let editingPlayerIndex = null;
-
-    // Função para iniciar a edição de um jogador
-    const editPlayer = (index) => {
-      editingPlayerIndex = index;
-      stateListPlayers.currentListInput = { ...stateListPlayers.currentListPlayers[index] };
-    };
-
-    // Função para atualizar o jogador editado
-    const updatePlayer = () => {
-      if (editingPlayerIndex !== null) {
-        stateListPlayers.currentListPlayers[editingPlayerIndex] = { ...stateListPlayers.currentListInput };
-        cancelEdit();
-      }
-    };
-
-    // Função para cancelar a edição
-    const cancelEdit = () => {
-      editingPlayerIndex = null;
-      stateListPlayers.currentListInput = { name: '', cpf: '', number: '' };
-    };
-
-    return {
-      stateListPlayers,
-      editingPlayerIndex,
-      editPlayer,
-      updatePlayer,
-      cancelEdit
-    };
-  }
-};
-</script>
-
-<style scoped>
-/* Estilos simples para o formulário e a lista */
-input {
-  margin: 5px;
-  padding: 5px;
-}
-
-button {
-  padding: 5px 10px;
-  margin-top: 10px;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  padding: 5px;
-  margin: 5px 0;
-  border: 1px solid #ddd;
-}
-</style> -->

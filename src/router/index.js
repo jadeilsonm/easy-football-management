@@ -7,6 +7,8 @@ import SubscribeComponent from '../components/SubscribeComponent.vue'
 import SearchComponent from '../components/SearchComponent.vue'
 import StatisticPlayersComponent from '@/components/StatisticPlayersComponent.vue'
 import EditPlayersComponent from '@/components/EditPlayersComponent.vue'
+import RegisterView from '@/views/RegisterView.vue'
+import ManagerProfile from '@/views/ManagerProfile.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,11 +24,16 @@ const router = createRouter({
       component: ManagerCreated
     },
     {
+      path: '/manager/Profile',
+      name: 'manager/Profile',
+      component: ManagerProfile
+    },
+    {
       path: '/home',
       name: 'home',
       component: HomeView,
       children: [
-        { 
+        {
           path: 'team', name: 'team', component: PlayersComponent,
           children: [
             {
@@ -48,6 +55,11 @@ const router = createRouter({
       name: 'login',
       component: LoginView
     },
+    {
+      path: '/register',
+      name: 'register',
+      component: RegisterView
+    }
   ]
 })
 

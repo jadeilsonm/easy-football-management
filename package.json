@@ -10,6 +10,9 @@
     "lint": "eslint . --fix"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.699.0",
+    "@faker-js/faker": "^9.2.0",
+    "Faker": "^0.7.2",
     "firebase": "^11.0.1",
     "firebase-tools": "^13.27.0",
     "pinia": "^2.2.4",
