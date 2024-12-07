@@ -16,22 +16,34 @@ const reactiveInputRegisterUser = reactive({
   isValid: false,
   isValidPassword: false,
   isValidEmail: false,
+  isDisabled: true,
   validateEmail: () => {
     const email = reactiveInputRegisterUser.email;
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-    reactiveInputRegisterUser.isValidEmail = emailRegex.test(email);
-    !reactiveInputRegisterUser.isValidEmail ?
-      reactiveInputRegisterUser.error = 'Email inválido' :
-    reactiveInputRegisterUser.error = '';
+    if (email.length > 3) {
+      reactiveInputRegisterUser.isValidEmail = emailRegex.test(email);
+      reactiveInputRegisterUser.errorEmail = !reactiveInputRegisterUser.isValidEmail ?
+        'Email inválido' : '';
+    }
+    reactiveInputRegisterUser.verifyDisabled();
   },
   validatePassword: () => {
     const password = reactiveInputRegisterUser.password;
     const confirmPassword = reactiveInputRegisterUser.confirmPassword;
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-    reactiveInputRegisterUser.isValidPassword = (password === confirmPassword) && passwordRegex.test(password);
-    reactiveInputRegisterUser.error = !reactiveInputRegisterUser.isValidPassword ? 'Password inválido ou diferentes' : '';
+    if (confirmPassword.length > 1) {
+      reactiveInputRegisterUser.isValidPassword = ((password === confirmPassword) && passwordRegex.test(password));
+      reactiveInputRegisterUser.errorPassword = !reactiveInputRegisterUser.isValidPassword ? 'Password inválido ou diferentes' : '';
+    }
+    reactiveInputRegisterUser.verifyDisabled();
   },
-  error:'',
+  errorEmail:'',
+  errorPassword:'',
+  verifyDisabled: () => {
+    const validate = reactiveInputRegisterUser.isValidEmail && reactiveInputRegisterUser.isValidPassword && reactiveInputRegisterUser.name.length >= 3;
+    console.log(validate);
+    reactiveInputRegisterUser.isDisabled = !validate;
+  }
 })
 
 const dao = new DAOService('users');
@@ -51,6 +63,9 @@ const register = async () => {
     }
     const uid = user.user.uid;
     await dao.create({ userId: uid ,...payload });
+    const teamDao = new DAOService('teams');
+    console.log(payload.name.replace(' ')+ '` teams' );
+    await teamDao.create({ userId: uid, name: payload.name.replace(' ')+ '` teams', createdAt: new Date() });
     router.push('/login');
   } catch (error) {
     console.error(error);
@@ -73,12 +88,13 @@ const register = async () => {
 
 
         <input type="text" placeholder="Nome" v-model="reactiveInputRegisterUser.name">
-        <input type="text" placeholder="Email" v-model="reactiveInputRegisterUser.email" @keypress="reactiveInputRegisterUser.validateEmail">
+        <input type="text" placeholder="Email" v-model="reactiveInputRegisterUser.email" @keyup="reactiveInputRegisterUser.validateEmail">
         <input type="password" placeholder="Senha" v-model="reactiveInputRegisterUser.password" @keyup="reactiveInputRegisterUser.validatePassword">
         <input type="password" placeholder="Confirme a senha" v-model="reactiveInputRegisterUser.confirmPassword" @keyup="reactiveInputRegisterUser.validatePassword">
 
-        <button @click="register">Cadastrar</button>
-        <span v-if="reactiveInputRegisterUser.error">{{ reactiveInputRegisterUser.error }}</span>
+        <button @click="register" :disabled="reactiveInputRegisterUser.isDisabled">Cadastrar</button>
+        <span v-if="reactiveInputRegisterUser.errorEmail">{{ reactiveInputRegisterUser.errorEmail }}</span>
+        <span v-if="reactiveInputRegisterUser.errorPassword">{{ reactiveInputRegisterUser.errorPassword }}</span>
       </div>
       <div>
         <img src="../assets/logo_oficial.png" alt="" srcset="">
@@ -122,6 +138,14 @@ const register = async () => {
     background-color: #1c1e21;
     border: 1px solid #42b883;
     color: #ffffff;
+  }
+
+  button:disabled {
+    background-color: rgba(235, 235, 235, 0.64);
+    border: 1px solid #000000;
+    color: #143023;
+    font-weight: bold;
+    cursor: not-allowed;
   }
 }
 

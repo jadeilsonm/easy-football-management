@@ -4,13 +4,15 @@ import { onMounted, reactive } from 'vue';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { DAOService } from '@/services/DAOService';
 import { uploadFile } from '@/services/S3Bucket';
-import ModelEditProfile from '@/components/ModelEditProfile.vue';
 import router from '@/router';
 import LoadComponent from '@/components/LoadComponent.vue';
+import InputGeneric from '@/components/InputGeneric.vue';
 
 const auth = getAuth();
 
 const dao = new DAOService('users');
+
+const buttonsValues = [{path:'/',value:'Home'}, {path:'/manager/created',value:'Criar Campeonato'}, {path:'/manager/league',value:'Campeonatos'}, {path:'/login',value:'Sair'}]
 
 const reactiveProfile = reactive({
   name: '',
@@ -48,15 +50,13 @@ const reactiveProfile = reactive({
 })
 
 const getUserValues = async (userId) => {
-  console.log('currentUser', userId);
   const resultUser = await dao.getByField('userId', userId);
   const user = resultUser[0];
-  console.log('fecth result ',user);
   reactiveProfile.currentUser = user;
   reactiveProfile.name = user.name;
   reactiveProfile.email = user.email;
-  reactiveProfile.imgProfile = user.imgProfile || '../assets/profil.png';
-  reactiveProfile.phone = user.phone || '';
+  reactiveProfile.imgProfile = user.imgProfile || '../../src/assets/profil.png';
+  reactiveProfile.phone = user.phone || '(99) 99999-9999';
   reactiveProfile.city = user.city || '';
   reactiveProfile.state = user.state || '';
   reactiveProfile.country = user.country || '';
@@ -80,24 +80,42 @@ onMounted(() => {
 </script>
 
 <template>
-  <NavBar :buttonsValues=buttonsValues />
+ <NavBar :buttonsValues=buttonsValues />
   <LoadComponent v-if="reactiveProfile.isLoad" :isLoading="reactiveProfile.isLoad" />
   <main v-else>
-      <ModelEditProfile v-if="reactiveProfile.changeModal" :reactiveProfile="reactiveProfile" />
-      <div class="container">
+    <div class="container">
+      <div class="profile">
         <h2>Perfil</h2>
         <img :src="reactiveProfile.imgProfile" alt="" srcset="">
-        <h3>{{ reactiveProfile.name }}</h3>
-        <p>{{ reactiveProfile.email }}</p>
-        <p>{{ reactiveProfile.phone }}</p>
-        <p>{{ reactiveProfile.city }}</p>
-        <p>{{ reactiveProfile.state }}</p>
-        <p>{{ reactiveProfile.country }}</p>
-        <p>{{ reactiveProfile.teamFavorite }}</p>
-
-        <button type="button" @click="reactiveProfile.changeModal">Edite Perfil</button>
+        <div>
+          <h4>Nome: {{ reactiveProfile.name }}</h4>
+          <p>Email: {{ reactiveProfile.email }}</p>
+          <p>Telefone: {{ reactiveProfile.phone }}</p>
+          <p>Cidade: {{ reactiveProfile.city }}</p>
+          <p>Estado: {{ reactiveProfile.state }}</p>
+          <p>Pais: {{ reactiveProfile.country }}</p>
+          <p>Time Favorito: {{ reactiveProfile.teamFavorite }}</p>
+        </div>
       </div>
-    </main>
+
+        <div class="modal-content">
+          <input type="file" name="imgProfile" placeholder="imagem do perfil" id="imgProfile" accept="image/*"
+            @change="reactiveProfile.uploadImage" />
+
+          <InputGeneric inputType="text" label="Nome: " cssApply="input" v-model="reactiveProfile.name" />
+          <InputGeneric inputType="text" label="E-mail: " cssApply="input" v-model="reactiveProfile.email" />
+          <InputGeneric inputType="text" label="Número telefone: " cssApply="input" v-model="reactiveProfile.phone" />
+          <InputGeneric inputType="text" label="Cidade: " cssApply="input" v-model="reactiveProfile.city" />
+          <InputGeneric inputType="text" label="Estado: " cssApply="input" v-model="reactiveProfile.state" />
+          <InputGeneric inputType="text" label="Pais: " cssApply="input" v-model="reactiveProfile.country" />
+          <InputGeneric inputType="text" label="Time favorito: " cssApply="input"
+            v-model="reactiveProfile.teamFavorite" />
+
+          <button type="button" @click="reactiveProfile.save">Salvar</button>
+        </div>
+
+    </div>
+  </main>
 </template>
 
 
@@ -114,6 +132,48 @@ onMounted(() => {
   color: white;
   margin: 20px;
   cursor: pointer;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #42b883;
+  border-radius: 26px;
+  padding: 20px;
+  text-align: left;
+  width: 70%;
+  height: 90%;
+
+  input {
+    padding: 10px;
+    border-radius: 7px;
+    box-shadow: none;
+    background-color: #1c1e21;
+    border: 1px solid #42b883;
+    color: white;
+    margin: 10px;
+  }
+
+  button {
+    padding: 10px;
+    border-radius: 7px;
+    width: 30%;
+    box-shadow: none;
+    font-size: medium;
+    background-color: #42b883;
+    border: 2px solid #ffffff;
+    color: white;
+    margin: 20px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #1c1e21;
+    border: 2px solid #42b883;
+    color: #ffffff;
+  }
 }
 
 .button:hover {
@@ -139,6 +199,7 @@ main {
   width: 40%;
   align-items: center;
   justify-content: space-between;
+
   select {
     background-color: #1c1e21;
     border: 1px solid #42b883;
@@ -154,15 +215,39 @@ select {
 }
 
 .container {
-  border: 1px solid #42b883;
-  padding: 80px;
+  height: 100%;
+  width: 100%;
+  border-radius: 26px;
   display: flex;
-  width: 80%;
-  height: 80%;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.profile {
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  border: 1px solid #42b883;
   border-radius: 26px;
-}
+  padding: 20px;
+  text-align: left;
+  width: 27%;
+  height: 90%;
 
+  img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+  }
+
+
+
+  img,
+  h2,
+  div {
+    margin: 10px;
+  }
+}
 </style>
