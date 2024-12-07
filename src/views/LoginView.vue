@@ -46,6 +46,7 @@ const login = async () => {
         <input type="password" placeholder="Senha" v-model="password">
 
         <button @click="login">Entrar</button>
+        <router-link to="/register">Não tem uma conta? Registre-se</router-link>
         <span v-if="error">{{ error }}</span>
       </div>
     </div>
@@ -84,7 +85,7 @@ const login = async () => {
   }
   button:hover {
     background-color: #1c1e21;
-    border: 2px solid #42b883;
+    border: 1px solid #42b883;
     color: #ffffff;
   }
 }

@@ -9,6 +9,7 @@ import StatisticPlayersComponent from '@/components/StatisticPlayersComponent.vu
 import EditPlayersComponent from '@/components/EditPlayersComponent.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import ManagerProfile from '@/views/ManagerProfile.vue'
+import CopaView from '@/views/CopaView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -59,6 +60,11 @@ const router = createRouter({
       path: '/register',
       name: 'register',
       component: RegisterView
+    },
+    {
+      path: '/copa',
+      name: 'copa',
+      component: CopaView
     }
   ]
 })
