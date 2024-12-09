@@ -1,5 +1,5 @@
 <script>
-import { RouterView }  from 'vue-router';
+  import { RouterView }  from 'vue-router';
 
 </script>
 
@@ -15,7 +15,7 @@ import { RouterView }  from 'vue-router';
 
 <style scoped>
 .team {
-  
+
   border-radius: 26px;
   border: 1px solid #42b883;
 }
