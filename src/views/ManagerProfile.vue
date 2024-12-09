@@ -184,6 +184,7 @@ onMounted(() => {
 
 main {
   display: flex;
+  background-color: #1c1e21;
   flex-direction: column;
   align-items: center;
   justify-content: center;
