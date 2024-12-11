@@ -3,13 +3,14 @@ import HomeView from '../views/HomeView.vue'
 import ManagerCreated from '@/views/ManagerCreated.vue'
 import LoginView from '../views/LoginView.vue'
 import PlayersComponent from '../components/TeamComponent.vue'
-import SubscribeComponent from '../components/SubscribeComponent.vue'
+import SubscribedComponent from '../components/SubscribedComponent.vue'
 import SearchComponent from '../components/SearchComponent.vue'
 import StatisticPlayersComponent from '@/components/StatisticPlayersComponent.vue'
 import EditPlayersComponent from '@/components/EditPlayersComponent.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import ManagerProfile from '@/views/ManagerProfile.vue'
 import CopaView from '@/views/CopaView.vue'
+import ChampionShipComponent from '@/components/ChampionShipComponent.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -47,8 +48,16 @@ const router = createRouter({
             }
           ]
         },
-        { path: 'subscribe', name: 'subscribe', component: SubscribeComponent },
-        { path: 'search', name: 'search', component: SearchComponent },
+        { path: 'subscribed', name: 'subscribed', component: SubscribedComponent },
+        { 
+          path: 'search', name: 'search', component: SearchComponent,
+          children: [
+            {
+              path: 'championship/details/:id',
+              component: ChampionShipComponent,
+            },
+          ]
+        },
       ]
     },
     {

@@ -15,7 +15,7 @@ const login = async () => {
   signInWithEmailAndPassword(auth, email.value, password.value)
         .then((userCredential) => {
           if(userCredential.user)
-            router.push('/home');
+            router.push('/home/team/editteam');
         })
         .catch((err) => {
           error.value = 'Email ou senha inválidos';
