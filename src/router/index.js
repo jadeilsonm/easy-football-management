@@ -11,6 +11,7 @@ import RegisterView from '@/views/RegisterView.vue'
 import ManagerProfile from '@/views/ManagerProfile.vue'
 import CopaView from '@/views/ChampionsShipsView.vue'
 import ChampionsShipsView from '@/views/ChampionsShipsView.vue'
+import CupView from '@/views/CupView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,6 +30,11 @@ const router = createRouter({
       path: '/manager',
       name: 'manager',
       component: ChampionsShipsView
+    },
+    {
+      path: '/manager/cup/:id',
+      name: 'manager/cup',
+      component: CupView
     },
     {
       path: '/manager/Profile',
