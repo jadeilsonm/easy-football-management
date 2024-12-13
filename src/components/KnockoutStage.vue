@@ -3,6 +3,11 @@ import { onMounted, ref } from 'vue'
 import RoundComponent from './RoundComponent.vue';
 import MatchComponent from './MatchComponent.vue';
 import { DAOService } from '@/services/DAOService';
+import { useRoute } from 'vue-router';
+import { CHAMPIONS_SHIP_COLLECTION, TEAM_COLLECTION } from '@/Utils/constantes';
+import LoadComponent from './LoadComponent.vue';
+
+const route = useRoute();
 
 defineProps({
   teamsAll: {
@@ -10,6 +15,9 @@ defineProps({
     required: true
   }
 })
+
+
+const isLoading = ref(true);
 
 const sortMatches = (teamsAll) => {
   const sortedMatches = {
@@ -35,6 +43,36 @@ const sortMatches = (teamsAll) => {
       })
     }
   }
+  else if (lengthAllMatches === 4) {
+    for (let i = 0; i < lengthAllMatches; i++) {
+      const home = teamsAll.shift()
+      teamsAll = teamsAll.sort(() => Math.random() - 0.5)
+      const away = teamsAll.shift()
+      sortedMatches.quarterFinals.push({
+        stage: 'CURRENT',
+        team1: { name: home.name, score: '' },
+        team2: { name: away.name, score: '' }
+      })
+    }
+  }
+
+  else if (lengthAllMatches === 2) {
+    const x = [...teamsAll]
+    console.log("x: ",x)
+    for (let i = 0; i < lengthAllMatches; i++) {
+      const home = teamsAll.pop()
+      teamsAll = teamsAll.sort(() => Math.random() - 0.5)
+      const away = teamsAll.pop() || teamsAll[0]
+      console.log(teamsAll)
+      sortedMatches.semiFinals.push({
+        stage: 'CURRENT',
+        team1: { name: home.name, score: '0' },
+        team2: { name: away.name, score: '0' }
+      })
+
+      console.log(sortedMatches.semiFinals)
+    }
+  }
 
   return sortedMatches
 }
@@ -46,15 +84,22 @@ const matches = ref({
   final: []
 })
 
-onMounted(() => {
-  const daoChampionsShip = new DAOService('champions_ship');
-  const teamsAll = [];
-  matches.value = sortMatches(teamsAll)
+onMounted(async () => {
+  const daoChampionsShip = new DAOService(CHAMPIONS_SHIP_COLLECTION);
+  const idChampionsShip = route.params.id;
+  const { teamIds } = await daoChampionsShip.getById(idChampionsShip);
+  const daoTeams = new DAOService(TEAM_COLLECTION);
+  const teams = await daoTeams.getByIds(teamIds);
+  isLoading.value = false;
+  console.log("championsShip: ", teams)
+  // const teamsAll = championsShip;
+  matches.value = sortMatches(teams)
 });
 
 </script>
 
 <template>
+  <LoadComponent :isLoading="isLoading"/>
   <div class="knockout-stage">
     <h1>Eliminatórias</h1>
     <div class="brackets">

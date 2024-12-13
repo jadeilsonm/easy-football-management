@@ -1,9 +1,20 @@
-import { db } from '@/firebase';
-import { collection, addDoc, updateDoc, deleteDoc, getDocs, getDoc, doc, query, where } from 'firebase/firestore';
+import { db } from "@/firebase";
+import { CHAMPIONS_SHIP_COLLECTION } from "@/Utils/constantes";
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  getDocs,
+  getDoc,
+  doc,
+  query,
+  where,
+} from "firebase/firestore";
 export class DAOService {
   constructor(path) {
     if (!path) {
-      throw new Error('Path is required');
+      throw new Error("Path is required");
     }
     this.collection = collection(db, path);
   }
@@ -13,7 +24,7 @@ export class DAOService {
       const docRef = await addDoc(this.collection, data);
       return docRef.id;
     } catch (error) {
-      console.error('Error adding document: ', error);
+      console.error("Error adding document: ", error);
     }
   }
 
@@ -22,7 +33,7 @@ export class DAOService {
       const docRef = doc(this.collection, id);
       await updateDoc(docRef, data);
     } catch (error) {
-      console.error('Error updating document: ', error);
+      console.error("Error updating document: ", error);
     }
   }
 
@@ -31,7 +42,7 @@ export class DAOService {
       const docRef = doc(this.collection, id);
       await deleteDoc(docRef);
     } catch (error) {
-      console.error('Error deleting document: ', error);
+      console.error("Error deleting document: ", error);
     }
   }
 
@@ -44,7 +55,7 @@ export class DAOService {
       });
       return data;
     } catch (error) {
-      console.error('Error getting documents: ', error);
+      console.error("Error getting documents: ", error);
     }
   }
 
@@ -55,24 +66,24 @@ export class DAOService {
       if (docSnap.exists()) {
         return { id: docSnap.id, ...docSnap.data() };
       } else {
-        console.error('No such document!');
+        console.error("No such document!");
       }
     } catch (error) {
-      console.error('Error getting document: ', error);
+      console.error("Error getting document: ", error);
     }
   }
 
   async getByField(field, value) {
     try {
-      const q = query(this.collection, where(field, '==', value));
+      const q = query(this.collection, where(field, "==", value));
       const querySnapshot = await getDocs(q);
       const data = [];
       querySnapshot.forEach((doc) => {
-        data.push({ id: doc.id, ...doc.data() })
+        data.push({ id: doc.id, ...doc.data() });
       });
       return data;
     } catch (error) {
-      console.error('Error getting documents: ', error);
+      console.error("Error getting documents: ", error);
     }
   }
 
@@ -80,7 +91,11 @@ export class DAOService {
     try {
       let q;
       fields.forEach((field) => {
-        q = query(this.collection, where(field.field, field.operator, field.value));
+        q = query(
+          this.collection,
+          where(field.field, field.operator, field.value)
+        );
+        console.log(q);
       });
       const querySnapshot = await getDocs(q);
       const data = [];
@@ -89,7 +104,40 @@ export class DAOService {
       });
       return data;
     } catch (error) {
-      console.error('Error getting documents: ', error);
+      console.error("Error getting documents: ", error);
     }
+  }
+
+  async getByIds(ids) {
+    let idChunks;
+    if (ids.length >= 10) {
+
+      const chunkArray = (array, size) => {
+        const chunks = [];
+        for (let i = 0; i < array.length; i += size) {
+          chunks.push(array.slice(i, i + size));
+        }
+        return chunks;
+      };
+
+      idChunks = chunkArray(ids, 10);
+      console.log(idChunks)
+    } else {
+      idChunks = [ids];
+    }
+
+    const allDocs = [];
+
+    for (const chunk of idChunks) {
+      const q = query(
+        this.collection,
+        where("__name__", "in", chunk)
+      );
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        allDocs.push({ id: doc.id, ...doc.data() });
+      });
+    }
+    return allDocs;
   }
 }

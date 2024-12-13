@@ -1,0 +1,8 @@
+const CHAMPIONS_SHIP_COLLECTION = 'chanpions_ships';
+const TEAM_COLLECTION = 'teams';
+
+
+export {
+  CHAMPIONS_SHIP_COLLECTION,
+  TEAM_COLLECTION
+};

@@ -2,13 +2,14 @@
 import NavBar from '@/components/NavBar.vue';
 import router from '@/router';
 import { DAOService } from '@/services/DAOService';
+import { CHAMPIONS_SHIP_COLLECTION } from '@/Utils/constantes';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { onMounted, reactive } from 'vue';
 
 
 const auth = getAuth();
 
-const dao = new DAOService('chanpions_ships');
+const dao = new DAOService(CHAMPIONS_SHIP_COLLECTION);
 
 const reactiveChampionsShips = reactive({
   result: []
