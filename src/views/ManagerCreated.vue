@@ -12,7 +12,8 @@ const reactiveInputManager = reactive({
   inputValue: '',
   inputQntTime: '',
   selectValue: '',
-  userAuth: ''
+  userAuth: '',
+  description: ''
 })
 
 const auth = getAuth();
@@ -28,7 +29,7 @@ onAuthStateChanged(auth, (user) => {
 });
 
 const select = [{ text: "COPA", value: "cup" }, { text: "LIGA", value: "ligue" }]
-const buttonsValues = [{path:'/',value:'Home'}, {path:'/manager/created',value:'Criar Campeonato'}, {path:'/manager/league',value:'Campeonatos'}, {path:'/login',value:'Sair'}]
+const buttonsValues = [{path:'/home',value:'Home'}, {path:'/manager/created',value:'Criar Campeonato'}, {path:'/manager/league',value:'Campeonatos'}, {path:'/login',value:'Sair'}]
 
 
 
@@ -40,6 +41,7 @@ const createLeague = async () => {
     type: reactiveInputManager.selectValue.value,
     qntTime: reactiveInputManager.inputQntTime,
     status: STATUS[1],
+    description: reactiveInputManager.description,
     createdAt: new Date(),
     userOwner: reactiveInputManager.userAuth.uid
   }
@@ -74,6 +76,7 @@ const clearReactive = () => {
   reactiveInputManager.inputValue = '';
   reactiveInputManager.inputQntTime = '';
   reactiveInputManager.selectValue = '';
+  reactiveInputManager.description = '';
 }
 
 </script>
@@ -91,6 +94,7 @@ const clearReactive = () => {
           </select>
         </label>
         <Input inputType="number" label="Quantidade de times:" cssApply="input" v-model="reactiveInputManager.inputQntTime" />
+        <Input inputType="text" label="Descrição:" cssApply="input" v-model="reactiveInputManager.description" />
         <button class="button" @click="createLeague">Criar</button>
       </div>
     </main>
@@ -121,6 +125,7 @@ const clearReactive = () => {
 main {
   display: flex;
   flex-direction: column;
+  background-color: #1c1e21;
   align-items: center;
   justify-content: center;
   width: 100%;

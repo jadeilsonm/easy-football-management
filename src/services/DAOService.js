@@ -80,9 +80,9 @@ export class DAOService {
 
   async search(fields) {
     try {
-      let q = this.collection;
+      let q;
       fields.forEach((field) => {
-        q = query(q, where(field.name, field.operator, field.value));
+        q = query(this.collection, where(field.field, field.operator, field.value));
       });
       const querySnapshot = await getDocs(q);
       const data = [];

@@ -51,6 +51,8 @@ const reactiveProfile = reactive({
 
 const getUserValues = async (userId) => {
   const resultUser = await dao.getByField('userId', userId);
+  const userById = await dao.getById(resultUser[0].id);
+  console.log("usrbyid", userById);
   const user = resultUser[0];
   reactiveProfile.currentUser = user;
   reactiveProfile.name = user.name;
@@ -184,6 +186,7 @@ onMounted(() => {
 
 main {
   display: flex;
+  background-color: #1c1e21;
   flex-direction: column;
   align-items: center;
   justify-content: center;

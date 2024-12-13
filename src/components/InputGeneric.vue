@@ -1,10 +1,3 @@
-<template>
-    <label :for="label" :class="cssApply">
-      {{ label }}
-      <input :type="inputType" :value="modelValue" :id="label" @input="updateInputValue" >
-    </label>
-</template>
-
 <script setup>
 import { defineProps, defineEmits } from 'vue';
 
@@ -37,6 +30,13 @@ function updateInputValue(event) {
 }
 
 </script>
+
+<template>
+    <label :for="label" :class="cssApply">
+      {{ label }}
+      <input :type="inputType" :value="modelValue" :id="label" @input="updateInputValue" >
+    </label>
+</template>
 
 <style scoped>
 .input {
