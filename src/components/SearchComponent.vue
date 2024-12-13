@@ -13,7 +13,7 @@
 import { ref, onBeforeMount } from "vue";
 import { DAOService } from "@/services/DAOService";
 import router from "@/router";
-const URL_ROUTER_CHAMPION_SHIP = '/championship/details/';
+const URL_ROUTER_CHAMPION_SHIP = '/search/championship/details/';
 
 export default {
   setup() {
@@ -25,7 +25,7 @@ export default {
 
     const buttonRedirect = (championShipId) => {
       console.log(URL_ROUTER_CHAMPION_SHIP + championShipId);
-      router.push(URL_ROUTER_CHAMPION_SHIP + championShipId)
+      router.push({name: 'championsshipdetails', params: { id: championShipId }})
     }
     
     onBeforeMount(async () => {

@@ -19,13 +19,35 @@ export default {
 
 <style scoped>
 .aside {
-  /* height: 90vh;
-  width: 10vw; */
-  /* margin: 26px; */
+  height: 70vh;
+  width: 10vw; 
+  margin: 26px;
   border-radius: 26px;
   border: 1px solid #42b883;
   display: flex;
   flex-direction: column;
+}
+
+.aside input {
+  background-color: #10422c00;
+  border: none;
+  color: white;
+  /* padding: 15px 32px; */
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 26px;
+}
+
+.aside input:hover {
+  background-color: #333; /* Cor mais clara do fundo no hover */
+}
+
+.aside button {
+  background-color: #42b883
 }
 
 .aside img {

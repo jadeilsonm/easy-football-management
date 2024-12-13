@@ -54,13 +54,9 @@ export default {
     };
 
     const updatePlayer = async () => {
-      // console.log("index " ,editingPlayerIndex.value)
       const { id } = stateListPlayers.currentListPlayers[editingPlayerIndex.value]
-      // console.log("index data todo ", stateListPlayers.currentListPlayers[editingPlayerIndex.value])
-      // console.log("index data ", playerCurrentUpdate)
       if (editingPlayerIndex.value !== null) {
         await DAOPlayersServiceInstance.update(id,stateListPlayers.currentListInputUpdate);
-        // stateListPlayers.currentListPlayers[editingPlayerIndex] = { ...stateListPlayers.currentListInputUpdate };
         cancelEdit();
       }
 
@@ -74,10 +70,8 @@ export default {
     };
 
     const DeletePlayer = async (indexDeletePlayer) => {
-      // console.log(stateListPlayers.currentListPlayers[indexDeletePlayer].id)
       await DAOPlayersServiceInstance.delete(stateListPlayers.currentListPlayers[indexDeletePlayer].id);
       await reSeedsPlayersInList();
-      // stateListPlayers.currentListPlayers = stateListPlayers.currentListPlayers.filter((player,index) => index !== indexDeletePlayer)
     };
 
     const cancelEdit = () => {
@@ -88,11 +82,7 @@ export default {
     const reSeedsPlayersInList = async () => {
       try {
         const response = await DAOPlayersServiceInstance.getAll();
-        // console.log(response)
-        // console.log("response edited")
-        // console.log(response[0])
         stateListPlayers.currentListPlayers = response;
-        // console.log(response);
       } catch (error) {
         console.error('Erro ao carregar os dados:', error);
       }
@@ -101,12 +91,8 @@ export default {
     const getByIdTeam = async (userId) => {
       try {
         const response = await DAOTeamsServiceInstance.getByField('userId', userId);
-        // console.log(response[0].id)
-        // console.log(userId)
-        // console.log("response edited")
-        // console.log(response[0])
         stateListPlayers.teamId = response[0].id;
-        // console.log(response);
+        localStorage.setItem("data", JSON.stringify({userId, teamId: response[0].id}));
       } catch (error) {
         console.error('Erro ao carregar os dados:', error);
       }
@@ -117,7 +103,6 @@ export default {
     onMounted(() => {
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          console.log('Usuário autenticado');
           const uuid = user.uid;
           getByIdTeam(uuid);
         } else {
@@ -129,11 +114,7 @@ export default {
     onBeforeMount(async () => {
       try {
         const response = await DAOPlayersServiceInstance.getAll();
-        // console.log(response)
-        // console.log("response edited")
-        // console.log(response[0])
         stateListPlayers.currentListPlayers = response;
-        // console.log(response);
       } catch (error) {
         console.error('Erro ao carregar os dados:', error);
       }

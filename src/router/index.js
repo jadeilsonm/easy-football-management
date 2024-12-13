@@ -51,15 +51,15 @@ const router = createRouter({
         { path: 'subscribed', name: 'subscribed', component: SubscribedComponent },
         { 
           path: 'search', name: 'search', component: SearchComponent,
-          children: [
-            {
-              path: 'championship/details/:id',
-              component: ChampionShipComponent,
-            },
-          ]
+        },
+        {
+          path: 'championship/details/:id',
+          name: 'championsshipdetails',
+          component: ChampionShipComponent,
         },
       ]
     },
+    
     {
       path: '/login',
       name: 'login',
