@@ -32,7 +32,7 @@ const router = createRouter({
       component: ChampionsShipsView
     },
     {
-      path: '/manager/cup',
+      path: '/manager/cup/:id',
       name: 'manager/cup',
       component: CupView
     },

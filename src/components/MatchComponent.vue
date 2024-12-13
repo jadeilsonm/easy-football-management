@@ -14,10 +14,6 @@ defineProps({
         type: String,
         required: true
       },
-      flag: {
-      type: String,
-      required: true
-    },
       score: {
       type: String,
       required: true
@@ -32,10 +28,6 @@ defineProps({
         type: String,
         required: true
       },
-      flag: {
-      type: String,
-      required: true
-    },
       score: {
       type: String,
       required: true
@@ -52,16 +44,13 @@ defineProps({
 <template>
   <div class="match">
     <div class="match-header">
-      <span class="date">{{ match.date }}</span>
       <span class="stage">{{ match.stage }}</span>
     </div>
     <div class="team" :class="{ winner: match.team1.winner }">
-      <span class="flag">{{ match.team1.flag }}</span>
       <span class="name">{{ match.team1.name }}</span>
       <span class="score">{{ match.team1.score }}</span>
     </div>
     <div class="team" :class="{ winner: match.team2.winner }">
-      <span class="flag">{{ match.team2.flag }}</span>
       <span class="name">{{ match.team2.name }}</span>
       <span class="score">{{ match.team2.score }}</span>
     </div>
