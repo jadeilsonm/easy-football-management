@@ -1,37 +1,44 @@
 <script setup>
-import NavBar from '@/components/NavBar.vue';
-import Input from '@/components/InputGeneric.vue';
-import { STATUS } from '@/Enums/status';
-import { reactive } from 'vue';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { DAOService } from '@/services/DAOService';
-import router from '@/router';
+import NavBar from "@/components/NavBar.vue";
+import Input from "@/components/InputGeneric.vue";
+import { STATUS } from "@/Enums/status";
+import { reactive } from "vue";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { DAOService } from "@/services/DAOService";
+import router from "@/router";
 
 const reactiveInputManager = reactive({
-  inputName: '',
-  inputValue: '',
-  inputQntTime: '',
-  selectValue: '',
-  userAuth: '',
-  description: ''
-})
+  inputName: "",
+  inputValue: "",
+  inputQntTime: "",
+  selectValue: "",
+  userAuth: "",
+  description: "",
+});
 
 const auth = getAuth();
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    console.log('Usuário autenticado');
+    console.log("Usuário autenticado");
     console.log(user);
     reactiveInputManager.userAuth = user;
   } else {
-    router.push('/login');
+    router.push("/login");
   }
 });
 
-const select = [{ text: "COPA", value: "cup" }, { text: "LIGA", value: "ligue" }]
-const buttonsValues = [{path:'/home',value:'Home'}, {path:'/manager/created',value:'Criar Campeonato'}, {path:'/manager/league',value:'Campeonatos'}, {path:'/login',value:'Sair'}]
+const select = [
+  { text: "COPA", value: "cup" },
+  { text: "LIGA", value: "ligue" },
+];
 
-
+const buttonsValues = [
+  { path: "/home", value: "Home" },
+  { path: "/manager/created", value: "Criar Campeonato" },
+  { path: "/manager", value: "Campeonatos" },
+  { path: "/login", value: "Sair" },
+];
 
 const createLeague = async () => {
   const dao = new DAOService("chanpions_ships");
@@ -43,66 +50,89 @@ const createLeague = async () => {
     status: STATUS[1],
     description: reactiveInputManager.description,
     createdAt: new Date(),
-    userOwner: reactiveInputManager.userAuth.uid
-  }
+    userOwner: reactiveInputManager.userAuth.uid,
+  };
 
-  if (payload.name === '' || payload.value === '' || payload.type === '' || payload.qntTime === '') {
-    alert('Preencha todos os campos');
+  if (
+    payload.name === "" ||
+    payload.value === "" ||
+    payload.type === "" ||
+    payload.qntTime === ""
+  ) {
+    alert("Preencha todos os campos");
     return;
   }
 
   if (payload.qntTime < 2) {
-    alert('Quantidade de times deve ser maior que 1');
+    alert("Quantidade de times deve ser maior que 1");
     return;
   }
 
   if (payload.userOwner === null) {
-    alert('Usuário não autenticado');
+    alert("Usuário não autenticado");
     return;
   }
 
   try {
     await dao.create(payload);
-    alert('Campeonato criado com sucesso');
+    alert("Campeonato criado com sucesso");
     clearReactive();
   } catch (error) {
     console.error(error);
   }
-}
-
+};
 
 const clearReactive = () => {
-  reactiveInputManager.inputName = '';
-  reactiveInputManager.inputValue = '';
-  reactiveInputManager.inputQntTime = '';
-  reactiveInputManager.selectValue = '';
-  reactiveInputManager.description = '';
-}
-
+  reactiveInputManager.inputName = "";
+  reactiveInputManager.inputValue = "";
+  reactiveInputManager.inputQntTime = "";
+  reactiveInputManager.selectValue = "";
+  reactiveInputManager.description = "";
+};
 </script>
 
 <template>
-  <NavBar :buttonsValues=buttonsValues />
+  <NavBar :buttonsValues="buttonsValues" />
   <main>
-      <div class="container">
-        <Input inputType="text" label="Nome do campeonato:" cssApply="input" v-model="reactiveInputManager.inputName" />
-        <Input inputType="number" label="Premiação:" cssApply="input" v-model="reactiveInputManager.inputValue" />
-        <label for="select" class="select">
-          Modalidade:
-          <select v-model="reactiveInputManager.selectValue">
-            <option v-for="(value, index) in select" :key="index" :value="value">{{ value.text }}</option>
-          </select>
-        </label>
-        <Input inputType="number" label="Quantidade de times:" cssApply="input" v-model="reactiveInputManager.inputQntTime" />
-        <Input inputType="text" label="Descrição:" cssApply="input" v-model="reactiveInputManager.description" />
-        <button class="button" @click="createLeague">Criar</button>
-      </div>
-    </main>
+    <div class="container">
+      <Input
+        inputType="text"
+        label="Nome do campeonato:"
+        cssApply="input"
+        v-model="reactiveInputManager.inputName"
+      />
+      <Input
+        inputType="number"
+        label="Premiação:"
+        cssApply="input"
+        v-model="reactiveInputManager.inputValue"
+      />
+      <label for="select" class="select">
+        Modalidade:
+        <select v-model="reactiveInputManager.selectValue">
+          <option v-for="(value, index) in select" :key="index" :value="value">
+            {{ value.text }}
+          </option>
+        </select>
+      </label>
+      <Input
+        inputType="number"
+        label="Quantidade de times:"
+        cssApply="input"
+        v-model="reactiveInputManager.inputQntTime"
+      />
+      <Input
+        inputType="text"
+        label="Descrição:"
+        cssApply="input"
+        v-model="reactiveInputManager.description"
+      />
+      <button class="button" @click="createLeague">Criar</button>
+    </div>
+  </main>
 </template>
 
-
 <style scoped>
-
 .button {
   padding: 10px;
   border-radius: 7px;
@@ -132,7 +162,6 @@ main {
   height: 90dvh;
 }
 
-
 .select {
   display: flex;
   flex-direction: row;
@@ -140,6 +169,7 @@ main {
   width: 40%;
   align-items: center;
   justify-content: space-between;
+
   select {
     background-color: #1c1e21;
     border: 1px solid #42b883;
@@ -165,5 +195,4 @@ select {
   justify-content: center;
   border-radius: 26px;
 }
-
 </style>

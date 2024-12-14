@@ -9,14 +9,11 @@ import StatisticPlayersComponent from '@/components/StatisticPlayersComponent.vu
 import EditPlayersComponent from '@/components/EditPlayersComponent.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import ManagerProfile from '@/views/ManagerProfile.vue'
-// <<<<<<< HEAD
-// import CopaView from '@/views/CopaView.vue'
 import ChampionShipComponent from '@/components/ChampionShipComponent.vue'
-// =======
 import CopaView from '@/views/ChampionsShipsView.vue'
 import ChampionsShipsView from '@/views/ChampionsShipsView.vue'
 import CupView from '@/views/CupView.vue'
-// >>>>>>> main
+import LeagueComponent from '@/components/LeagueComponent.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -40,6 +37,11 @@ const router = createRouter({
       path: '/manager/cup/:id',
       name: 'manager/cup',
       component: CupView
+    },
+    {
+      path: '/manager/league/:id',
+      name: 'manager/league',
+      component: LeagueComponent
     },
     {
       path: '/manager/Profile',

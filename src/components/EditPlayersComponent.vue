@@ -162,19 +162,19 @@ export default {
     </div>
     <table>
       <tbody>
-      <tr>
-        <th>Nome</th>
-        <th>Posição</th>
-        <th>numero</th>
-      </tr>
-      <tr v-for="(players, index) in stateListPlayers.currentListPlayers" :key="index">
-        <th>{{ players.name }} </th>
-        <th>{{ players.position }} </th>
-        <th>{{ players.number }} </th>
-        <th><button @click="editPlayer(index)">Editar</button></th>
-        <th><button @click="DeletePlayer(index)">Excluir</button></th>
-      </tr>
-    </tbody>
+        <tr :key="50">
+          <th>Nome</th>
+          <th>Posição</th>
+          <th>numero</th>
+        </tr>
+        <tr v-for="(players, index) in stateListPlayers.currentListPlayers" :key="index">
+          <th>{{ players.name }} </th>
+          <th>{{ players.position }} </th>
+          <th>{{ players.number }} </th>
+          <th><button @click="editPlayer(index)">Editar</button></th>
+          <th><button @click="DeletePlayer(index)">Excluir</button></th>
+        </tr>
+      </tbody>
     </table>
 
     <!-- <button type="button" @click="seedsDatabaseButton()">seeds</button> -->
