@@ -30,7 +30,7 @@ onAuthStateChanged(auth, (user) => {
 
 const select = [
   { text: "COPA", value: "cup" },
-  { text: "LIGA", value: "ligue" },
+  { text: "LIGA", value: "league" },
 ];
 
 const buttonsValues = [
@@ -42,6 +42,7 @@ const buttonsValues = [
 
 const createLeague = async () => {
   const dao = new DAOService("chanpions_ships");
+  const DAOClassificationInstance = new DAOService("classification");
   const payload = {
     name: reactiveInputManager.inputName,
     value: reactiveInputManager.inputValue,
@@ -74,8 +75,8 @@ const createLeague = async () => {
   }
 
   try {
-    await dao.create(payload);
-    alert("Campeonato criado com sucesso");
+    const chanpionsShipId = await dao.create(payload);
+    await DAOClassificationInstance.create({chanpionsShipId, teams: []})
     clearReactive();
   } catch (error) {
     console.error(error);

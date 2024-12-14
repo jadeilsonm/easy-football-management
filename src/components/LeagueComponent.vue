@@ -16,12 +16,7 @@ export default {
 
     const subcribeChanpinsShip = async () => {
       try {
-        //const response = await DAOChampionsShipServiceInstance.getById(stateChanpionsShip.value.id);
         const responseLocalStorage = JSON.parse(localStorage.getItem("data"));
-        // if (!stateChanpionsShip.value.TeamIds) {
-        //   stateChanpionsShip.value.TeamIds = [responseLocalStorage.teamId]
-        //   return
-        // }
         stateChanpionsShip.value.teamIds = [ ...stateChanpionsShip.value.teamIds, responseLocalStorage.teamId]
         await DAOChampionsShipServiceInstance.update(stateChanpionsShip.value.id, stateChanpionsShip.value)
       } catch (error) {
@@ -31,7 +26,6 @@ export default {
 
     onBeforeMount(async () => {
       try {
-        // console.log('está sendo retornado Champions ship', route.params.id);
         const response = await DAOChampionsShipServiceInstance.getById(route.params.id);
         console.log('está sendo retornado Champions ship', response);
         stateChanpionsShip.value = response;
