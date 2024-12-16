@@ -121,7 +121,6 @@ export class DAOService {
       };
 
       idChunks = chunkArray(ids, 10);
-      console.log(idChunks)
     } else {
       idChunks = [ids];
     }
@@ -138,6 +137,7 @@ export class DAOService {
         allDocs.push({ id: doc.id, ...doc.data() });
       });
     }
+
     return allDocs;
   }
 }
