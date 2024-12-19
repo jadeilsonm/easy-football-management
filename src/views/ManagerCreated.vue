@@ -67,8 +67,8 @@ const createLeague = async () => {
   }
 
   try {
-    const chanpionsShipId = await dao.create(payload);
-    await DAOClassificationInstance.create({chanpionsShipId, teams: []})
+    await dao.create(payload);
+    // await DAOClassificationInstance.create({chanpionsShipId, teams: []})
     clearReactive();
   } catch (error) {
     console.error(error);
