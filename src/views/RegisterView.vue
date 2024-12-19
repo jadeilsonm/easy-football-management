@@ -91,11 +91,12 @@ const register = async () => {
         <input type="password" placeholder="Confirme a senha" v-model="reactiveInputRegisterUser.confirmPassword" @keyup="reactiveInputRegisterUser.validatePassword">
 
         <button @click="register" :disabled="reactiveInputRegisterUser.isDisabled">Cadastrar</button>
+        <router-link to="/login">Já tem uma conta? Faça login</router-link>
         <span v-if="reactiveInputRegisterUser.errorEmail">{{ reactiveInputRegisterUser.errorEmail }}</span>
         <span v-if="reactiveInputRegisterUser.errorPassword">{{ reactiveInputRegisterUser.errorPassword }}</span>
       </div>
       <div>
-        <img src="../assets/logo_oficial.png" alt="" srcset="">
+        <img class="logo" src="../assets/logo_oficial.png" alt="" srcset="">
       </div>
     </div>
   </div>
@@ -174,11 +175,57 @@ const register = async () => {
         padding: 10px;
       }
 }
-@media (min-width: 1024px) {
-  .register {
-    min-height: 100vh;
+@media screen and (max-width: 1024px) {
+  .container {
+    width: 100vw;
+    height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    && .logo {
+      display: none;
+    }
   }
+  .form {
+    display: flex;
+    flex-direction: column;
+  }
+
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column-reverse;
+    && .logo {
+      display: block;
+      width: 200px;
+      height: 200px;
+    }
+  }
+
+
+  .form {
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    h1, h2, p {
+      display: none;
+    }
+    && input {
+      width: 80%;
+    }
+    && button {
+      width: 80%;
+    }
+
+  }
+
 }
 </style>
