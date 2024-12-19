@@ -31,7 +31,7 @@ onMounted(async () => {
   });
 })
 
-const buttonsValues = [{ path: '/home', value: 'Home' }, { path: '/manager/created', value: 'Criar Campeonato' }, { path: '/manager/league', value: 'Campeonatos' }, { path: '/login', value: 'Sair' }]
+const buttonsValues = [{ path: '/home/team/editteam', value: 'Home' }, { path: '/manager/created', value: 'Criar Campeonato' }, { path: '/manager/league', value: 'Campeonatos' }, { path: '/login', value: 'Sair' }]
 
 const goDetais = (e) => {
   router.push(e);

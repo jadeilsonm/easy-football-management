@@ -5,8 +5,8 @@ import { RouterLink } from 'vue-router'
 <template>
   <div class="about">
     <h1>This is an about page</h1>
+    <RouterLink to="/login">login</RouterLink>
   </div>
-  <RouterLink to="/login">login</RouterLink>
 </template>
 
 <style>

@@ -10,7 +10,7 @@ export default {
 <template>
   <div class="aside">
     <img src="../assets/logo_oficial.png"  />
-    <input type="button" value="Meu Time" @click="$router.push('/home/team')">
+    <input type="button" value="Meu Time" @click="$router.push('/home/team/editteam')">
     <input type="button" value="Meus Torneios" @click="$router.push('/home/subscribed')">
     <input type="button" value="Buscar Torneios" @click="$router.push('/home/search')">
     

@@ -2,7 +2,11 @@
 import NavBar from '@/components/NavBar.vue';
 import { RouterView } from 'vue-router';
 import AsideComponent from '@/components/AsideComponent.vue';
-const buttonsValues = [{path:'/manager/created',value:'Criar Campeonato'}, {path:'/manager/perfil',value:'Perfil'}, {path:'/login',value:'Sair'}]
+const buttonsValues = [
+  { path:'/manager', value:'Gerenciar Torneios' },
+  { path:'/manager/created', value:'Criar Campeonato' },
+  {path:'/manager/perfil',value:'Perfil'},
+  {path:'/login',value:'Sair'}]
 </script>
 
 <template>
