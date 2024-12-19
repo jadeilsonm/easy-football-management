@@ -187,8 +187,49 @@ export default {
 
 <style scoped>
 .edit-team {
+  display: flex;
+  flex-direction: column;
   height: auto;
   width: auto;
+}
+
+input {
+  background-color: black;
+  color: white;
+  border: 1px solid #42b883;
+  padding: 10px;
+  font-size: 1em;
+  border-radius: 4px;
+  width: 20%;
+  box-sizing: border-box; 
+}
+
+input::placeholder {
+  color: #42b883;
+  opacity: 0.7;
+}
+
+button {
+  all: unset; 
+  background-color: black;
+  color: white;
+  border: 1px solid #42b883;
+  padding: 5px;
+  font-size: 1em;
+  border-radius: 4px;
+  width: auto;
+  box-sizing: border-box;
+  cursor: pointer;
+  text-align: center;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+  input {
+    font-size: 0.9em; 
+    padding: 8px; 
+  }
 }
 
 .container {
@@ -217,5 +258,11 @@ select {
 select:focus {
   border-color: #007bff;
   background-color: #f1f9ff;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 </style>
