@@ -27,6 +27,7 @@ const select = [
 const buttonsValues = [
   { path: "/home", value: "Home" },
   { path: "/manager/created", value: "Criar Campeonato" },
+  { path: "/manager/profile", value: "Editar perfil" },
   { path: "/manager", value: "Campeonatos" },
   { path: "/login", value: "Sair" },
 ];
@@ -147,7 +148,7 @@ const clearReactive = () => {
 main {
   display: flex;
   flex-direction: column;
-  background-color: #1c1e21;
+  background-color: #000000;
   align-items: center;
   justify-content: center;
   width: 100%;
@@ -178,6 +179,7 @@ select {
 
 .container {
   border: 1px solid #42b883;
+  background-color: #1c1e21;
   padding: 80px;
   display: flex;
   width: 80%;

@@ -187,8 +187,10 @@ export default {
 
 <style scoped>
 .edit-team {
-  height: auto;
-  width: auto;
+  height: 65vh;
+  width: 80vw;
+  padding: 20px;
+  margin-right: 10px;
 }
 
 .container {

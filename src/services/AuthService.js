@@ -39,6 +39,7 @@ export class AuthService {
   async getUser() {
     await onAuthStateChanged(this.auth, (user) => {
       if (user) {
+        console.log('User logged in', user);
         return user;
       } else {
         router.push('/login');

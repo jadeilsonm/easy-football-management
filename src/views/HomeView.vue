@@ -2,24 +2,26 @@
 import NavBar from '@/components/NavBar.vue';
 import { RouterView } from 'vue-router';
 import AsideComponent from '@/components/AsideComponent.vue';
+import { AuthService } from '@/services/AuthService';
 const buttonsValues = [
   { path:'/manager', value:'Gerenciar Torneios' },
   { path:'/manager/created', value:'Criar Campeonato' },
   {path:'/manager/perfil',value:'Perfil'},
   {path:'/login',value:'Sair'}]
+
+const auth = new AuthService();
+auth.getUser();
+
 </script>
+
 
 <template>
   <main class="home">
     <NavBar :buttonsValues=buttonsValues />
-    <div >
+    <div class="container">
       <AsideComponent />
-    </div>
-    <div>
-      <NavBar />
       <RouterView />
     </div>
-
   </main>
 </template>
 
@@ -29,8 +31,10 @@ const buttonsValues = [
   width: 100vw;
   display: flex;
   flex-direction: column;
-  & div {
-    display: flex;
-  }
+}
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>

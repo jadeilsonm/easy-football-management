@@ -5,9 +5,10 @@ import { DAOService } from '@/services/DAOService';
 import { uploadFile } from '@/services/S3Bucket';
 import LoadComponent from '@/components/LoadComponent.vue';
 import InputGeneric from '@/components/InputGeneric.vue';
-import { AuthService } from '@/services/AuthService';
+import router from '@/router';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
-const auth = new AuthService();
+const auth = getAuth();
 
 const dao = new DAOService('users');
 
@@ -31,12 +32,11 @@ const reactiveProfile = reactive({
     console.log(dataUpload);
     reactiveProfile.imgProfile = dataUpload;
   },
-  save: () => {
-    dao.update(reactiveProfile.currentUser.uid, {
+  save: async () => {
+    await dao.update(reactiveProfile.currentUser.id, {
       name: reactiveProfile.name,
-      email: reactiveProfile.email,
       imgProfile: reactiveProfile.imgProfile,
-      phone: reactiveProfile.phone,
+      phone: maskPhone(reactiveProfile.phone),
       city: reactiveProfile.city,
       state: reactiveProfile.state,
       country: reactiveProfile.country,
@@ -48,8 +48,30 @@ const reactiveProfile = reactive({
   }
 })
 
-const getUserValues = async (userId) => {
-  const resultUser = await dao.getByField('userId', userId);
+
+function maskPhone(input) {
+  let value = input.replace(/\D/g, "");
+
+  if (value.length > 11) {
+    value = value.slice(0, 11);
+  }
+
+  if (value.length > 10) {
+    value = value.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
+  } else if (value.length > 6) {
+    value = value.replace(/^(\d{2})(\d{4})(\d{0,4})$/, "($1) $2-$3");
+  } else if (value.length > 2) {
+    value = value.replace(/^(\d{2})(\d{0,5})$/, "($1) $2");
+  } else {
+    value = value.replace(/^(\d{0,2})/, "($1");
+  }
+
+  return value;
+}
+
+const getUserValues = async (userID) => {
+  console.log(userID);
+  const resultUser = await dao.getByField('userId', userID);
   const user = resultUser[0];
   reactiveProfile.currentUser = user;
   reactiveProfile.name = user.name;
@@ -63,10 +85,16 @@ const getUserValues = async (userId) => {
   reactiveProfile.isLoad = false;
 }
 
-onMounted(async () => {
-  const user = auth.getUser();
-  reactiveProfile.currentUser = user;
-  await getUserValues(user.uid);
+onMounted(() => {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log('Usuário autenticado');
+      const uuid = user.uid;
+      getUserValues(uuid);
+    } else {
+      router.push('/login');
+    }
+  });
 })
 
 
@@ -96,8 +124,7 @@ onMounted(async () => {
             @change="reactiveProfile.uploadImage" />
 
           <InputGeneric inputType="text" label="Nome: " cssApply="input" v-model="reactiveProfile.name" />
-          <InputGeneric inputType="text" label="E-mail: " cssApply="input" v-model="reactiveProfile.email" />
-          <InputGeneric inputType="text" label="Número telefone: " cssApply="input" v-model="reactiveProfile.phone" />
+          <InputGeneric inputType="text" label="Número telefone: " cssApply="input" v-model="reactiveProfile.phone"/>
           <InputGeneric inputType="text" label="Cidade: " cssApply="input" v-model="reactiveProfile.city" />
           <InputGeneric inputType="text" label="Estado: " cssApply="input" v-model="reactiveProfile.state" />
           <InputGeneric inputType="text" label="Pais: " cssApply="input" v-model="reactiveProfile.country" />
@@ -133,6 +160,7 @@ onMounted(async () => {
   align-items: center;
   justify-content: center;
   border: 1px solid #42b883;
+  background-color: #1c1e21;
   border-radius: 26px;
   padding: 20px;
   text-align: left;
@@ -177,7 +205,7 @@ onMounted(async () => {
 
 main {
   display: flex;
-  background-color: #1c1e21;
+  background-color: #000000;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -216,6 +244,7 @@ select {
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
+
 }
 
 .profile {
@@ -224,6 +253,7 @@ select {
   align-items: center;
   justify-content: center;
   border: 1px solid #42b883;
+  background-color: #1c1e21;
   border-radius: 26px;
   padding: 20px;
   text-align: left;
