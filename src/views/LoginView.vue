@@ -53,88 +53,99 @@ const login = async () => {
 </template>
 
 <style scoped>
-#app{
-  display: flex;
-  height: 100dvh;
-  width: 100vw;
+.league {
+  /* font-family: Arial, sans-serif; */
+  margin: 20px;
+  padding: 20px;
+  /* background-color: transparent; */
+  border-radius: 8px;
+  overflow-x: auto;
 }
 
-.container {
-  border-radius: 26px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  background: #1c1e21;
-  height: 80vh;
-  width: 80vw;
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  /* background-color: transparent; */
   border: 1px solid #42b883;
-
-  button {
-    background-color: #42b883;
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 26px;
-  }
-  button:hover {
-    background-color: #1c1e21;
-    border: 1px solid #42b883;
-    color: #ffffff;
-  }
 }
 
-
-
-.login {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+th, td {
+  padding: 12px 15px;
+  text-align: center;
+  border: 1px solid #42b883;
 }
 
-.form {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      text-align: center;
-      input {
-        color: white;
-        font-size: 16px;
-        background-color: #1c1e21;
-        border: 1px solid #42b883;
-        height: 36px;
-        width: auto;
-        border-radius: 26px;
-        margin: 10px;
-        padding: 10px;
-      }
+th {
+  background-color: transparent;
+  color: #42b883;
+  font-weight: bold;
 }
-@media (min-width: 1024px) {
-  .login {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
+
+tr:nth-child(even) {
+  background-color: transparent;
+}
+
+tr:hover {
+  background-color: transparent;
+}
+
+span {
+  display: block;
+  font-size: 0.9em;
+  color: #555;
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  table, th, td {
+    font-size: 0.9em;
   }
-}
 
-@media screen and (max-width: 780px) {
-  img {
-    margin: auto;
-    width: 90%;
+  th, td {
+    padding: 10px;
   }
-  h1, h2, p {
+
+  .league {
+    overflow-x: auto;
+  }
+
+  table {
+    display: block;
+    width: 100%;
+  }
+
+  thead {
     display: none;
   }
-  .container {
-    display: flex;
-    flex-direction: column;
+
+  tbody tr {
+    display: block;
+    margin-bottom: 10px;
+    border: 1px solid #42b883;
+    padding: 10px;
+  }
+
+  tbody td {
+    display: block;
+    text-align: right;
+    padding: 10px 0;
+    position: relative;
+    border: none;
+  }
+
+  tbody td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #42b883;
+  }
+
+  th, td {
+    border: none;
   }
 }
 </style>
