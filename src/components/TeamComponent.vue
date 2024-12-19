@@ -15,9 +15,13 @@
 
 <style scoped>
 .team {
-
+  display: flex;
+  flex-direction: column;
   border-radius: 26px;
   border: 1px solid #42b883;
+  & div {
+    display: flex;
+  }
 }
 
 button {

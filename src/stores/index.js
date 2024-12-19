@@ -1,28 +1,26 @@
-import { ref, computed } from 'vue'
-import { createStore } from 'vuex'
+// import { ref, computed } from 'vue'
+// import { createStore } from 'vuex'
 
-export default createStore({
-    state: {
-        user: null
-    },
-    mutations: {
-        SET_USER(state, user) {
-            state.user = user
-        },
-        CLEAR_USER(state) {
-            state.user = null
-        }
-    },
-    actions: {
-        async login({comit}, datails) {
-            //
-        },
-        async register({comit}, datails) {
-            //
-        },
-        async logout({comit}) {
-            //
-        },
-    },
-    modules: {}
-})
+// export default createStore({
+//     state: {
+//         user: null
+//     },
+// })
+
+// import { createApp } from 'vue'
+// import { createStore } from 'vuex'
+
+// // Cria uma nova instância do store.
+// const store = createStore({
+//   state () {
+//     return {
+//       userId: null,
+//       teamId: null
+//     }
+//   }
+// })
+
+// const app = createApp({ /* seu componente raiz */ })
+
+// // Instale a instância do store como um plugin
+// app.use(store)

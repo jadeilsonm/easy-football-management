@@ -53,6 +53,7 @@ button {
   background-color: #1c1e21;
   justify-content: space-between;
   padding: 15px;
+  /* margin: 5% 5% 0% 5%; */
   border: 1px solid #42b883;
 }
 
