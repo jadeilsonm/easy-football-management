@@ -7,20 +7,20 @@
 //     },
 // })
 
-import { createApp } from 'vue'
-import { createStore } from 'vuex'
+// import { createApp } from 'vue'
+// import { createStore } from 'vuex'
 
-// Cria uma nova instância do store.
-const store = createStore({
-  state () {
-    return {
-      userId: null,
-      teamId: null
-    }
-  }
-})
+// // Cria uma nova instância do store.
+// const store = createStore({
+//   state () {
+//     return {
+//       userId: null,
+//       teamId: null
+//     }
+//   }
+// })
 
-const app = createApp({ /* seu componente raiz */ })
+// const app = createApp({ /* seu componente raiz */ })
 
-// Instale a instância do store como um plugin
-app.use(store)
+// // Instale a instância do store como um plugin
+// app.use(store)

@@ -80,6 +80,7 @@ export class DAOService {
 
   async search(fields) {
     try {
+      console.log(fields)
       let q;
       fields.forEach((field) => {
         q = query(this.collection, where(field.field, field.operator, field.value));
