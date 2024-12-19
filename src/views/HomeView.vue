@@ -3,6 +3,7 @@ import NavBar from '@/components/NavBar.vue';
 import { RouterView } from 'vue-router';
 import AsideComponent from '@/components/AsideComponent.vue';
 import { AuthService } from '@/services/AuthService';
+import { onMounted } from 'vue';
 const buttonsValues = [
   { path:'/manager', value:'Gerenciar Torneios' },
   { path:'/manager/created', value:'Criar Campeonato' },
@@ -10,7 +11,10 @@ const buttonsValues = [
   {path:'/login',value:'Sair'}]
 
 const auth = new AuthService();
-auth.getUser();
+
+onMounted(() => {
+  auth.getUser();
+})
 
 </script>
 

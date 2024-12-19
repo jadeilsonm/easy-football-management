@@ -1,5 +1,6 @@
 <script setup>
 import router from '@/router';
+import { AuthService } from '@/services/AuthService';
 import { defineProps } from 'vue';
 
 defineProps({
@@ -38,6 +39,8 @@ const home = () => {
 
 <style scoped>
 
+
+
 button {
   background-color: #1c1e21;
   border: none;
@@ -45,6 +48,7 @@ button {
   display: inline-block;
   font-size: 16px;
   cursor: pointer;
+
 }
 
 .navBar {
