@@ -1,10 +1,10 @@
 <template>
   <div class="search">
-    <div v-for="( ChanpionsShip, index ) in stateChanpionsShips" :key="index">
+    <div v-for="( ChanpionsShip, index ) in stateChanpionsShips" :key="index" class="chanpionships">
       <h2>Name: {{ ChanpionsShip.name }} </h2>
       <h3>vagas: {{ ChanpionsShip.qntTime }}</h3>
       <h3>Tipo: {{ ChanpionsShip.type }}</h3>
-      <button type="button" @click="buttonRedirect(ChanpionsShip.id)">detalhes{{ ChanpionsShip.id }}</button>
+      <button type="button" @click="buttonRedirect(ChanpionsShip.id)">detalhes</button>
     </div>
   </div>
 </template>
@@ -52,7 +52,13 @@ export default {
   height: 70vh;
   width: 60vw;
   border: solid 1px green;
+  display: flex;
 }
 
+.chanpionships {
+  border: solid 1px green;
+  width: 400px;
+  height: 200px;
+}
 
 </style>
