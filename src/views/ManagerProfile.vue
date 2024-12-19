@@ -1,14 +1,13 @@
 <script setup>
 import NavBar from '@/components/NavBar.vue';
 import { onMounted, reactive } from 'vue';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { DAOService } from '@/services/DAOService';
 import { uploadFile } from '@/services/S3Bucket';
-import router from '@/router';
 import LoadComponent from '@/components/LoadComponent.vue';
 import InputGeneric from '@/components/InputGeneric.vue';
+import { AuthService } from '@/services/AuthService';
 
-const auth = getAuth();
+const auth = new AuthService();
 
 const dao = new DAOService('users');
 
@@ -51,8 +50,6 @@ const reactiveProfile = reactive({
 
 const getUserValues = async (userId) => {
   const resultUser = await dao.getByField('userId', userId);
-  const userById = await dao.getById(resultUser[0].id);
-  console.log("usrbyid", userById);
   const user = resultUser[0];
   reactiveProfile.currentUser = user;
   reactiveProfile.name = user.name;
@@ -66,16 +63,10 @@ const getUserValues = async (userId) => {
   reactiveProfile.isLoad = false;
 }
 
-onMounted(() => {
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      console.log('Usuário autenticado');
-      const uuid = user.uid;
-      getUserValues(uuid);
-    } else {
-      router.push('/login');
-    }
-  });
+onMounted(async () => {
+  const user = auth.getUser();
+  reactiveProfile.currentUser = user;
+  await getUserValues(user.uid);
 })
 
 

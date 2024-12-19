@@ -3,9 +3,8 @@ import NavBar from '@/components/NavBar.vue';
 import Input from '@/components/InputGeneric.vue';
 import { STATUS } from '@/Enums/status';
 import { reactive } from 'vue';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { DAOService } from '@/services/DAOService';
-import router from '@/router';
+import { AuthService } from '@/services/AuthService';
 
 const reactiveInputManager = reactive({
   inputName: '',
@@ -16,17 +15,9 @@ const reactiveInputManager = reactive({
   description: ''
 })
 
-const auth = getAuth();
+const auth = new AuthService();
 
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    console.log('Usuário autenticado');
-    console.log(user);
-    reactiveInputManager.userAuth = user;
-  } else {
-    router.push('/login');
-  }
-});
+reactiveInputManager.userAuth = auth.getUser();
 
 const select = [{ text: "COPA", value: "cup" }, { text: "LIGA", value: "ligue" }]
 const buttonsValues = [{path:'/home',value:'Home'}, {path:'/manager/created',value:'Criar Campeonato'}, {path:'/manager/league',value:'Campeonatos'}, {path:'/login',value:'Sair'}]

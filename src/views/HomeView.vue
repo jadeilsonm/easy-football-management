@@ -8,14 +8,12 @@ import AsideComponent from '@/components/AsideComponent.vue';
   <main class="home">
     <div>
       <AsideComponent />
-
     </div>
     <div>
-
       <NavBar />
       <RouterView />
     </div>
-    
+
   </main>
 </template>
 

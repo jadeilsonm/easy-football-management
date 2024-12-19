@@ -1,12 +1,10 @@
 <script setup >
 import router from '@/router';
+import { AuthService } from '@/services/AuthService';
 import { DAOService } from '@/services/DAOService';
-import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { reactive } from 'vue';
 
-
-
-const auth = getAuth();
+const auth = new AuthService();
 
 const reactiveInputRegisterUser = reactive({
   email: '',
@@ -56,7 +54,7 @@ const register = async () => {
   }
 
   try {
-    const user = await createUserWithEmailAndPassword(auth, reactiveInputRegisterUser.email, reactiveInputRegisterUser.password)
+    const user = await auth.register(reactiveInputRegisterUser.email, reactiveInputRegisterUser.password);
     if (!user) {
       alert('Erro ao criar usuário');
       throw new Error('Erro ao criar usuário');

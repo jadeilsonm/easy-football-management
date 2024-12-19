@@ -1,5 +1,4 @@
 import { db } from "@/firebase";
-import { CHAMPIONS_SHIP_COLLECTION } from "@/Utils/constantes";
 import {
   collection,
   addDoc,

@@ -1,13 +1,13 @@
 <script setup >
 import NavBar from '@/components/NavBar.vue';
 import router from '@/router';
+import { AuthService } from '@/services/AuthService';
 import { DAOService } from '@/services/DAOService';
 import { CHAMPIONS_SHIP_COLLECTION } from '@/Utils/constantes';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { onMounted, reactive } from 'vue';
 
 
-const auth = getAuth();
+const auth = new AuthService();
 
 const dao = new DAOService(CHAMPIONS_SHIP_COLLECTION);
 
@@ -22,14 +22,10 @@ const getChampionsShips = async (userID) => {
 }
 
 onMounted(async () => {
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      router.push('/login');
-    }
-    const userId = user.uid;
-    const result = await getChampionsShips(userId);
-    reactiveChampionsShips.result = result;
-  });
+  const user = auth.getUser();
+  const userId = user.uid;
+  const result = await getChampionsShips(userId);
+  reactiveChampionsShips.result = result;
 })
 
 const buttonsValues = [{ path: '/home', value: 'Home' }, { path: '/manager/created', value: 'Criar Campeonato' }, { path: '/manager/league', value: 'Campeonatos' }, { path: '/login', value: 'Sair' }]

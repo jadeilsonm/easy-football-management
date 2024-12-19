@@ -1,26 +1,21 @@
 <script setup >
-import router from '@/router';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { AuthService } from '@/services/AuthService';
 import { ref } from 'vue';
 
 
-const auth = getAuth();
+const auth = new AuthService();
 
 const error = ref('');
 
 const email = ref('');
 const password = ref('');
 
-const login = async () => {
-  signInWithEmailAndPassword(auth, email.value, password.value)
-        .then((userCredential) => {
-          if(userCredential.user)
-            router.push('/home');
-        })
-        .catch((err) => {
-          error.value = 'Email ou senha inválidos';
-          console.log(err);
-        });
+const login = () => {
+  auth.login(email.value, password.value);
+}
+
+const loginGoogle = () => {
+  auth.loginWhithGoogle();
 }
 
 </script>
@@ -29,7 +24,7 @@ const login = async () => {
   <div class="login">
     <div class="container">
       <div>
-        <img src="../assets/logo_oficial.png" alt="" srcset="">
+        <img class="logo" src="../assets/logo_oficial.png" alt="" srcset="">
       </div>
 
       <div  class="form">
@@ -46,6 +41,7 @@ const login = async () => {
         <input type="password" placeholder="Senha" v-model="password">
 
         <button @click="login">Entrar</button>
+        <button @click="loginGoogle" class="google">Entrar com <img src="../assets/google.png" class="google-img" srcset=""></button>
         <router-link to="/register">Não tem uma conta? Registre-se</router-link>
         <span v-if="error">{{ error }}</span>
       </div>
@@ -59,6 +55,9 @@ const login = async () => {
   height: 100dvh;
   width: 100vw;
 }
+
+
+
 
 .container {
   border-radius: 26px;
@@ -88,7 +87,23 @@ const login = async () => {
     border: 1px solid #42b883;
     color: #ffffff;
   }
+  .google {
+    display: flex;
+    align-items: center;
+    border: none;
+    width: auto;
+    justify-content: center;
+    background-color: #1c1e21;
+
+    && .google-img  {
+      margin-left: 10px;
+      width: 25px;
+      height: 25px;
+    }
+  }
+
 }
+
 
 
 
@@ -117,11 +132,56 @@ const login = async () => {
         padding: 10px;
       }
 }
-@media (min-width: 1024px) {
-  .login {
-    min-height: 100vh;
+
+@media screen and (max-width: 1024px) {
+  .container {
+    width: 100vw;
+    height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    && .logo {
+      display: none;
+    }
   }
+  .form {
+    display: flex;
+    flex-direction: column;
+  }
+
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    width: 100vw;
+    height: 100vh;
+    && .logo {
+    display: block;
+      width: 200px;
+      height: 200px;
+    }
+  }
+
+
+  .form {
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    h1, h2, p {
+      display: none;
+    }
+    && input {
+      width: 80%;
+    }
+    && button {
+      width: 80%;
+    }
+
+  }
+
 }
 </style>
