@@ -17,23 +17,15 @@ export class AuthService {
 
   }
 
-  logout() {
-    signOut(this.auth);
+  async logout() {
+    await signOut(this.auth);
   }
 
-  loginWhithGoogle() {
+  async loginWhithGoogle() {
     const provider = new GoogleAuthProvider();
     provider.addScope('profile');
     provider.addScope('email');
-    signInWithPopup(this.auth, provider)
-    .then((result) => {
-      GoogleAuthProvider.credentialFromResult(result);
-      const user = result.user;
-      if (user.uid) router.push('/home');
-    }).catch((error) => {
-      alert('Credentials error');
-      console.log(error);
-    });
+    await signInWithPopup(this.auth, provider);
   }
 
   async register(email, password) {
