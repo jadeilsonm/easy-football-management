@@ -20,8 +20,8 @@ export default {
 <style scoped>
 .aside {
   height: 70vh;
-  width: 10vw; 
-  margin: 26px;
+  width: 15vw; 
+  margin: 16px;
   border-radius: 26px;
   border: 1px solid #42b883;
   display: flex;

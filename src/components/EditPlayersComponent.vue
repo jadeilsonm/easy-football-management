@@ -187,6 +187,10 @@ export default {
 
 <style scoped>
 .edit-team {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  width: auto;
   height: 65vh;
   width: 80vw;
   padding: 20px;
@@ -219,5 +223,11 @@ select {
 select:focus {
   border-color: #007bff;
   background-color: #f1f9ff;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 </style>
