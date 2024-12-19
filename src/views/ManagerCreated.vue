@@ -1,32 +1,23 @@
 <script setup>
-import NavBar from "@/components/NavBar.vue";
-import Input from "@/components/InputGeneric.vue";
-import { STATUS } from "@/Enums/status";
-import { reactive } from "vue";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { DAOService } from "@/services/DAOService";
-import router from "@/router";
+import NavBar from '@/components/NavBar.vue';
+import Input from '@/components/InputGeneric.vue';
+import { STATUS } from '@/Enums/status';
+import { reactive } from 'vue';
+import { DAOService } from '@/services/DAOService';
+import { AuthService } from '@/services/AuthService';
 
 const reactiveInputManager = reactive({
-  inputName: "",
-  inputValue: "",
-  inputQntTime: "",
-  selectValue: "",
-  userAuth: "",
-  description: "",
-});
+  inputName: '',
+  inputValue: '',
+  inputQntTime: '',
+  selectValue: '',
+  userAuth: '',
+  description: ''
+})
 
-const auth = getAuth();
+const auth = new AuthService();
 
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    console.log("Usuário autenticado");
-    console.log(user);
-    reactiveInputManager.userAuth = user;
-  } else {
-    router.push("/login");
-  }
-});
+reactiveInputManager.userAuth = auth.getUser();
 
 const select = [
   { text: "COPA", value: "cup" },
@@ -36,6 +27,7 @@ const select = [
 const buttonsValues = [
   { path: "/home", value: "Home" },
   { path: "/manager/created", value: "Criar Campeonato" },
+  { path: "/manager/profile", value: "Editar perfil" },
   { path: "/manager", value: "Campeonatos" },
   { path: "/login", value: "Sair" },
 ];
@@ -156,7 +148,7 @@ const clearReactive = () => {
 main {
   display: flex;
   flex-direction: column;
-  background-color: #1c1e21;
+  background-color: #000000;
   align-items: center;
   justify-content: center;
   width: 100%;
@@ -187,6 +179,7 @@ select {
 
 .container {
   border: 1px solid #42b883;
+  background-color: #1c1e21;
   padding: 80px;
   display: flex;
   width: 80%;

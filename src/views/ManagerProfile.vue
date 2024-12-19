@@ -1,12 +1,12 @@
 <script setup>
 import NavBar from '@/components/NavBar.vue';
 import { onMounted, reactive } from 'vue';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { DAOService } from '@/services/DAOService';
 import { uploadFile } from '@/services/S3Bucket';
-import router from '@/router';
 import LoadComponent from '@/components/LoadComponent.vue';
 import InputGeneric from '@/components/InputGeneric.vue';
+import router from '@/router';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 const auth = getAuth();
 
@@ -32,12 +32,11 @@ const reactiveProfile = reactive({
     console.log(dataUpload);
     reactiveProfile.imgProfile = dataUpload;
   },
-  save: () => {
-    dao.update(reactiveProfile.currentUser.uid, {
+  save: async () => {
+    await dao.update(reactiveProfile.currentUser.id, {
       name: reactiveProfile.name,
-      email: reactiveProfile.email,
       imgProfile: reactiveProfile.imgProfile,
-      phone: reactiveProfile.phone,
+      phone: maskPhone(reactiveProfile.phone),
       city: reactiveProfile.city,
       state: reactiveProfile.state,
       country: reactiveProfile.country,
@@ -49,10 +48,30 @@ const reactiveProfile = reactive({
   }
 })
 
-const getUserValues = async (userId) => {
-  const resultUser = await dao.getByField('userId', userId);
-  const userById = await dao.getById(resultUser[0].id);
-  console.log("usrbyid", userById);
+
+function maskPhone(input) {
+  let value = input.replace(/\D/g, "");
+
+  if (value.length > 11) {
+    value = value.slice(0, 11);
+  }
+
+  if (value.length > 10) {
+    value = value.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
+  } else if (value.length > 6) {
+    value = value.replace(/^(\d{2})(\d{4})(\d{0,4})$/, "($1) $2-$3");
+  } else if (value.length > 2) {
+    value = value.replace(/^(\d{2})(\d{0,5})$/, "($1) $2");
+  } else {
+    value = value.replace(/^(\d{0,2})/, "($1");
+  }
+
+  return value;
+}
+
+const getUserValues = async (userID) => {
+  console.log(userID);
+  const resultUser = await dao.getByField('userId', userID);
   const user = resultUser[0];
   reactiveProfile.currentUser = user;
   reactiveProfile.name = user.name;
@@ -105,8 +124,7 @@ onMounted(() => {
             @change="reactiveProfile.uploadImage" />
 
           <InputGeneric inputType="text" label="Nome: " cssApply="input" v-model="reactiveProfile.name" />
-          <InputGeneric inputType="text" label="E-mail: " cssApply="input" v-model="reactiveProfile.email" />
-          <InputGeneric inputType="text" label="Número telefone: " cssApply="input" v-model="reactiveProfile.phone" />
+          <InputGeneric inputType="text" label="Número telefone: " cssApply="input" v-model="reactiveProfile.phone"/>
           <InputGeneric inputType="text" label="Cidade: " cssApply="input" v-model="reactiveProfile.city" />
           <InputGeneric inputType="text" label="Estado: " cssApply="input" v-model="reactiveProfile.state" />
           <InputGeneric inputType="text" label="Pais: " cssApply="input" v-model="reactiveProfile.country" />
@@ -142,6 +160,7 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   border: 1px solid #42b883;
+  background-color: #1c1e21;
   border-radius: 26px;
   padding: 20px;
   text-align: left;
@@ -186,7 +205,7 @@ onMounted(() => {
 
 main {
   display: flex;
-  background-color: #1c1e21;
+  background-color: #000000;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -225,6 +244,7 @@ select {
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
+
 }
 
 .profile {
@@ -233,6 +253,7 @@ select {
   align-items: center;
   justify-content: center;
   border: 1px solid #42b883;
+  background-color: #1c1e21;
   border-radius: 26px;
   padding: 20px;
   text-align: left;
