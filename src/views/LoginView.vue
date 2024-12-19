@@ -41,7 +41,6 @@ const login = async () => {
         <p>desempenho do seu time, tudo em um só lugar.</p>
         <h2>Faça login para começar!</h2>
 
-
         <input type="text" placeholder="Email" v-model="email">
         <input type="password" placeholder="Senha" v-model="password">
 
@@ -122,6 +121,20 @@ const login = async () => {
     min-height: 100vh;
     display: flex;
     align-items: center;
+  }
+}
+
+@media screen and (max-width: 780px) {
+  img {
+    margin: auto;
+    width: 90%;
+  }
+  h1, h2, p {
+    display: none;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
   }
 }
 </style>

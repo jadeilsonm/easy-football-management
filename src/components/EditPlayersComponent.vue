@@ -6,32 +6,32 @@ import router from '@/router';
 
 export default {
   setup() {
+    // const positions = [
+    //   { id: 'goleiro', nome: 'Goleiro', abreviacao: 'GO' },
+    //   { id: 'zagueiro', nome: 'Zagueiro', abreviacao: 'ZG' },
+    //   { id: 'meio-campo', nome: 'Meio-Campo', abreviacao: 'MC' },
+    //   { id: 'atacante', nome: 'Atacante', abreviacao: 'AT' },
+    //   { id: 'ponta-esquerda', nome: 'Ponta Esquerda', abreviacao: 'PE' },
+    //   { id: 'ponta-direita', nome: 'Ponta Direita', abreviacao: 'PD' },
+    //   { id: 'lateral-esquerdo', nome: 'Lateral Esquerdo', abreviacao: 'LE' },
+    //   { id: 'lateral-direito', nome: 'Lateral Direito', abreviacao: 'LD' },
+    //   { id: 'volante', nome: 'Volante', abreviacao: 'VL' }
+    // ];
     const DAOPlayersServiceInstance = new DAOService('players');
     const DAOTeamsServiceInstance = new DAOService('teams');
     // DAOPlayersServiceInstance.seedDatabase();
     const seedsDatabaseButton = async () => {
       await DAOPlayersServiceInstance.seedDatabase();
     }
-    
-    // const edintingPlayersActive = ref(false)
+
     const editingPlayerIndex = ref(null)
     const stateListPlayers = reactive({
       teamId: '',
-      currentListInput: { name: '', 
-      position: '',
-      // posicaoEscolhida: '', // Valor da posição escolhida
-      // posicoes: [
-      //   { value: 'goleiro', label: 'Goleiro' },
-      //   { value: 'zagueiro', label: 'Zagueiro' },
-      //   { value: 'lateral-direito', label: 'Lateral Direito' },
-      //   { value: 'lateral-esquerdo', label: 'Lateral Esquerdo' },
-      //   { value: 'meio-campo', label: 'Meio Campo' },
-      //   { value: 'atacante', label: 'Atacante' },
-      //   { value: 'ponta-direita', label: 'Ponta Direita' },
-      //   { value: 'ponta-esquerda', label: 'Ponta Esquerda' },
-      //   { value: 'centroavante', label: 'Centroavante' }
-      // ],
-      number: '' },
+      currentListInput: {
+        name: '',
+        position: '',
+        number: ''
+      },
       currentListInputUpdate: { name: '', position: '', number: ''},
       currentListPlayers: []
     });
@@ -72,11 +72,12 @@ export default {
     const DeletePlayer = async (indexDeletePlayer) => {
       await DAOPlayersServiceInstance.delete(stateListPlayers.currentListPlayers[indexDeletePlayer].id);
       await reSeedsPlayersInList();
+      console.log(stateListPlayers);
     };
 
     const cancelEdit = () => {
       editingPlayerIndex.value = null;
-      stateListPlayers.currentListInputUpdate = { name: '', cpf: '', number: '' };
+      stateListPlayers.currentListInputUpdate = { name: '', position: '', number: '' };
     };
 
     const reSeedsPlayersInList = async () => {
@@ -132,7 +133,8 @@ export default {
       DAOPlayersServiceInstance,
       onMounted,
       reSeedsPlayersInList,
-      seedsDatabaseButton
+      seedsDatabaseButton,
+      // positions
     };
   }
 };
@@ -144,9 +146,9 @@ export default {
     <div v-if="editingPlayerIndex === null">
       <input v-model="stateListPlayers.currentListInput.name" placeholder="Nome" />
       <input v-model="stateListPlayers.currentListInput.position" placeholder="Posição" />
-      <!-- <select v-model="posicaoEscolhida" id="posicao">
-        <option v-for="posicao in posicoes" :key="posicao.value" :value="posicao.value">
-          {{ posicao.label }}
+      <!-- <select v-model="stateListPlayers.position" id="posicao">
+        <option v-for="position in positions" :key="position.id" :value="stateListPlayers.position">
+          {{ position.nome }}
         </option>
       </select> -->
       <input v-model="stateListPlayers.currentListInput.number" placeholder="Número" type="number" min="1" />
@@ -155,7 +157,11 @@ export default {
     <div v-else>
       <input v-model="stateListPlayers.currentListInputUpdate.name" placeholder="Nome" />
       <input v-model="stateListPlayers.currentListInputUpdate.position" placeholder="Posição" />
-      
+      <!-- <select v-model="stateListPlayers.position" id="posicao">
+        <option v-for="position in positions" :key="position.id" :value="position.value">
+          {{ position.nome }}
+        </option> -->
+      <!-- </select> -->
       <input v-model="stateListPlayers.currentListInputUpdate.number" placeholder="Número" type="number" min="1" />
       <button @click="updatePlayer">Atualizar Jogador</button>
       <button @click="cancelEdit">Cancelar</button>
@@ -176,15 +182,13 @@ export default {
         </tr>
       </tbody>
     </table>
-
-    <!-- <button type="button" @click="seedsDatabaseButton()">seeds</button> -->
   </div>
 </template>
 
 <style scoped>
 .edit-team {
-  height: 400px;
-  width: 500px;
+  height: auto;
+  width: auto;
 }
 
 .container {

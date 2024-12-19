@@ -6,38 +6,43 @@ import router from "@/router";
 
 export default {
   setup() {
-    const DAOChampionsShipServiceInstance = new DAOService('chanpions_ships');
-    const stateChanpionsShip = ref();
+    const DAOClassificationServiceInstance = new DAOService('classification');
+    const stateClassification = ref();
     const route = useRoute();
 
     const backUrl = () => {
       router.push({ name: 'manager/league'})
     };
 
-    const subcribeChanpinsShip = async () => {
-      try {
-        const responseLocalStorage = JSON.parse(localStorage.getItem("data"));
-        stateChanpionsShip.value.teamIds = [ ...stateChanpionsShip.value.teamIds, responseLocalStorage.teamId]
-        await DAOChampionsShipServiceInstance.update(stateChanpionsShip.value.id, stateChanpionsShip.value)
-      } catch (error) {
-        console.error('Erro ao editar os dados:', error);
-      }
-    };
+    // const subcribeChanpinsShip = async () => {
+    //   // try {
+    //   //   const responseLocalStorage = JSON.parse(localStorage.getItem("data"));
+    //   //   stateChanpionsShip.value.teamIds = [ ...stateChanpionsShip.value.teamIds, responseLocalStorage.teamId]
+    //   //   await DAOChampionsShipServiceInstance.update(stateChanpionsShip.value.id, stateChanpionsShip.value)
+    //   // } catch (error) {
+    //   //   console.error('Erro ao editar os dados:', error);
+    //   // }
+    // };
 
     onBeforeMount(async () => {
       try {
-        const response = await DAOChampionsShipServiceInstance.getById(route.params.id);
-        console.log('está sendo retornado Champions ship', response);
-        stateChanpionsShip.value = response;
+        const [ response ] = await DAOClassificationServiceInstance.search(
+          [
+            { field: 'chanpionsShipId', operator: "==", value: route.params.id}
+          ]);
+        console.log('classification', response.teams);
+        stateClassification.value = response.teams;
 
       } catch (error) {
         console.error('Erro ao carregar os dados:', error);
       }
     });
 
+    
+
     return {
-      stateChanpionsShip,
-      subcribeChanpinsShip,
+      DAOClassificationServiceInstance,
+      stateClassification,
       backUrl
     };
   }
@@ -49,6 +54,7 @@ export default {
     <table>
       <tbody>
         <tr :key="1">
+          <th></th>
           <th>P</th>
           <th>J</th>
           <th>V</th>
@@ -59,16 +65,17 @@ export default {
           <th>SG</th>
           <th>%</th>
         </tr>
-        <tr>
-          <th>P</th>
-          <th>J</th>
-          <th>V</th>
-          <th>E</th>
-          <th>D</th>
-          <th>GP</th>
-          <th>GC</th>
-          <th>SG</th>
-          <th>%</th>
+        <tr v-for="(teams, index) in stateClassification" :key="index">
+          <th>{{ teams.teamId }}</th>
+          <th>{{ teams.P }}</th>
+          <th>{{ teams.J }}</th>
+          <th>{{ teams.V }}</th>
+          <th>{{ teams.E }}</th>
+          <th>{{ teams.D }}</th>
+          <th>{{ teams.GP }}</th>
+          <th>{{ teams.GC }}</th>
+          <th>{{ teams.SG }}</th>
+          <th>{{ teams.A }}</th>
         </tr>
       </tbody>
     </table>
