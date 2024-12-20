@@ -15,9 +15,18 @@ const reactiveInputManager = reactive({
   description: ''
 })
 
-const auth = new AuthService();
+const auth = getAuth();
 
-reactiveInputManager.userAuth = auth.getUser();
+onMounted(() => {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log('Usuário autenticado');
+      reactive.userAuth = user;
+    } else {
+      router.push('/login');
+    }
+  });
+})
 
 const select = [
   { text: "COPA", value: "cup" },
@@ -68,7 +77,7 @@ const createLeague = async () => {
 
   try {
     const chanpionsShipId = await dao.create(payload);
-  //  await DAOClassificationInstance.create({chanpionsShipId, teams: []})
+    await DAOClassificationInstance.create({chanpionsShipId, teams: []})
     clearReactive();
   } catch (error) {
     console.error(error);
