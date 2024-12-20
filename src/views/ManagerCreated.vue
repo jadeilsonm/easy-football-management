@@ -27,6 +27,7 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
+
 const select = [
   { text: "COPA", value: "cup" },
   { text: "LIGA", value: "league" },
