@@ -17,10 +17,6 @@ const home = () => {
   router.push('/home');
 }
 
-
-// const profileDefault = "../assets/profil.png"
-// https://stackoverflow.com/questions/56624817/passing-and-binding-img-src-from-props-in-vue-js
-
 </script>
 
 <template>
