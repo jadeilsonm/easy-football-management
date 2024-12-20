@@ -1,26 +1,30 @@
-// import { ref, computed } from 'vue'
-// import { createStore } from 'vuex'
+import { createStore } from 'vuex';
 
-// export default createStore({
-//     state: {
-//         user: null
-//     },
-// })
+const store = createStore({
+  state: {
+    userId: null,
+    teamId: null,
+  },
+  mutations: {
+    setUserId(state, userId) {
+      state.userId = userId;
+    },
+    setTeamId(state, teamId) {
+      state.teamId = teamId;
+    }
+  },
+  actions: {
+    updateUserId({ commit }, userId) {
+      commit('setUserId', userId);
+    },
+    updateTeamId({ commit }, teamId) {
+      commit('setTeamId', teamId);
+    }
+  },
+  getters: {
+    getUserId: (state) => state.userId,
+    getTeamId: (state) => state.teamId,
+  },
+});
 
-// import { createApp } from 'vue'
-// import { createStore } from 'vuex'
-
-// // Cria uma nova instância do store.
-// const store = createStore({
-//   state () {
-//     return {
-//       userId: null,
-//       teamId: null
-//     }
-//   }
-// })
-
-// const app = createApp({ /* seu componente raiz */ })
-
-// // Instale a instância do store como um plugin
-// app.use(store)
+export default store;

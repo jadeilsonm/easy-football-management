@@ -4,7 +4,8 @@ import Input from '@/components/InputGeneric.vue';
 import { STATUS } from '@/Enums/status';
 import { reactive } from 'vue';
 import { DAOService } from '@/services/DAOService';
-import { AuthService } from '@/services/AuthService';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import router from '@/router';
 
 const reactiveInputManager = reactive({
   inputName: '',
@@ -15,9 +16,16 @@ const reactiveInputManager = reactive({
   description: ''
 })
 
-const auth = new AuthService();
+const auth = getAuth();
 
-reactiveInputManager.userAuth = auth.getUser();
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    reactiveInputManager.userAuth = user;
+    console.log("login", reactive.userAuth);
+  } else {
+    router.push('/login');
+  }
+});
 
 const select = [
   { text: "COPA", value: "cup" },
@@ -34,7 +42,8 @@ const buttonsValues = [
 
 const createLeague = async () => {
   const dao = new DAOService("chanpions_ships");
-  const DAOClassificationInstance = new DAOService("classification");
+  console.log(reactiveInputManager);
+  // const DAOClassificationInstance = new DAOService("classification");
   const payload = {
     name: reactiveInputManager.inputName,
     value: reactiveInputManager.inputValue,
@@ -45,6 +54,8 @@ const createLeague = async () => {
     createdAt: new Date(),
     userOwner: reactiveInputManager.userAuth.uid,
   };
+
+  console.log(payload);
 
   if (
     payload.name === "" ||
@@ -67,7 +78,8 @@ const createLeague = async () => {
   }
 
   try {
-    await dao.create(payload);
+    const c = await dao.create(payload);
+    console.log(c);
     // await DAOClassificationInstance.create({chanpionsShipId, teams: []})
     clearReactive();
   } catch (error) {

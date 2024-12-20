@@ -141,7 +141,7 @@ onMounted(async () => {
       console.error(error)
     }
   }
-  isCurrentCup.value = true;
+  isCurrentCup.value = false;
   isLoading.value = false;
 });
 
