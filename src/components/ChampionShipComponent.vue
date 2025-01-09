@@ -181,13 +181,11 @@ button:last-of-type:hover {
   transition: background-color 0.3s ease;
 }
 
-/* Classe para o botão desabilitado */
 .btn:disabled {
-  background-color: #ddd; /* Cor cinza quando desabilitado */
+  background-color: #ddd;
   cursor: not-allowed;
 }
 
-/* Classe para o botão vermelho */
 .btn-red {
   background-color: red;
   color: white;
