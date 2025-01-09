@@ -56,60 +56,51 @@ export default {
   margin: 15px;
 }
 
-/* .chanpionships {
-  border-radius: 26px;
-  border: solid 1px green;
-  width: 400px;
-  height: 200px;
-} */
-
 .chanpionships {
-  background-color: #1f1f1f; /* Fundo mais claro do container */
-  border-radius: 8px; /* Bordas arredondadas */
+  background-color: #1f1f1f;
+  border-radius: 8px;
   padding: 20px;
   margin: 15px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Sombras sutis */
-  transition: transform 0.2s ease; /* Transição suave ao passar o mouse */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease;
 }
 
-/* Efeito de hover (passar o mouse sobre o container) */
 .chanpionships:hover {
-  transform: translateY(-5px); /* Levanta o container um pouco */
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4); /* Aumenta a sombra no hover */
+  transform: translateY(-5px); 
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4); 
 }
 
-/* Estilo dos textos dentro do container */
+
 .chanpionships span {
-  display: block; /* Faz com que cada linha ocupe uma nova linha */
-  margin-bottom: 8px; /* Espaçamento entre os spans */
-  font-size: 16px; /* Tamanho de fonte */
-  color: #ddd; /* Cor de texto clara */
+  display: block;
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: #ddd;
 }
 
-/* Estilo do botão */
+
 button {
-  background-color: #06ee2dd7; /* Cor de fundo do botão */
-  color: #ffffff; /* Cor do texto do botão */
+  background-color: #06ee2dd7;
+  color: #ffffff;
   border: none;
   padding: 10px 20px;
-  border-radius: 4px; /* Bordas arredondadas */
+  border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
-  transition: background-color 0.3s ease; /* Transição suave ao passar o mouse */
+  transition: background-color 0.3s ease;
 }
 
-/* Efeito de hover no botão */
 button:hover {
-  background-color: #06ee2d88; /* Muda a cor do botão quando o mouse passa */
+  background-color: #06ee2d88;
 }
 
 @media (max-width: 768px) {
   .chanpionships {
-    padding: 15px; /* Menos padding para telas menores */
+    padding: 15px;
   }
 
   button {
-    width: 100%; /* O botão ocupa toda a largura em telas pequenas */
+    width: 100%;
   }
 }
 </style>
