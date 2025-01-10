@@ -1,32 +1,32 @@
 <script setup>
-import NavBar from "@/components/NavBar.vue";
-import Input from "@/components/InputGeneric.vue";
-import { STATUS } from "@/Enums/status";
-import { reactive } from "vue";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { DAOService } from "@/services/DAOService";
-import router from "@/router";
+import NavBar from '@/components/NavBar.vue';
+import Input from '@/components/InputGeneric.vue';
+import { STATUS } from '@/Enums/status';
+import { reactive } from 'vue';
+import { DAOService } from '@/services/DAOService';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import router from '@/router';
 
 const reactiveInputManager = reactive({
-  inputName: "",
-  inputValue: "",
-  inputQntTime: "",
-  selectValue: "",
-  userAuth: "",
-  description: "",
-});
+  inputName: '',
+  inputValue: '',
+  inputQntTime: '',
+  selectValue: '',
+  userAuth: '',
+  description: ''
+})
 
 const auth = getAuth();
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    console.log("Usuário autenticado");
-    console.log(user);
     reactiveInputManager.userAuth = user;
+    console.log("login", reactive.userAuth);
   } else {
-    router.push("/login");
+    router.push('/login');
   }
 });
+
 
 const select = [
   { text: "COPA", value: "cup" },
@@ -36,13 +36,15 @@ const select = [
 const buttonsValues = [
   { path: "/home", value: "Home" },
   { path: "/manager/created", value: "Criar Campeonato" },
+  { path: "/manager/profile", value: "Editar perfil" },
   { path: "/manager", value: "Campeonatos" },
   { path: "/login", value: "Sair" },
 ];
 
 const createLeague = async () => {
   const dao = new DAOService("chanpions_ships");
-  const DAOClassificationInstance = new DAOService("classification");
+  console.log(reactiveInputManager);
+  // const DAOClassificationInstance = new DAOService("classification");
   const payload = {
     name: reactiveInputManager.inputName,
     value: reactiveInputManager.inputValue,
@@ -53,6 +55,8 @@ const createLeague = async () => {
     createdAt: new Date(),
     userOwner: reactiveInputManager.userAuth.uid,
   };
+
+  console.log(payload);
 
   if (
     payload.name === "" ||
@@ -75,8 +79,9 @@ const createLeague = async () => {
   }
 
   try {
-    const chanpionsShipId = await dao.create(payload);
-    await DAOClassificationInstance.create({chanpionsShipId, teams: []})
+    const c = await dao.create(payload);
+    console.log(c);
+    // await DAOClassificationInstance.create({chanpionsShipId, teams: []})
     clearReactive();
   } catch (error) {
     console.error(error);
@@ -156,7 +161,7 @@ const clearReactive = () => {
 main {
   display: flex;
   flex-direction: column;
-  background-color: #1c1e21;
+  background-color: #000000;
   align-items: center;
   justify-content: center;
   width: 100%;
@@ -187,6 +192,7 @@ select {
 
 .container {
   border: 1px solid #42b883;
+  background-color: #1c1e21;
   padding: 80px;
   display: flex;
   width: 80%;

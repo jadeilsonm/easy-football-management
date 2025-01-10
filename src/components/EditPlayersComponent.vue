@@ -189,8 +189,10 @@ export default {
 .edit-team {
   display: flex;
   flex-direction: column;
-  height: auto;
-  width: auto;
+  height: 70vh;
+  width: 80vw;
+  padding: 10px;
+  margin: 16px;
 }
 
 input {
@@ -201,7 +203,7 @@ input {
   font-size: 1em;
   border-radius: 4px;
   width: 20%;
-  box-sizing: border-box; 
+  box-sizing: border-box;
 }
 
 input::placeholder {
@@ -210,7 +212,7 @@ input::placeholder {
 }
 
 button {
-  all: unset; 
+  all: unset;
   background-color: black;
   color: white;
   border: 1px solid #42b883;
@@ -227,8 +229,8 @@ button {
 
 @media (max-width: 768px) {
   input {
-    font-size: 0.9em; 
-    padding: 8px; 
+    font-size: 0.9em;
+    padding: 8px;
   }
 }
 

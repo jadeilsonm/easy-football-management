@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
+import { getDatabase } from "firebase/database";
 import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 
 export const firebaseConfig = {
@@ -17,6 +18,8 @@ export const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
 
 export const db = getFirestore(firebaseApp);
+
+export const realTime = getDatabase(firebaseApp);
 
 if ( import.meta.env.MODE === 'development') {
   connectFirestoreEmulator(db, 'localhost', 8080);

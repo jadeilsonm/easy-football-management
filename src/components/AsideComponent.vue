@@ -13,14 +13,14 @@ export default {
     <input type="button" value="Meu Time" @click="$router.push('/home/team/editteam')">
     <input type="button" value="Meus Torneios" @click="$router.push('/home/subscribed')">
     <input type="button" value="Buscar Torneios" @click="$router.push('/home/search')">
-    
+
   </div>
 </template>
 
 <style scoped>
 .aside {
-  height: 70vh;
-  width: 15vw; 
+  height: 80vh;
+  width: 15vw;
   margin: 16px;
   border-radius: 26px;
   border: 1px solid #42b883;
@@ -52,5 +52,6 @@ export default {
 
 .aside img {
   width: 100px;
+  margin: 0 auto;
 }
 </style>

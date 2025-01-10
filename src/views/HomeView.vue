@@ -43,6 +43,7 @@ onMounted(() => {
 });
 </script>
 
+
 <template>
   <main class="home">
     <NavBar :buttonsValues=buttonsValues />
@@ -50,7 +51,6 @@ onMounted(() => {
       <AsideComponent />
       <RouterView />
     </div>
-
   </main>
 </template>
 
@@ -60,9 +60,7 @@ onMounted(() => {
   width: 100vw;
   display: flex;
   flex-direction: column;
-
   & div {
     display: flex;
   }
-}
 </style>
