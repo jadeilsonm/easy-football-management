@@ -12,7 +12,7 @@ const auth = getAuth();
 
 const dao = new DAOService('users');
 
-const buttonsValues = [{path:'/',value:'Home'}, {path:'/manager/created',value:'Criar Campeonato'}, {path:'/manager/league',value:'Campeonatos'}, {path:'/login',value:'Sair'}]
+const buttonsValues = [{path:'/home/team/editteam',value:'Principal'}, {path:'/manager/created',value:'Criar Campeonato'}, {path:'/manager/league',value:'Campeonatos'}, {path:'/login',value:'Sair'}]
 
 const reactiveProfile = reactive({
   name: '',

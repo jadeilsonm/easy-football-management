@@ -16,12 +16,13 @@ app.use(VueFire, {
   firebaseApp,
   modules: [
     VueFireFirestoreOptionsAPI,
-    VueFireAuth()]
+    VueFireAuth(),
+  ]
 });
 
-app.use(store)
+const pinia = createPinia();
+app.use(pinia);  
 
-app.use(createPinia())
-app.use(router)
+app.use(router);
 
-app.mount('#app')
+app.mount('#app');

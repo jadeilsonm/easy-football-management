@@ -1,9 +1,9 @@
 <template>
   <div class="search">
     <div v-for="( ChanpionsShip, index ) in stateChanpionsShips" :key="index" class="chanpionships">
-      <h2>Name: {{ ChanpionsShip.name }} </h2>
-      <h3>vagas: {{ ChanpionsShip.qntTime }}</h3>
-      <h3>Tipo: {{ ChanpionsShip.type }}</h3>
+      <span>Name: {{ ChanpionsShip.name }} </span>
+      <span>vagas: {{ ChanpionsShip.qntTime }}</span>
+      <span>Tipo: {{ ChanpionsShip.type }}</span>
       <button type="button" @click="buttonRedirect(ChanpionsShip.id)">detalhes</button>
     </div>
   </div>
@@ -31,7 +31,7 @@ export default {
     onBeforeMount(async () => {
       try {
         const response = await DAOServiceInstance.getAll();
-        //console.log('está sendo retornado ', response);
+        console.log('está sendo retornado ', response);
         stateChanpionsShips.value = response;
 
       } catch (error) {
@@ -50,15 +50,57 @@ export default {
 <style scoped>
 .search {
   height: 70vh;
-  width: 60vw;
+  width: 80vw;
   border: solid 1px green;
   display: flex;
+  margin: 15px;
 }
 
 .chanpionships {
-  border: solid 1px green;
-  width: 400px;
-  height: 200px;
+  background-color: #1f1f1f;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease;
 }
 
+.chanpionships:hover {
+  transform: translateY(-5px); 
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4); 
+}
+
+
+.chanpionships span {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: #ddd;
+}
+
+
+button {
+  background-color: #06ee2dd7;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #06ee2d88;
+}
+
+@media (max-width: 768px) {
+  .chanpionships {
+    padding: 15px;
+  }
+
+  button {
+    width: 100%;
+  }
+}
 </style>

@@ -1,50 +1,53 @@
 <script setup>
-import NavBar from '@/components/NavBar.vue';
-import { RouterView } from 'vue-router';
-import AsideComponent from '@/components/AsideComponent.vue';
-import { computed, ref } from 'vue';
-import { useStore } from 'vuex';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import AsideComponent from "@/components/AsideComponent.vue";
+import NavBar from "@/components/NavBar.vue";
+import { RouterView } from "vue-router";
+import { onMounted } from "vue";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import router from '@/router';
+import { useUserStore } from '@/stores/userStore';
+import { DAOTeams } from '../services/index'
 
 const buttonsValues = [
   { path: '/manager', value: 'Gerenciar Torneios' },
   { path: '/manager/created', value: 'Criar Campeonato' },
   { path: '/manager/perfil', value: 'Perfil' },
-  { path: '/login', value: 'Sair' }]
+  { path: '/login', value: 'Sair' }
+];
 
-const store = useStore(); // Acessa o store do Vuex
-const newUserId = ref(''); // Para capturar o input do usuário
+const userStore = useUserStore();
 
-const userId = computed(() => store.getters.getUserId);
-
-const setUserId = () => {
-  if (newUserId.value) {
-    store.dispatch('updateUserId', newUserId.value);
+const getByIdTeam = async (userId) => {
+  try {
+    const response = await DAOTeams.getByField('userId', userId);
+    userStore.setMyTeamId(response[0].id);
+  } catch (error) {
+    console.error('Erro ao carregar os dados:', error);
   }
 };
 
 const auth = getAuth();
 
-onAuthStateChanged(auth,(user) => {
+onMounted(() => {
+  onAuthStateChanged(auth, (user) => {
     if (user) {
-      const { uid } = user;
-      newUserId.value = uid;
-      setUserId(uid);
-      return user;
+      if (!userStore.getUserId) {
+        const uuid = user.uid;
+        userStore.setUserId(uuid);
+        getByIdTeam(uuid);
+      }
     } else {
       router.push('/login');
-    }});
-
-
-
+    }
+  });
+});
 </script>
 
 
 <template>
   <main class="home">
     <NavBar :buttonsValues=buttonsValues />
-    <div class="container">
+    <div>
       <AsideComponent />
       <RouterView />
     </div>
@@ -57,11 +60,7 @@ onAuthStateChanged(auth,(user) => {
   width: 100vw;
   display: flex;
   flex-direction: column;
-}
-
-.container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+  & div {
+    display: flex;
+  }
 </style>

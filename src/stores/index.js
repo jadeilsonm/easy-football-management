@@ -1,30 +1,32 @@
 import { createStore } from 'vuex';
 
-const store = createStore({
+export default createStore({
   state: {
     userId: null,
-    teamId: null,
+    myTeamId: null,
   },
   mutations: {
-    setUserId(state, userId) {
-      state.userId = userId;
+    setUserId(state, id) {
+      state.userId = id;
     },
-    setTeamId(state, teamId) {
-      state.teamId = teamId;
-    }
+    setMyTeamId(state, id) {
+      state.myTeamId = id;
+    },
   },
   actions: {
-    updateUserId({ commit }, userId) {
-      commit('setUserId', userId);
+    setUserId({ commit }, id) {
+      commit('setUserId', id);
     },
-    updateTeamId({ commit }, teamId) {
-      commit('setTeamId', teamId);
-    }
+    setMyTeamId({ commit }, id) {
+      commit('setMyTeamId', id);
+    },
   },
   getters: {
-    getUserId: (state) => state.userId,
-    getTeamId: (state) => state.teamId,
+    getUserId(state) {
+      return state.userId;
+    },
+    getMyTeamId(state) {
+      return state.myTeamId;
+    },
   },
 });
-
-export default store;
