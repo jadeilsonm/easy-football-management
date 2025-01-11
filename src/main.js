@@ -44,7 +44,7 @@ app.use(VueFire, {
 });
 
 const pinia = createPinia();
-app.use(pinia);  
+app.use(pinia);
 
 app.use(router);
 

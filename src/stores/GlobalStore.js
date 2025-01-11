@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-export const useUserStore = defineStore('userStore', {
+export const GlobalStore = defineStore('userStore', {
   state: () => ({
     userId: null,
     myTeamId: null,

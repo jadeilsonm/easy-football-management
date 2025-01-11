@@ -1,143 +1,124 @@
-<script>
+<script setup>
 import { ref, reactive, onBeforeMount, onMounted } from "vue";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { DAOService } from "@/services/DAOService"
 import router from '@/router';
 
-export default {
-  setup() {
-    // const positions = [
-    //   { id: 'goleiro', nome: 'Goleiro', abreviacao: 'GO' },
-    //   { id: 'zagueiro', nome: 'Zagueiro', abreviacao: 'ZG' },
-    //   { id: 'meio-campo', nome: 'Meio-Campo', abreviacao: 'MC' },
-    //   { id: 'atacante', nome: 'Atacante', abreviacao: 'AT' },
-    //   { id: 'ponta-esquerda', nome: 'Ponta Esquerda', abreviacao: 'PE' },
-    //   { id: 'ponta-direita', nome: 'Ponta Direita', abreviacao: 'PD' },
-    //   { id: 'lateral-esquerdo', nome: 'Lateral Esquerdo', abreviacao: 'LE' },
-    //   { id: 'lateral-direito', nome: 'Lateral Direito', abreviacao: 'LD' },
-    //   { id: 'volante', nome: 'Volante', abreviacao: 'VL' }
-    // ];
-    const DAOPlayersServiceInstance = new DAOService('players');
-    const DAOTeamsServiceInstance = new DAOService('teams');
-    // DAOPlayersServiceInstance.seedDatabase();
-    const seedsDatabaseButton = async () => {
-      await DAOPlayersServiceInstance.seedDatabase();
-    }
+// const positions = [
+//   { id: 'goleiro', nome: 'Goleiro', abreviacao: 'GO' },
+//   { id: 'zagueiro', nome: 'Zagueiro', abreviacao: 'ZG' },
+//   { id: 'meio-campo', nome: 'Meio-Campo', abreviacao: 'MC' },
+//   { id: 'atacante', nome: 'Atacante', abreviacao: 'AT' },
+//   { id: 'ponta-esquerda', nome: 'Ponta Esquerda', abreviacao: 'PE' },
+//   { id: 'ponta-direita', nome: 'Ponta Direita', abreviacao: 'PD' },
+//   { id: 'lateral-esquerdo', nome: 'Lateral Esquerdo', abreviacao: 'LE' },
+//   { id: 'lateral-direito', nome: 'Lateral Direito', abreviacao: 'LD' },
+//   { id: 'volante', nome: 'Volante', abreviacao: 'VL' }
+// ];
+const DAOPlayersServiceInstance = new DAOService('players');
+const DAOTeamsServiceInstance = new DAOService('teams');
+// DAOPlayersServiceInstance.seedDatabase();
+const seedsDatabaseButton = async () => {
+  await DAOPlayersServiceInstance.seedDatabase();
+}
 
-    const editingPlayerIndex = ref(null)
-    const stateListPlayers = reactive({
-      teamId: '',
-      currentListInput: {
-        name: '',
-        position: '',
-        number: ''
-      },
-      currentListInputUpdate: { name: '', position: '', number: ''},
-      currentListPlayers: []
-    });
+const editingPlayerIndex = ref(null)
+const stateListPlayers = reactive({
+  teamId: '',
+  currentListInput: {
+    name: '',
+    position: '',
+    number: ''
+  },
+  currentListInputUpdate: { name: '', position: '', number: '' },
+  currentListPlayers: []
+});
 
-    const insertPlayers = async () => {
-      // stateListPlayers.currentListPlayers.push(stateListPlayers.currentListInput)
-      try {
-      //  await DAOPlayersServiceInstance.seedDatabase();
-        await DAOPlayersServiceInstance.create({...stateListPlayers.currentListInput, teamId: stateListPlayers.teamId});
-        stateListPlayers.currentListInput = { name: '', position: '', number: '' };
-        await reSeedsPlayersInList();
-      } catch (error) {
-        console.error('Erro ao inserir os dados:', error);
-      }
-    };
-
-    const editPlayer = (index) => {
-      editingPlayerIndex.value = index;
-      stateListPlayers.currentListInputUpdate = { ...stateListPlayers.currentListPlayers[index] };
-    };
-
-    const updatePlayer = async () => {
-      const { id } = stateListPlayers.currentListPlayers[editingPlayerIndex.value]
-      if (editingPlayerIndex.value !== null) {
-        await DAOPlayersServiceInstance.update(id,stateListPlayers.currentListInputUpdate);
-        cancelEdit();
-      }
-
-      try {
-        const { id, name, position, number  } = stateListPlayers.currentListInputUpdate
-        await DAOPlayersServiceInstance.update(id,{name, position, number});
-      } catch (error) {
-        console.error('Erro ao editar os dados:', error);
-      }
-      await reSeedsPlayersInList();
-    };
-
-    const DeletePlayer = async (indexDeletePlayer) => {
-      await DAOPlayersServiceInstance.delete(stateListPlayers.currentListPlayers[indexDeletePlayer].id);
-      await reSeedsPlayersInList();
-      console.log(stateListPlayers);
-    };
-
-    const cancelEdit = () => {
-      editingPlayerIndex.value = null;
-      stateListPlayers.currentListInputUpdate = { name: '', position: '', number: '' };
-    };
-
-    const reSeedsPlayersInList = async () => {
-      try {
-        const response = await DAOPlayersServiceInstance.getAll();
-        stateListPlayers.currentListPlayers = response;
-      } catch (error) {
-        console.error('Erro ao carregar os dados:', error);
-      }
-    };
-
-    const getByIdTeam = async (userId) => {
-      try {
-        const response = await DAOTeamsServiceInstance.getByField('userId', userId);
-        stateListPlayers.teamId = response[0].id;
-        localStorage.setItem("data", JSON.stringify({userId, teamId: response[0].id}));
-      } catch (error) {
-        console.error('Erro ao carregar os dados:', error);
-      }
-    };
-
-    const auth = getAuth();
-
-    onMounted(() => {
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          const uuid = user.uid;
-          getByIdTeam(uuid);
-        } else {
-          router.push('/login');
-        }
-      });
-    })
-
-    onBeforeMount(async () => {
-      try {
-        const response = await DAOPlayersServiceInstance.getAll();
-        stateListPlayers.currentListPlayers = response;
-      } catch (error) {
-        console.error('Erro ao carregar os dados:', error);
-      }
-    });
-
-    return {
-      stateListPlayers,
-      insertPlayers,
-      editingPlayerIndex,
-      editPlayer,
-      DeletePlayer,
-      updatePlayer,
-      cancelEdit,
-      onBeforeMount,
-      DAOPlayersServiceInstance,
-      onMounted,
-      reSeedsPlayersInList,
-      seedsDatabaseButton,
-      // positions
-    };
+const insertPlayers = async () => {
+  // stateListPlayers.currentListPlayers.push(stateListPlayers.currentListInput)
+  try {
+    //  await DAOPlayersServiceInstance.seedDatabase();
+    await DAOPlayersServiceInstance.create({ ...stateListPlayers.currentListInput, teamId: stateListPlayers.teamId });
+    stateListPlayers.currentListInput = { name: '', position: '', number: '' };
+    await reSeedsPlayersInList();
+  } catch (error) {
+    console.error('Erro ao inserir os dados:', error);
   }
 };
+
+const editPlayer = (index) => {
+  editingPlayerIndex.value = index;
+  stateListPlayers.currentListInputUpdate = { ...stateListPlayers.currentListPlayers[index] };
+};
+
+const updatePlayer = async () => {
+  const { id } = stateListPlayers.currentListPlayers[editingPlayerIndex.value]
+  if (editingPlayerIndex.value !== null) {
+    await DAOPlayersServiceInstance.update(id, stateListPlayers.currentListInputUpdate);
+    cancelEdit();
+  }
+
+  try {
+    const { id, name, position, number } = stateListPlayers.currentListInputUpdate
+    await DAOPlayersServiceInstance.update(id, { name, position, number });
+  } catch (error) {
+    console.error('Erro ao editar os dados:', error);
+  }
+  await reSeedsPlayersInList();
+};
+
+const DeletePlayer = async (indexDeletePlayer) => {
+  await DAOPlayersServiceInstance.delete(stateListPlayers.currentListPlayers[indexDeletePlayer].id);
+  await reSeedsPlayersInList();
+  console.log(stateListPlayers);
+};
+
+const cancelEdit = () => {
+  editingPlayerIndex.value = null;
+  stateListPlayers.currentListInputUpdate = { name: '', position: '', number: '' };
+};
+
+const reSeedsPlayersInList = async () => {
+  try {
+    const response = await DAOPlayersServiceInstance.getAll();
+    stateListPlayers.currentListPlayers = response;
+  } catch (error) {
+    console.error('Erro ao carregar os dados:', error);
+  }
+};
+
+const getByIdTeam = async (userId) => {
+  try {
+    const response = await DAOTeamsServiceInstance.getByField('userId', userId);
+    stateListPlayers.teamId = response[0].id;
+    localStorage.setItem("data", JSON.stringify({ userId, teamId: response[0].id }));
+  } catch (error) {
+    console.error('Erro ao carregar os dados:', error);
+  }
+};
+
+const auth = getAuth();
+
+onMounted(() => {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const uuid = user.uid;
+      getByIdTeam(uuid);
+    } else {
+      router.push('/login');
+    }
+  });
+})
+
+onBeforeMount(async () => {
+  try {
+    const response = await DAOPlayersServiceInstance.getAll();
+    stateListPlayers.currentListPlayers = response;
+  } catch (error) {
+    console.error('Erro ao carregar os dados:', error);
+  }
+});
+
 </script>
 
 <template>
@@ -201,7 +182,7 @@ input {
   font-size: 1em;
   border-radius: 4px;
   width: 20%;
-  box-sizing: border-box; 
+  box-sizing: border-box;
 }
 
 input::placeholder {
@@ -210,7 +191,7 @@ input::placeholder {
 }
 
 button {
-  all: unset; 
+  all: unset;
   background-color: black;
   color: white;
   border: 1px solid #42b883;
@@ -227,8 +208,8 @@ button {
 
 @media (max-width: 768px) {
   input {
-    font-size: 0.9em; 
-    padding: 8px; 
+    font-size: 0.9em;
+    padding: 8px;
   }
 }
 

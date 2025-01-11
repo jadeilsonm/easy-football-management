@@ -4,7 +4,8 @@ import Input from "@/components/InputGeneric.vue";
 import { STATUS } from "@/Enums/status";
 import { reactive } from "vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { DAOService } from "@/services/DAOService";
+// import { DAOService } from "@/services/DAOService";
+import { DAOChanpionShip, DAOClassification } from "@/services";
 import router from "@/router";
 
 const reactiveInputManager = reactive({
@@ -41,8 +42,6 @@ const buttonsValues = [
 ];
 
 const createLeague = async () => {
-  const dao = new DAOService("chanpions_ships");
-  const DAOClassificationInstance = new DAOService("classification");
   const payload = {
     name: reactiveInputManager.inputName,
     value: reactiveInputManager.inputValue,
@@ -75,8 +74,8 @@ const createLeague = async () => {
   }
 
   try {
-    const chanpionsShipId = await dao.create(payload);
-    await DAOClassificationInstance.create({chanpionsShipId, teams: []})
+    const chanpionsShipId = await DAOChanpionShip.create(payload);
+    await DAOClassification.create({chanpionsShipId, teams: []})
     clearReactive();
   } catch (error) {
     console.error(error);
