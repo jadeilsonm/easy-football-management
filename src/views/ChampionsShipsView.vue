@@ -2,30 +2,34 @@
 import NavBar from '@/components/NavBar.vue';
 import router from '@/router';
 import { DAOChanpionShip } from '@/services';
+import { CHAMPIONS_SHIP_COLLECTION } from '@/Utils/constantes';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { onMounted, reactive } from 'vue';
+import { computed, onBeforeMount, reactive, ref } from 'vue';
+import { useStore } from 'vuex';
 
 const auth = getAuth();
+const userID = ref('');
 
 const reactiveChampionsShips = reactive({
   result: []
 })
-
 const getChampionsShips = async (userID) => {
   console.log("userID: ", userID);
   const response = await DAOChanpionShip.search([{ field: 'status', operator: '==', value: 'CREATED' }, { field: 'userOwner', operator: '==', value: userID }]);
   return response;
 }
 
-onMounted(async () => {
-  onAuthStateChanged(auth, async (user) => {
+
+
+onBeforeMount(async () => {
+  await onAuthStateChanged(auth, async (user) => {
     if (!user) {
       router.push('/login');
     }
-    const userId = user.uid;
-    const result = await getChampionsShips(userId);
-    reactiveChampionsShips.result = result;
+    userID.value = user.uid;
+    reactiveChampionsShips.result = await getChampionsShips();
   });
+
 })
 
 const buttonsValues = [

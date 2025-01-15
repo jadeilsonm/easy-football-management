@@ -170,8 +170,10 @@ onBeforeMount(async () => {
 .edit-team {
   display: flex;
   flex-direction: column;
-  height: auto;
-  width: auto;
+  height: 70vh;
+  width: 80vw;
+  padding: 10px;
+  margin: 16px;
 }
 
 input {
