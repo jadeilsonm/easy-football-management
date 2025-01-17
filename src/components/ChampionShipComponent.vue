@@ -3,7 +3,9 @@ import { reactive, toRefs, onMounted } from "vue";
 import { DAOChanpionShip, DAOClassification } from "@/services";
 import { useRoute } from 'vue-router'
 import router from "@/router";
-import { GlobalStore } from '@/stores/GlobalStore';
+import { PiniaStore } from '@/stores';
+
+const globalStore = PiniaStore();
 
 const stateChanpionsShip = reactive({
   chanpionsShip: null,
@@ -23,21 +25,15 @@ const LocalStorage = JSON.parse(localStorage.getItem('data'))
 
 const subcribeChanpinsShip = async () => {
   try {
-    // const LocalStorage = JSON.parse(localStorage.getItem('data'))
     const [{ id, chanpionsShipId, teams }] = await DAOClassification.search(
       [{ field: 'chanpionsShipId', operator: "==", value: chanpionsShip.value.id }]
     );
     console.log('linha 27 ok', id, chanpionsShipId, teams);
-    // const [{ id:ID }] = await DAOClassification.getById(
-    //   classification.value.id
-    // );
-    // console.log('linha 28 ok', ID);
-    console.log(GlobalStore.userId , GlobalStore.myTeamId)
 
     await DAOClassification.update(id, {
       teams: [
         ...teams, 
-        { teamId: LocalStorage.teamId, P: 0, J: 0, v: 0, E: 0, D: 0, GP: 0, GC: 0, S: 0, A: 0.00 },
+        { teamId: globalStore.getMyTeamId, P: 0, J: 0, v: 0, E: 0, D: 0, GP: 0, GC: 0, S: 0, A: 0.00 },
       ]
     })
   } catch (error) {

@@ -7,7 +7,8 @@ import App from './App.vue'
 import router from './router'
 import { VueFire, VueFireAuth, VueFireFirestoreOptionsAPI } from 'vuefire'
 import { firebaseApp } from './firebase'
-import store from './stores'
+import piniaPersist from 'pinia-plugin-persistedstate'
+// import store from './stores'
 
 const app = createApp(App)
 
@@ -21,6 +22,7 @@ app.use(VueFire, {
 });
 
 const pinia = createPinia();
+pinia.use(piniaPersist) 
 app.use(pinia);
 
 app.use(router);

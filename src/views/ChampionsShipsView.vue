@@ -27,7 +27,7 @@ onBeforeMount(async () => {
       router.push('/login');
     }
     userID.value = user.uid;
-    reactiveChampionsShips.result = await getChampionsShips();
+    reactiveChampionsShips.result = await getChampionsShips(user.uid);
   });
 
 })

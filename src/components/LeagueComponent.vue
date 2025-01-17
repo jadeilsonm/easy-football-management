@@ -15,7 +15,7 @@ const { data } = toRefs(stateClassification);
 const route = useRoute();
 
 const backUrl = () => {
-  router.push({ name: 'manager/league' });
+  router.push({ name: 'manager' });
 };
 
 // const subcribeChanpinsShip = async () => {
@@ -34,7 +34,7 @@ onMounted(async () => {
       [
         { field: 'chanpionsShipId', operator: "==", value: route.params.id}
       ]);
-    console.log('classification', response.teams);
+    console.log('classification', response);
     stateClassification.data = response.teams;
   } catch (error) {
     console.error('Erro ao carregar os dados:', error);
@@ -75,8 +75,70 @@ onMounted(async () => {
     </table>
     <span>P: Pontos J: Jogos V: Vitórias E: Empates D: Derrotas GP: Gols Pró GC: Gols Contra SG: Saldo de gols %:
       Aproveitamento</span>
+      <button type="button">Gerenciar Jogos</button>
+      <button @click="backUrl">Voltar</button>
   </div>
 </template>
 
 <style scoped>
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  padding: 8px 12px;
+  text-align: center;
+  /* border: 1px solid #ddd; */
+}
+
+th {
+  font-weight: bold;
+  /* background-color: #f4f4f4; */
+}
+
+tr:nth-child(even) {
+  /* background-color: #f9f9f9; */
+}
+
+tr:hover {
+  /* background-color: #f1f1f1; */
+}
+
+span {
+  display: block;
+  margin-top: 20px;
+  font-size: 14px;
+  text-align: center;
+  color: #666;
+}
+
+button {
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 10px;
+  border: none;
+  border-radius: 5px;
+}
+
+button[type="button"] {
+  background-color: #28a745;
+  color: white;
+}
+
+button[type="button"]:hover {
+  background-color: #218838;
+}
+
+button {
+  background-color: #dc3545;
+  color: white;
+}
+
+button:hover {
+  background-color: #c82333;
+}
+
 </style>
