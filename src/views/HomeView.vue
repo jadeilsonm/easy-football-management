@@ -5,8 +5,10 @@ import { RouterView } from "vue-router";
 import { onMounted } from "vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import router from '@/router';
-import { useUserStore } from '@/stores/userStore';
 import { DAOTeams } from '../services/index'
+import { PiniaStore } from '@/stores';
+
+const globalStore = PiniaStore();
 
 const buttonsValues = [
   { path: '/manager', value: 'Gerenciar Torneios' },
@@ -15,12 +17,14 @@ const buttonsValues = [
   { path: '/login', value: 'Sair' }
 ];
 
-const userStore = useUserStore();
-
 const getByIdTeam = async (userId) => {
   try {
     const response = await DAOTeams.getByField('userId', userId);
-    userStore.setMyTeamId(response[0].id);
+    // console.log(response)
+    globalStore.setMyTeamId(response[0].id);
+    // globalStore.setMyTeamId(response);
+    // console.log(globalStore.userId)
+    // localStorage.setItem('data', JSON.stringify({userId, teamId: response[0].id}))
   } catch (error) {
     console.error('Erro ao carregar os dados:', error);
   }
@@ -31,11 +35,9 @@ const auth = getAuth();
 onMounted(() => {
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      if (!userStore.getUserId) {
-        const uuid = user.uid;
-        userStore.setUserId(uuid);
-        getByIdTeam(uuid);
-      }
+      const uuid = user.uid;
+      globalStore.setUserId(uuid);
+      getByIdTeam(uuid);
     } else {
       router.push('/login');
     }
@@ -60,7 +62,9 @@ onMounted(() => {
   width: 100vw;
   display: flex;
   flex-direction: column;
+
   & div {
     display: flex;
   }
+}
 </style>

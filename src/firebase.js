@@ -21,8 +21,8 @@ export const db = getFirestore(firebaseApp);
 
 export const realTime = getDatabase(firebaseApp);
 
-if ( import.meta.env.MODE === 'development') {
-  connectFirestoreEmulator(db, 'localhost', 8080);
-  connectAuthEmulator(auth, "http://127.0.0.1:9099");
-}
+// if ( import.meta.env.MODE === 'development') {
+//   connectFirestoreEmulator(db, 'localhost', 8080);
+//   connectAuthEmulator(auth, "http://127.0.0.1:9099");
+// }
 

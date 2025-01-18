@@ -1,6 +1,6 @@
 <template>
   <div class="search">
-    <div v-for="( ChanpionsShip, index ) in stateChanpionsShips" :key="index" class="chanpionships">
+    <div v-for="( ChanpionsShip, index ) in stateChanpionShips" :key="index" class="chanpionships">
       <span>Name: {{ ChanpionsShip.name }} </span>
       <span>vagas: {{ ChanpionsShip.qntTime }}</span>
       <span>Tipo: {{ ChanpionsShip.type }}</span>
@@ -9,42 +9,32 @@
   </div>
 </template>
 
-<script>
-import { ref, onBeforeMount } from "vue";
-import { DAOService } from "@/services/DAOService";
+<script setup>
+import { ref, onMounted } from "vue";
+import { DAOChanpionShip } from "@/services";
 import router from "@/router";
 const URL_ROUTER_CHAMPION_SHIP = '/search/championship/details/';
 
-export default {
-  setup() {
-    const DAOServiceInstance = new DAOService('chanpions_ships');
-    const stateChanpionsShips = ref([
-      // { name: "brasileirão", qntTime: 12,  type: "cup"},
-      // { name: "cop do brasil", qntTime: 18,  type: "league"}
-    ]); // Estado que irá armazenar os dados
 
-    const buttonRedirect = (championShipId) => {
-      console.log(URL_ROUTER_CHAMPION_SHIP + championShipId);
-      router.push({name: 'championsshipdetails', params: { id: championShipId }})
-    }
-    
-    onBeforeMount(async () => {
-      try {
-        const response = await DAOServiceInstance.getAll();
-        console.log('está sendo retornado ', response);
-        stateChanpionsShips.value = response;
+const stateChanpionShips = ref([
+  // { name: "brasileirão", qntTime: 12,  type: "cup"},
+  // { name: "cop do brasil", qntTime: 18,  type: "league"}
+]); // Estado que irá armazenar os dados
 
-      } catch (error) {
-        console.error('Erro ao carregar os dados:', error);
-      }
-    });
+const buttonRedirect = (championShipId) => {
+  router.push({ name: 'championsshipdetails', params: { id: championShipId } })
+}
 
-    return {
-      stateChanpionsShips,
-      buttonRedirect
-    };
+onMounted(async () => {
+  try {
+    const response = await DAOChanpionShip.getAll();
+    stateChanpionShips.value = response;
+
+  } catch (error) {
+    console.error('Erro ao carregar os dados:', error);
   }
-};
+});
+
 </script>
 
 <style scoped>
@@ -66,8 +56,8 @@ export default {
 }
 
 .chanpionships:hover {
-  transform: translateY(-5px); 
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4); 
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4);
 }
 
 

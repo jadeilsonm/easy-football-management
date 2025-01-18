@@ -1,78 +1,69 @@
-<script>
-import { reactive, ref, toRefs, onBeforeMount,onMounted } from "vue";
-import { DAOService } from "@/services/DAOService";
+<script setup>
+import { reactive, toRefs, onMounted } from "vue";
+import { DAOChanpionShip, DAOClassification } from "@/services";
 import { useRoute } from 'vue-router'
 import router from "@/router";
+import { PiniaStore } from '@/stores';
 
-export default {
-  setup() {
-    const DAOChampionsShipServiceInstance = new DAOService('chanpions_ships');
-    const DAOClassificationInstance = new DAOService('classification');
-    const stateChanpionsShip = reactive({
-      chanpionsShip: null,
-      classification: null,
-      errorRequest: false,
-      buttonDisable: false,
-      isSubscribed: false,
-    });
-    const { chanpionsShip, classification, buttonDisable} = toRefs(stateChanpionsShip);
-    const route = useRoute();
+const globalStore = PiniaStore();
 
-    const backUrl = () => {
-      router.push({ name: 'search' })
-    };
+const stateChanpionsShip = reactive({
+  chanpionsShip: null,
+  classification: null,
+  errorRequest: false,
+  buttonIsDisable: false,
+  isSubscribed: false,
+});
+const { chanpionsShip, classification, buttonIsDisable } = toRefs(stateChanpionsShip);
+const route = useRoute();
 
-    const subcribeChanpinsShip = async () => {
-      try {
-        const responseLocalStorage = JSON.parse(localStorage.getItem("data"));
+const backUrl = () => {
+  router.push({ name: 'search' })
+};
 
-        const [{ id, chanpionsShipId, teams }] = await DAOClassificationInstance.search(
-          [{ field: 'chanpionsShipId', operator: "==", value: chanpionsShip.value.id }]
-        );
-        
-        // const [{ id, chanpionsShipId, teams }] = await DAOClassificationInstance.getById(
-        //   chanpionsShip.value.id
-        // );
-        console.log('classificion atual', id, chanpionsShipId, teams);
-        await DAOClassificationInstance.update(id, {
-          teams: [...teams, { teamId: responseLocalStorage.teamId, P: 0, J: 0, v: 0, E: 0, D: 0, GP: 0, GC: 0, S: 0, A: 0.00 }]
-        })
-      } catch (error) {
-        console.error('Erro ao editar os dados:', error);
-      }
-    };
+const LocalStorage = JSON.parse(localStorage.getItem('data'))
 
-    const defaultResquest = async () => {
-      try {
-        // console.log('está sendo retornado Champions ship', route.params.id);
-        const responseChampionsShip = await DAOChampionsShipServiceInstance.getById(route.params.id);
-        const responseClassification = await DAOClassificationInstance.getByField('chanpionsShipId', route.params.id);
-        console.log('compnents championsShip \n', responseChampionsShip,responseClassification);
-        console.log('teams \n',responseClassification[0].teams);
-        stateChanpionsShip.chanpionsShip = responseChampionsShip;
-        stateChanpionsShip.classification = responseClassification;
+const subcribeChanpinsShip = async () => {
+  try {
+    const [{ id, chanpionsShipId, teams }] = await DAOClassification.search(
+      [{ field: 'chanpionsShipId', operator: "==", value: chanpionsShip.value.id }]
+    );
+    console.log('linha 27 ok', id, chanpionsShipId, teams);
 
-        stateChanpionsShip.buttonDisable = responseChampionsShip - responseClassification[0].teams.length <= 0
-        
-      } catch (error) {
-        console.error('Erro ao carregar os dados:', error);
-      }
-    }
-
-    onMounted( async () => {
-      await defaultResquest();
-    });
-
-    return {
-      stateChanpionsShip,
-      subcribeChanpinsShip,
-      backUrl,
-      defaultResquest,
-      chanpionsShip,
-      classification
-    };
+    await DAOClassification.update(id, {
+      teams: [
+        ...teams, 
+        { teamId: globalStore.getMyTeamId, P: 0, J: 0, v: 0, E: 0, D: 0, GP: 0, GC: 0, S: 0, A: 0.00 },
+      ]
+    })
+  } catch (error) {
+    console.error('Erro ao editar os dados:', error);
   }
 };
+
+const defaultResquest = async () => {
+  try {
+    // console.log('está sendo retornado Champions ship', route.params.id);
+    const responseChampionsShip = await DAOChanpionShip.getById(route.params.id);
+    const responseClassification = await DAOClassification.getByField('chanpionsShipId', route.params.id);
+    // console.log('getById \n', route.params.id);
+    // console.log('getByField \n', responseClassification[0].teams);
+    stateChanpionsShip.chanpionsShip = responseChampionsShip;
+    stateChanpionsShip.classification = responseClassification;
+    // console.log(responseClassification[0].teams.some((team) => team.teamId === LocalStorage.teamId))
+    // console.log(responseClassification[0].teams[4].teamId, LocalStorage.teamId,responseClassification[0].teams.some((team) => team.teamId === LocalStorage.teamId))
+    stateChanpionsShip.buttonIsDisable = responseClassification[0].teams.some((team) => team.teamId === LocalStorage.teamId);
+
+  } catch (error) {
+    console.error('Erro ao carregar os dados:', error);
+  }
+}
+
+onMounted(async () => {
+  await defaultResquest();
+});
+
+
 </script>
 
 <template>
@@ -91,30 +82,19 @@ export default {
         Tipo: {{ chanpionsShip.type === "cup" ? 'Mata Mata' : 'Pontos Corridos' }}
       </span>
     </div>
-    <button 
-      :class="['btn', { 'btn-red': stateChanpionsShip.buttonDisable }]" 
-      :disabled="stateChanpionsShip.buttonDisable"
-      @click="subcribeChanpinsShip"
-    >
-      {{ stateChanpionsShip.buttonDisable ? 'Já estou inscrito' : 'Inscrever-se' }}
+    <button :class="['btn', { 'btn-red': buttonIsDisable }]"
+      :disabled="buttonIsDisable" @click="subcribeChanpinsShip">
+      {{ buttonIsDisable ? 'Já estou inscrito' : 'Inscrever-se' }}
     </button>
+    <!-- <button :
+      :disabled="buttonIsDisable" @click="subcribeChanpinsShip">
+      {{ buttonIsDisable ? 'Já estou inscrito' : 'Inscrever-se' }}
+    </button> -->
     <button @click="backUrl()">Voltar</button>
   </div>
 </template>
 
 <style scoped>
-/* .chanpions-ship-details {
-  height: 70vh;
-  width: 80vw;
-  display: flex;
-  flex-direction: column;
-  border: solid 1px rgb(6, 207, 6);
-}
-
-.chanpions-ship-details img {
-  width: 26px;
-} */
-
 .chanpions-ship-details {
   height: 70vh;
   width: 80vw;
@@ -179,10 +159,10 @@ button:last-of-type:hover {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-}
+} 
 
 .btn:disabled {
-  background-color: #ddd;
+  background-color: #db2626;
   cursor: not-allowed;
 }
 

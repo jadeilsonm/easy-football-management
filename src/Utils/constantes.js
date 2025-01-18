@@ -1,6 +1,6 @@
-const CHAMPIONS_SHIP_COLLECTION = 'chanpions_ships';
+const CHAMPIONS_SHIP_COLLECTION = 'chanpionShips';
 const TEAM_COLLECTION = 'teams';
-const CLASSIFICATION_COLLECTION = 'classification';
+const CLASSIFICATION_COLLECTION = 'classifications';
 
 
 export {

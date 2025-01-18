@@ -1,32 +1,30 @@
-import { createStore } from 'vuex';
+import { defineStore } from 'pinia'
 
-export default createStore({
-  state: {
+export const PiniaStore = defineStore('GlobalStore', {
+  state: () => ({
     userId: null,
     myTeamId: null,
-  },
-  mutations: {
-    setUserId(state, id) {
-      state.userId = id;
-    },
-    setMyTeamId(state, id) {
-      state.myTeamId = id;
-    },
-  },
+  }),
+
   actions: {
-    setUserId({ commit }, id) {
-      commit('setUserId', id);
+    setUserId(userId) {
+      this.userId = userId;
     },
-    setMyTeamId({ commit }, id) {
-      commit('setMyTeamId', id);
+
+    setMyTeamId(myTeamId) {
+      this.myTeamId = myTeamId;
+    },
+
+    clearUserData() {
+      this.userId = null;
+      this.myTeamId = null;
     },
   },
+
   getters: {
-    getUserId(state) {
-      return state.userId;
-    },
-    getMyTeamId(state) {
-      return state.myTeamId;
-    },
+    getUserId: (state) => state.userId,
+    getMyTeamId: (state) => state.myTeamId,
   },
-});
+
+  persist: true
+})

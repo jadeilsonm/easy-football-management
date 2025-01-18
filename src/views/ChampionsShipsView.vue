@@ -1,30 +1,21 @@
 <script setup>
 import NavBar from '@/components/NavBar.vue';
 import router from '@/router';
-import { DAOService } from '@/services/DAOService';
+import { DAOChanpionShip } from '@/services';
 import { CHAMPIONS_SHIP_COLLECTION } from '@/Utils/constantes';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { computed, onBeforeMount, reactive, ref } from 'vue';
 import { useStore } from 'vuex';
 
-
 const auth = getAuth();
 const userID = ref('');
-
-const store = useStore();
-
-const getUserId = computed(() => store.getters.getUserId);
-
-const dao = new DAOService(CHAMPIONS_SHIP_COLLECTION);
 
 const reactiveChampionsShips = reactive({
   result: []
 })
-
-const getChampionsShips = async () => {
-
-  console.log("v: ", userID.value, 'userID');
-  const response = await dao.search([{ field: 'status', operator: '==', value: 'CREATED' }, { field: 'userOwner', operator: '==', value: userID.value }]);
+const getChampionsShips = async (userID) => {
+  console.log("userID: ", userID);
+  const response = await DAOChanpionShip.search([{ field: 'status', operator: '==', value: 'CREATED' }, { field: 'userOwner', operator: '==', value: userID }]);
   return response;
 }
 
@@ -36,12 +27,17 @@ onBeforeMount(async () => {
       router.push('/login');
     }
     userID.value = user.uid;
-    reactiveChampionsShips.result = await getChampionsShips();
+    reactiveChampionsShips.result = await getChampionsShips(user.uid);
   });
 
 })
 
-const buttonsValues = [{ path: '/home/team/editteam', value: 'Home' }, { path: '/manager/created', value: 'Criar Campeonato' }, { path: '/manager/league', value: 'Campeonatos' }, { path: '/login', value: 'Sair' }]
+const buttonsValues = [
+  { path: '/home/team/editteam', value: 'Principal' },
+  { path: '/manager/created', value: 'Criar Campeonato' },
+  { path: '/manager/league', value: 'Campeonatos' },
+  { path: '/login', value: 'Sair' }
+]
 
 const goDetais = (e) => {
   router.push(e);

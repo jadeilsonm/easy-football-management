@@ -1,15 +1,7 @@
-import { db } from "@/firebase";
-import {
-  collection,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  getDocs,
-  getDoc,
-  doc,
-  query,
-  where,
-} from "firebase/firestore";
+import { db } from '@/firebase';
+import { collection, addDoc, updateDoc, deleteDoc, getDocs, getDoc, doc, query, where } from 'firebase/firestore';
+import { faker } from '@faker-js/faker';
+
 export class DAOService {
   constructor(path) {
     if (!path) {
@@ -30,6 +22,8 @@ export class DAOService {
   async update(id, data) {
     try {
       const docRef = doc(this.collection, id);
+      console.log('aqui')
+      console.log(id, data)
       await updateDoc(docRef, data);
     } catch (error) {
       console.error("Error updating document: ", error);
@@ -88,14 +82,12 @@ export class DAOService {
 
   async search(fields) {
     try {
-      console.log(fields)
       let q;
       fields.forEach((field) => {
         q = query(
           this.collection,
           where(field.field, field.operator, field.value)
         );
-        console.log(q);
       });
       const querySnapshot = await getDocs(q);
       const data = [];
@@ -106,38 +98,5 @@ export class DAOService {
     } catch (error) {
       console.error("Error getting documents: ", error);
     }
-  }
-
-  async getByIds(ids) {
-    let idChunks;
-    if (ids.length >= 10) {
-
-      const chunkArray = (array, size) => {
-        const chunks = [];
-        for (let i = 0; i < array.length; i += size) {
-          chunks.push(array.slice(i, i + size));
-        }
-        return chunks;
-      };
-
-      idChunks = chunkArray(ids, 10);
-    } else {
-      idChunks = [ids];
-    }
-
-    const allDocs = [];
-
-    for (const chunk of idChunks) {
-      const q = query(
-        this.collection,
-        where("__name__", "in", chunk)
-      );
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        allDocs.push({ id: doc.id, ...doc.data() });
-      });
-    }
-
-    return allDocs;
   }
 }

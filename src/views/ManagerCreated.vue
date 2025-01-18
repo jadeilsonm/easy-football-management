@@ -1,11 +1,12 @@
 <script setup>
-import NavBar from '@/components/NavBar.vue';
-import Input from '@/components/InputGeneric.vue';
-import { STATUS } from '@/Enums/status';
-import { reactive } from 'vue';
-import { DAOService } from '@/services/DAOService';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import router from '@/router';
+import NavBar from "@/components/NavBar.vue";
+import Input from "@/components/InputGeneric.vue";
+import { STATUS } from "@/Enums/status";
+import { reactive } from "vue";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+// import { DAOService } from "@/services/DAOService";
+import { DAOChanpionShip, DAOClassification } from "@/services";
+import router from "@/router";
 
 const reactiveInputManager = reactive({
   inputName: '',
@@ -42,9 +43,6 @@ const buttonsValues = [
 ];
 
 const createLeague = async () => {
-  const dao = new DAOService("chanpions_ships");
-  console.log(reactiveInputManager);
-  // const DAOClassificationInstance = new DAOService("classification");
   const payload = {
     name: reactiveInputManager.inputName,
     value: reactiveInputManager.inputValue,
@@ -79,9 +77,8 @@ const createLeague = async () => {
   }
 
   try {
-    const c = await dao.create(payload);
-    console.log(c);
-    // await DAOClassificationInstance.create({chanpionsShipId, teams: []})
+    const chanpionsShipId = await DAOChanpionShip.create(payload);
+    await DAOClassification.create({chanpionsShipId, teams: []})
     clearReactive();
   } catch (error) {
     console.error(error);

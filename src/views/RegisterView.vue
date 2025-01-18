@@ -39,7 +39,7 @@ const reactiveInputRegisterUser = reactive({
   errorPassword:'',
   verifyDisabled: () => {
     const validate = reactiveInputRegisterUser.isValidEmail && reactiveInputRegisterUser.isValidPassword && reactiveInputRegisterUser.name.length >= 3;
-    console.log(validate);
+    // console.log(validate);
     reactiveInputRegisterUser.isDisabled = !validate;
   }
 })
