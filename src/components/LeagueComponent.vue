@@ -4,7 +4,7 @@ import { ref, onMounted, reactive, toRefs } from "vue";
 import { DAOClassification } from "@/services";
 import { useRoute } from 'vue-router'
 import router from "@/router";
-
+const route = useRoute();
 
 const stateClassification = reactive({
   data: {}
@@ -12,35 +12,36 @@ const stateClassification = reactive({
 
 const { data } = toRefs(stateClassification);
 
-const route = useRoute();
-
 const backUrl = () => {
   router.push({ name: 'manager' });
 };
 
-// const subcribeChanpinsShip = async () => {
-//   // try {
-//   //   const responseLocalStorage = JSON.parse(localStorage.getItem("data"));
-//   //   stateChanpionsShip.value.teamIds = [ ...stateChanpionsShip.value.teamIds, responseLocalStorage.teamId]
-//   //   await DAOChampionsShipServiceInstance.update(stateChanpionsShip.value.id, stateChanpionsShip.value)
-//   // } catch (error) {
-//   //   console.error('Erro ao editar os dados:', error);
-//   // }
+const buttonRedirect = (url, paramsId) => {
+  paramsId === '' ?
+    router.push({ name: 'manager' }) :
+    router.push({ name: url, params: { id: paramsId } })
+}
+
+// const goManegerLeague = (url) => {
+//   console.log(stateClassification.data.id);
+//   console.log('aqui',data.value.id);
+//   console.log('aqui', url);
+
+//   // router.push({ name: url });
 // };
 
 onMounted(async () => {
   try {
-    const [ response ] = await DAOClassification.search(
+    const [response] = await DAOClassification.search(
       [
-        { field: 'chanpionsShipId', operator: "==", value: route.params.id}
+        { field: 'chanpionsShipId', operator: "==", value: route.params.id }
       ]);
     console.log('classification', response);
-    stateClassification.data = response.teams;
+    stateClassification.data = response;
   } catch (error) {
     console.error('Erro ao carregar os dados:', error);
   }
 });
-
 </script>
 
 <template>
@@ -59,7 +60,7 @@ onMounted(async () => {
           <th>SG</th>
           <th>%</th>
         </tr>
-        <tr v-for="(teams, index) in data" :key="index">
+        <tr v-for="(teams, index) in data.teams" :key="index">
           <th>{{ teams.teamId }}</th>
           <th>{{ teams.P }}</th>
           <th>{{ teams.J }}</th>
@@ -68,15 +69,17 @@ onMounted(async () => {
           <th>{{ teams.D }}</th>
           <th>{{ teams.GP }}</th>
           <th>{{ teams.GC }}</th>
-          <th>{{ teams.SG }}</th>
+          <th>{{ teams.GP - teams.GC }}</th>
           <th>{{ teams.A }}</th>
         </tr>
       </tbody>
     </table>
     <span>P: Pontos J: Jogos V: Vitórias E: Empates D: Derrotas GP: Gols Pró GC: Gols Contra SG: Saldo de gols %:
       Aproveitamento</span>
-      <button type="button">Gerenciar Jogos</button>
-      <button @click="backUrl">Voltar</button>
+    <button type="button" @click="() => buttonRedirect(`/manager/league/matches`, data.id)">
+      Gerenciar Jogos
+    </button>
+    <button @click="backUrl">Voltar</button>
   </div>
 </template>
 
@@ -87,24 +90,25 @@ table {
   margin-top: 20px;
 }
 
-th, td {
+th,
+td {
   padding: 8px 12px;
   text-align: center;
   /* border: 1px solid #ddd; */
 }
 
-th {
+/* th {
   font-weight: bold;
-  /* background-color: #f4f4f4; */
+  background-color: #f4f4f4;
 }
 
 tr:nth-child(even) {
-  /* background-color: #f9f9f9; */
+  background-color: #f9f9f9;
 }
 
 tr:hover {
-  /* background-color: #f1f1f1; */
-}
+  background-color: #f1f1f1;
+} */
 
 span {
   display: block;
@@ -140,5 +144,4 @@ button {
 button:hover {
   background-color: #c82333;
 }
-
 </style>

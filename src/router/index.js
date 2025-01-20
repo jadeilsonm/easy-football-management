@@ -14,6 +14,8 @@ import CopaView from '@/views/ChampionsShipsView.vue'
 import ChampionsShipsView from '@/views/ChampionsShipsView.vue'
 import CupView from '@/views/CupView.vue'
 import LeagueComponent from '@/components/LeagueComponent.vue'
+import RoundMatchesView from '@/views/RoundMatchesView.vue'
+import MatchResultView from '@/views/MatchResultView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -42,6 +44,16 @@ const router = createRouter({
       path: '/manager/league/:id',
       name: 'manager/league',
       component: LeagueComponent
+    },
+    {
+      path: '/manager/league/matches/:id',
+      name: '/manager/league/matches',
+      component: RoundMatchesView
+    },
+    {
+      path: '/manager/league/matches/:chanpionShipId/round/:numberRound/match/:numberMatch',
+      name: '/manager/league/matches/round',
+      component: MatchResultView
     },
     {
       path: '/manager/Profile',
