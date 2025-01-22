@@ -1,9 +1,8 @@
 <script setup>
 import { onMounted, reactive, computed  } from "vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { DAOClassification, DAORoundMatches } from "@/services";
+import { DAOChanpionShip } from "@/services";
 import RoundsComponent from '@/components/RoundsComponent.vue';
-import { genereateRoundMatches } from "@/services/ServiceRoundMatches";
 import router from "@/router";
 import { useRoute } from 'vue-router'
 const route = useRoute();
@@ -34,21 +33,10 @@ onMounted(async () => {
   });
   try {
     console.log('classification', (route.params.id));
-    const responseAPI = await DAORoundMatches.getByField('classificationId', route.params.id);
-    console.log('DAORoundMatches response', (responseAPI));
-    console.log('component 2' , await genereateRoundMatches(route.params.id));
-    if(!responseAPI.length) {
-      const  responseGenerated  = (await genereateRoundMatches(route.params.id));
-      // DAORoundMatches.create()
-      // await DAORoundMatches.create(responseGenerated)
-      state.rounds = responseGenerated.matches;
-      console.log('if response', responseGenerated.matches)
-      console.log('state ', state.rounds)
-    } else {
-      console.log('state 2', responseAPI)
-
-      state.rounds = responseAPI[0].matches;
-    };
+    const responseAPI = await DAOChanpionShip.getById(route.params.id);
+    console.log('DAORoundMatches response', (responseAPI.matches));
+    state.rounds = responseAPI.matches
+    //  console.log('component 2' , await genereateRoundMatches(route.params.id));
   } catch (error) {
     console.error('Erro ao carregar os dados:', error);
   }
@@ -60,7 +48,7 @@ onMounted(async () => {
     <h1>Campeonato - Rodadas</h1>
 
     <!-- Exibe as rodadas atuais -->
-    <RoundsComponent :round="currentRound" :classificationId="route.params.id"/>
+    <RoundsComponent :round="currentRound" :championshipID="route.params.id"/>
 
     <!-- Paginação -->
     <div class="pagination">

@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, toRefs, onMounted } from "vue";
-import { DAOChanpionShip, DAOClassification } from "@/services";
+import { DAOChanpionShip } from "@/services";
 import { useRoute } from 'vue-router'
 import router from "@/router";
 import { PiniaStore } from '@/stores';
@@ -9,7 +9,6 @@ const globalStore = PiniaStore();
 
 const state = reactive({
   chanpionsShip: null,
-  //classification: null,
   errorRequest: false,
   buttonIsDisable: false,
   isSubscribed: false,
@@ -21,14 +20,10 @@ const backUrl = () => {
   router.push({ name: 'search' })
 };
 
-//const LocalStorage = JSON.parse(localStorage.getItem('data'))
-
 const subcribeChanpinsShip = async () => {
   try {
     const responseAPIchanpionsShip = await DAOChanpionShip.getById(chanpionsShip.value.id)
-    // console.log('linha 29 ok', responseAPIchanpionsShip, responseAPIchanpionsShip.teams.some(team => team.id === chanpionsShip.value.id));
     if(!responseAPIchanpionsShip.teams.some(team => team.id === globalStore.myTeam.id)) {
-  
       await DAOChanpionShip.update(chanpionsShip.value.id, {
         teams: [
           ...responseAPIchanpionsShip.teams,
@@ -45,17 +40,9 @@ const subcribeChanpinsShip = async () => {
 
 const defaultResquest = async () => {
   try {
-    // console.log('está sendo retornado Champions ship', route.params.id);
     const responseChampionsShip = await DAOChanpionShip.getById(route.params.id);
-    //const responseClassification = await DAOClassification.getByField('chanpionsShipId', route.params.id);
-    // console.log('getById \n', route.params.id);
-    console.log('getById \n', responseChampionsShip);
+    console.log('champ', responseChampionsShip);
     state.chanpionsShip = responseChampionsShip;
-    //state.classification = responseClassification;
-    // console.log(responseClassification[0].teams.some((team) => team.teamId === LocalStorage.teamId))
-    // console.log(responseClassification[0].teams[4].teamId, LocalStorage.teamId,responseClassification[0].teams.some((team) => team.teamId === LocalStorage.teamId))
-    // state.buttonIsDisable = responseClassification[0].teams.some((team) => team.teamId === LocalStorage.teamId);
-
   } catch (error) {
     console.error('Erro ao carregar os dados:', error);
   }
@@ -78,7 +65,7 @@ onMounted(async () => {
         Quantidade: {{ chanpionsShip.qntTime }}
       </span>
       <span v-if="chanpionsShip.qntTime">
-        Vagas: {{ chanpionsShip.qntTime - chanpionsShip.teams.length }} 
+        Vagas: {{ state.chanpionsShip.qntTime - state.chanpionsShip.teams.length }}
       </span>
       <span v-if="chanpionsShip.type">
         Tipo: {{ chanpionsShip.type === "cup" ? 'Mata Mata' : 'Pontos Corridos' }}
@@ -157,7 +144,7 @@ button:last-of-type:hover {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-} 
+}
 
 .btn:disabled {
   background-color: #db2626;

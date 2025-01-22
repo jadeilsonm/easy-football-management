@@ -1,16 +1,16 @@
 <script setup>
-import { ref, onMounted, reactive, toRefs } from "vue";
-// import { DAOService } from "@/services/DAOService";
-import { DAOClassification } from "@/services";
+import { onMounted, reactive, toRefs } from "vue";
+import { DAOChanpionShip } from "@/services";
 import { useRoute } from 'vue-router'
 import router from "@/router";
+import { genereateRoundMatches } from "@/services/ServiceRoundMatches";
 const route = useRoute();
 
-const stateClassification = reactive({
+const state = reactive({
   data: {}
 });
 
-const { data } = toRefs(stateClassification);
+const { data } = toRefs(state);
 
 const backUrl = () => {
   router.push({ name: 'manager' });
@@ -22,26 +22,20 @@ const buttonRedirect = (url, paramsId) => {
     router.push({ name: url, params: { id: paramsId } })
 }
 
-// const goManegerLeague = (url) => {
-//   console.log(stateClassification.data.id);
-//   console.log('aqui',data.value.id);
-//   console.log('aqui', url);
-
-//   // router.push({ name: url });
-// };
-
 onMounted(async () => {
   try {
-    const [response] = await DAOClassification.search(
-      [
-        { field: 'chanpionsShipId', operator: "==", value: route.params.id }
-      ]);
-    console.log('classification', response);
-    stateClassification.data = response;
+    const response = await DAOChanpionShip.getById(route.params.id);
+    console.log('champ', response);
+    state.data = response;
+    if (response.teams.length == response.qntTime) {
+      const matches = genereateRoundMatches(response.teams);
+      await DAOChanpionShip.update(response.id, { matches });
+    }
   } catch (error) {
     console.error('Erro ao carregar os dados:', error);
   }
 });
+
 </script>
 
 <template>
@@ -61,8 +55,8 @@ onMounted(async () => {
           <th>%</th>
         </tr>
         <tr v-for="(teams, index) in data.teams" :key="index">
-          <th>{{ teams.teamId }}</th>
-          <th>{{ teams.P }}</th>
+          <!-- <th>{{ teams.teamId }}</th> -->
+          <!-- <th>{{ teams.P }}</th>
           <th>{{ teams.J }}</th>
           <th>{{ teams.V }}</th>
           <th>{{ teams.E }}</th>
@@ -70,7 +64,7 @@ onMounted(async () => {
           <th>{{ teams.GP }}</th>
           <th>{{ teams.GC }}</th>
           <th>{{ teams.GP - teams.GC }}</th>
-          <th>{{ teams.A }}</th>
+          <th>{{ teams.A }}</th> -->
         </tr>
       </tbody>
     </table>

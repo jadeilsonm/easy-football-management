@@ -4,16 +4,16 @@ import router from "@/router";
 
 defineProps({
   round: Object,
-  chanpionShipId: String
+  championshipID: String
 });
 
 // console.log('RoundsComponent', round);
-const buttonRedirect = (url, classificationId, numberRound, numberMatch) => {
+const buttonRedirect = (url, championshipID, numberRound, numberMatch) => {
   // console.log('url', url)
   // console.log('chanpionShipId', chanpionShipId)
   // console.log('numberRound', numberRound)
   // console.log('numberMatch', numberMatch)
-  router.push({ name: url, params: { classificationId, numberRound, numberMatch } })
+  router.push({ name: url, params: { championshipID, numberRound, numberMatch } })
 }//manager/league/matches/:chanpionShipId/round/:numberRound/match/:numberMatch
 </script>
 
@@ -22,9 +22,8 @@ const buttonRedirect = (url, classificationId, numberRound, numberMatch) => {
     <h2>Rodada {{ round.round }}</h2>
     <ul>
       <li v-for="(match, key) in round.games" :key="key"
-        @click="buttonRedirect('/manager/league/matches/round', chanpionShipId, round.round, key)">
+        @click="buttonRedirect('/manager/league/matches/round', championshipID, round.round, key)">
         {{ match.team1.name }} vs {{ match.team2.name }}
-        <!-- {{ round }} -->
       </li>
     </ul>
   </div>
