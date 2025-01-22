@@ -51,7 +51,7 @@ const router = createRouter({
       component: RoundMatchesView
     },
     {
-      path: '/manager/league/matches/:chanpionShipId/round/:numberRound/match/:numberMatch',
+      path: '/manager/league/matches/:classificationId/round/:numberRound/match/:numberMatch',
       name: '/manager/league/matches/round',
       component: MatchResultView
     },

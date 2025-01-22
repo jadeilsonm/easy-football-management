@@ -1,35 +1,3 @@
-<!-- <script setup>
-import { onMounted, reactive } from "vue";
-import { useRoute } from 'vue-router'
-import { DAOClassification, DAORoundMatches } from "@/services";
-import router from "@/router";
-import RoundComponent from "@/components/RoundComponent.vue";
-
-const localState = reactive({
-  rounds: [],
-  currentPage: 1,
-  totalRounds: 0
-});
-
-const route = useRoute();
-
-const backUrl = () => {
-  router.push({ name: 'manager' });
-};
-
-onMounted(async () => {
-  try {
-    console.log('classification', (route.params.id));
-    const responseAPI = await DAORoundMatches.getByField('classificationId', route.params.id);
-    console.log('classification response', (responseAPI));
-    genereateRoundMatches(route.params.id);
-  } catch (error) {
-    console.error('Erro ao carregar os dados:', error);
-  }
-});
-
-</script> -->
-
 <script setup>
 import { onMounted, reactive, computed  } from "vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -40,12 +8,8 @@ import router from "@/router";
 import { useRoute } from 'vue-router'
 const route = useRoute();
 const auth = getAuth();
-// Definindo o estado com reactive
 const state = reactive({
   rounds: [
-    // { round: 1, games: { match1: { team1: 'Flamengo', team2: 'Corinthians' }, match2: { team1: 'Palmeiras', team2: 'São Paulo' } } },
-    // { round: 2, games: { match1: { team1: 'Corinthians', team2: 'Flamengo' }, match2: { team1: 'São Paulo', team2: 'Palmeiras' } } },
-    // Adicione mais rodadas conforme necessário
   ],
   currentPage: 1,
 });
@@ -69,18 +33,21 @@ onMounted(async () => {
     }
   });
   try {
-    // console.log('classification', (route.params.id));
+    console.log('classification', (route.params.id));
     const responseAPI = await DAORoundMatches.getByField('classificationId', route.params.id);
-    console.log('classification response', (!responseAPI.length));
+    console.log('DAORoundMatches response', (responseAPI));
     console.log('component 2' , await genereateRoundMatches(route.params.id));
     if(!responseAPI.length) {
-      const  {matches}  = (await genereateRoundMatches(route.params.id));
+      const  responseGenerated  = (await genereateRoundMatches(route.params.id));
       // DAORoundMatches.create()
-      state.rounds = matches;
-      console.log('if response', matches)
-      console.log('state', state.rounds)
+      // await DAORoundMatches.create(responseGenerated)
+      state.rounds = responseGenerated.matches;
+      console.log('if response', responseGenerated.matches)
+      console.log('state ', state.rounds)
     } else {
-      state.rounds = responseAPI;
+      console.log('state 2', responseAPI)
+
+      state.rounds = responseAPI[0].matches;
     };
   } catch (error) {
     console.error('Erro ao carregar os dados:', error);
@@ -93,7 +60,7 @@ onMounted(async () => {
     <h1>Campeonato - Rodadas</h1>
 
     <!-- Exibe as rodadas atuais -->
-    <RoundsComponent :round="currentRound" :chanpionShipId="route.params.id"/>
+    <RoundsComponent :round="currentRound" :classificationId="route.params.id"/>
 
     <!-- Paginação -->
     <div class="pagination">

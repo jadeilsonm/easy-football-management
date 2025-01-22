@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 export const PiniaStore = defineStore('GlobalStore', {
   state: () => ({
     userId: null,
-    myTeamId: null,
+    myTeam: null,
   }),
 
   actions: {
@@ -11,19 +11,19 @@ export const PiniaStore = defineStore('GlobalStore', {
       this.userId = userId;
     },
 
-    setMyTeamId(myTeamId) {
-      this.myTeamId = myTeamId;
+    setMyTeam(myTeam) {
+      this.myTeam = myTeam;
     },
 
     clearUserData() {
       this.userId = null;
-      this.myTeamId = null;
+      this.myTeam = null;
     },
   },
 
   getters: {
-    getUserId: (state) => state.userId,
-    getMyTeamId: (state) => state.myTeamId,
+    getUser: (state) => state.userId,
+    getMyTeam: (state) => state.myTeam,
   },
 
   persist: true

@@ -8,12 +8,12 @@ defineProps({
 });
 
 // console.log('RoundsComponent', round);
-const buttonRedirect = (url, chanpionShipId, numberRound, numberMatch) => {
+const buttonRedirect = (url, classificationId, numberRound, numberMatch) => {
   // console.log('url', url)
   // console.log('chanpionShipId', chanpionShipId)
   // console.log('numberRound', numberRound)
   // console.log('numberMatch', numberMatch)
-  router.push({ name: url, params: { chanpionShipId, numberRound, numberMatch } })
+  router.push({ name: url, params: { classificationId, numberRound, numberMatch } })
 }//manager/league/matches/:chanpionShipId/round/:numberRound/match/:numberMatch
 </script>
 

@@ -1,16 +1,27 @@
 <script setup>
-import { onMounted } from "vue";
-import { useRoute } from 'vue-router'
+import { onMounted, reactive } from "vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useRoute } from 'vue-router'
 import router from "@/router";
+import { DAORoundMatches } from "@/services";
 const auth = getAuth();
-
-
 const route = useRoute();
+const state = reactive({
+  teams1: null,
+  teams2: null,
+  result: null
+})
 
 const backUrl = () => {
   router.push({ name: 'manager' });
 };
+
+const resquestDefault = async () => {
+  const classificationId= route.params;
+  const responseRoundMatches = await DAORoundMatches.getByField("chanpionShipId", classificationId)
+  console.log("matchResult", classificationId);
+  console.log("matchResult", responseRoundMatches);
+} 
 
 onMounted(async () => {
   onAuthStateChanged(auth, (user) => {
@@ -21,7 +32,7 @@ onMounted(async () => {
     }
   });
   try {
-    
+    resquestDefault()
   } catch (error) {
     console.error('Erro ao carregar os dados:', error);
   }

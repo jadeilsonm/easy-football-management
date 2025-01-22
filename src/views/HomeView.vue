@@ -19,9 +19,9 @@ const buttonsValues = [
 
 const getByIdTeam = async (userId) => {
   try {
-    const response = await DAOTeams.getByField('userId', userId);
+    const [response] = await DAOTeams.getByField('userId', userId);
     // console.log(response)
-    globalStore.setMyTeamId(response[0].id);
+    globalStore.setMyTeam(response);
     // globalStore.setMyTeamId(response);
     // console.log(globalStore.userId)
     // localStorage.setItem('data', JSON.stringify({userId, teamId: response[0].id}))
