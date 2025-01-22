@@ -14,7 +14,7 @@ const state = reactive({
   buttonIsDisable: false,
   isSubscribed: false,
 });
-const { chanpionsShip, buttonIsDisable } = toRefs(state);
+const { chanpionsShip, buttonIsDisable, isSubscribed } = toRefs(state);
 const route = useRoute();
 
 const backUrl = () => {
@@ -26,8 +26,8 @@ const backUrl = () => {
 const subcribeChanpinsShip = async () => {
   try {
     const responseAPIchanpionsShip = await DAOChanpionShip.getById(chanpionsShip.value.id)
-    console.log('linha 29 ok', responseAPIchanpionsShip);
-    if(!responseAPIchanpionsShip.teams.includes(chanpionsShip.value.id)) {
+    // console.log('linha 29 ok', responseAPIchanpionsShip, responseAPIchanpionsShip.teams.some(team => team.id === chanpionsShip.value.id));
+    if(!responseAPIchanpionsShip.teams.some(team => team.id === globalStore.myTeam.id)) {
   
       await DAOChanpionShip.update(chanpionsShip.value.id, {
         teams: [
