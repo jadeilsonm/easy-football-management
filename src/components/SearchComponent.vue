@@ -1,6 +1,6 @@
 <template>
   <div class="search">
-    <div v-for="( ChanpionsShip, index ) in stateChanpionShips" :key="index" class="chanpionships">
+    <div v-for="( ChanpionsShip, index ) in state" :key="index" class="chanpionships">
       <span>Name: {{ ChanpionsShip.name }} </span>
       <span>vagas: {{ ChanpionsShip.qntTime }}</span>
       <span>Tipo: {{ ChanpionsShip.type }}</span>
@@ -16,7 +16,7 @@ import router from "@/router";
 const URL_ROUTER_CHAMPION_SHIP = '/search/championship/details/';
 
 
-const stateChanpionShips = ref([
+const state = ref([
   // { name: "brasileirão", qntTime: 12,  type: "cup"},
   // { name: "cop do brasil", qntTime: 18,  type: "league"}
 ]); // Estado que irá armazenar os dados
@@ -28,8 +28,8 @@ const buttonRedirect = (championShipId) => {
 onMounted(async () => {
   try {
     const response = await DAOChanpionShip.getAll();
-    stateChanpionShips.value = response;
-
+    state.value = response.filter(chanpionShip => chanpionShip.status === "CREATED");
+    //console.log("seach state.value",state.value)
   } catch (error) {
     console.error('Erro ao carregar os dados:', error);
   }

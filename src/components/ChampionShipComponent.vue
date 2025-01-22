@@ -1,41 +1,38 @@
 <script setup>
 import { reactive, toRefs, onMounted } from "vue";
-import { DAOChanpionShip, DAOClassification } from "@/services";
+import { DAOChanpionShip } from "@/services";
 import { useRoute } from 'vue-router'
 import router from "@/router";
 import { PiniaStore } from '@/stores';
 
 const globalStore = PiniaStore();
 
-const stateChanpionsShip = reactive({
+const state = reactive({
   chanpionsShip: null,
-  classification: null,
   errorRequest: false,
   buttonIsDisable: false,
   isSubscribed: false,
 });
-const { chanpionsShip, classification, buttonIsDisable } = toRefs(stateChanpionsShip);
+const { chanpionsShip, buttonIsDisable, isSubscribed } = toRefs(state);
 const route = useRoute();
 
 const backUrl = () => {
   router.push({ name: 'search' })
 };
 
-const LocalStorage = JSON.parse(localStorage.getItem('data'))
-
 const subcribeChanpinsShip = async () => {
   try {
-    const [{ id, chanpionsShipId, teams }] = await DAOClassification.search(
-      [{ field: 'chanpionsShipId', operator: "==", value: chanpionsShip.value.id }]
-    );
-    console.log('linha 27 ok', id, chanpionsShipId, teams);
-
-    await DAOClassification.update(id, {
-      teams: [
-        ...teams, 
-        { teamId: globalStore.getMyTeamId, P: 0, J: 0, v: 0, E: 0, D: 0, GP: 0, GC: 0, S: 0, A: 0.00 },
-      ]
-    })
+    const responseAPIchanpionsShip = await DAOChanpionShip.getById(chanpionsShip.value.id)
+    if(!responseAPIchanpionsShip.teams.some(team => team.id === globalStore.myTeam.id)) {
+      await DAOChanpionShip.update(chanpionsShip.value.id, {
+        teams: [
+          ...responseAPIchanpionsShip.teams,
+          globalStore.getMyTeam,
+        ]
+      })
+    } else {
+      state.isSubscribed = true
+    }
   } catch (error) {
     console.error('Erro ao editar os dados:', error);
   }
@@ -43,17 +40,9 @@ const subcribeChanpinsShip = async () => {
 
 const defaultResquest = async () => {
   try {
-    // console.log('está sendo retornado Champions ship', route.params.id);
     const responseChampionsShip = await DAOChanpionShip.getById(route.params.id);
-    const responseClassification = await DAOClassification.getByField('chanpionsShipId', route.params.id);
-    // console.log('getById \n', route.params.id);
-    // console.log('getByField \n', responseClassification[0].teams);
-    stateChanpionsShip.chanpionsShip = responseChampionsShip;
-    stateChanpionsShip.classification = responseClassification;
-    // console.log(responseClassification[0].teams.some((team) => team.teamId === LocalStorage.teamId))
-    // console.log(responseClassification[0].teams[4].teamId, LocalStorage.teamId,responseClassification[0].teams.some((team) => team.teamId === LocalStorage.teamId))
-    stateChanpionsShip.buttonIsDisable = responseClassification[0].teams.some((team) => team.teamId === LocalStorage.teamId);
-
+    console.log('champ', responseChampionsShip);
+    state.chanpionsShip = responseChampionsShip;
   } catch (error) {
     console.error('Erro ao carregar os dados:', error);
   }
@@ -68,7 +57,7 @@ onMounted(async () => {
 
 <template>
   <div class="chanpions-ship-details">
-    <div v-if="chanpionsShip">
+    <div v-if="state.chanpionsShip">
       <span v-if="chanpionsShip.name">
         Name: {{ chanpionsShip.name }}
       </span>
@@ -76,20 +65,16 @@ onMounted(async () => {
         Quantidade: {{ chanpionsShip.qntTime }}
       </span>
       <span v-if="chanpionsShip.qntTime">
-        Vagas: {{ chanpionsShip.qntTime - classification[0].teams.length }}
+        Vagas: {{ state.chanpionsShip.qntTime - state.chanpionsShip.teams.length }}
       </span>
       <span v-if="chanpionsShip.type">
         Tipo: {{ chanpionsShip.type === "cup" ? 'Mata Mata' : 'Pontos Corridos' }}
       </span>
     </div>
     <button :class="['btn', { 'btn-red': buttonIsDisable }]"
-      :disabled="buttonIsDisable" @click="subcribeChanpinsShip">
-      {{ buttonIsDisable ? 'Já estou inscrito' : 'Inscrever-se' }}
+      :disabled="isSubscribed" @click="subcribeChanpinsShip">
+      {{ isSubscribed ? 'Já estou inscrito' : 'Inscrever-se' }}
     </button>
-    <!-- <button :
-      :disabled="buttonIsDisable" @click="subcribeChanpinsShip">
-      {{ buttonIsDisable ? 'Já estou inscrito' : 'Inscrever-se' }}
-    </button> -->
     <button @click="backUrl()">Voltar</button>
   </div>
 </template>
@@ -159,7 +144,7 @@ button:last-of-type:hover {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-} 
+}
 
 .btn:disabled {
   background-color: #db2626;

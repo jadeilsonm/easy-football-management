@@ -52,9 +52,9 @@ const createLeague = async () => {
     description: reactiveInputManager.description,
     createdAt: new Date(),
     userOwner: reactiveInputManager.userAuth.uid,
+    teams: [],
+    matches: [],
   };
-
-  console.log(payload);
 
   if (
     payload.name === "" ||

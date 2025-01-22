@@ -4,8 +4,7 @@ import router from '@/router';
 import { DAOChanpionShip } from '@/services';
 import { CHAMPIONS_SHIP_COLLECTION } from '@/Utils/constantes';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { computed, onBeforeMount, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
+import { onBeforeMount, reactive, ref } from 'vue';
 
 const auth = getAuth();
 const userID = ref('');
