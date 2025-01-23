@@ -1,24 +1,29 @@
 <script setup>
-import { onMounted, ref } from 'vue'
-import RoundComponent from './RoundComponent.vue';
-import MatchComponent from './MatchComponent.vue';
-import { DAOService } from '@/services/DAOService';
-import { useRoute } from 'vue-router';
-import { CHAMPIONS_SHIP_COLLECTION, CLASSIFICATION_COLLECTION, TEAM_COLLECTION } from '@/Utils/constantes';
-import LoadComponent from './LoadComponent.vue';
+import { onMounted, ref } from "vue";
+import RoundComponent from "./RoundComponent.vue";
+import MatchComponent from "./MatchComponent.vue";
+import { useRoute } from "vue-router";
+import LoadComponent from "./LoadComponent.vue";
+import { generatedRoundMatchCup } from "@/services/ServiceRoundMatches";
+import { DAOChanpionShip } from "@/services";
 
 const route = useRoute();
 
-const daoClassifications = new DAOService(CLASSIFICATION_COLLECTION);
-const daoChampionsShip = new DAOService(CHAMPIONS_SHIP_COLLECTION);
 const idChampionsShip = ref(route.params.id);
 
 defineProps({
   teamsAll: {
     type: Array,
-    required: true
-  }
-})
+    required: true,
+  },
+});
+
+const matchesGames = ref({
+  oitavas: [],
+  quarterFinals: [],
+  semiFinals: [],
+  final: []
+});
 
 const currentFase = ref(0);
 
@@ -26,160 +31,106 @@ const isCurrentCup = ref(false);
 
 const isLoading = ref(true);
 
-const nameCup = ref('');
+const nameCup = ref("");
 
-const mapToMatch = (num) => {
-  const res = []
-   for (let i = 0; i < num; i++) {
-    res.push({
-      stage: 'PENDENT',
-      team1: { name: '', score: '0' },
-      team2: { name: '', score: '0' }
-    })
+const defineMatch = (match, qntTeams) => {
+  switch (qntTeams) {
+    case 16:
+      return {
+        oitavas: Object.values(match[0]) || [],
+        quarterFinals: Object.values(match[1]) || [],
+        semiFinals: Object.values(match[2]) || [],
+        final: Object.values(match[3]) || [],
+      };
+    case 8:
+      return {
+        quarterFinals: Object.values(match[0]) || [],
+        semiFinals: Object.values(match[1]) || [],
+        final:  Object.values(match[2]) || [],
+      };
+    case 4:
+      return {
+        semiFinals: Object.values(match[0]) || [],
+        final: Object.values(match[1]) || [],
+      };
+    case 2:
+      return {
+        final: Object.values(match[0]) || [],
+      };
   }
-  return res;
-}
-
-const sortMatches = (teamsAll) => {
-  const sortedMatches = {
-    oitavas: mapToMatch(8),
-    quarterFinals: mapToMatch(4),
-    semiFinals: mapToMatch(2),
-    final: mapToMatch(1)
-  }
-
-  const lengthAllMatches = teamsAll.length / 2
-
-  if (lengthAllMatches === 0) return sortedMatches
-
-  if (lengthAllMatches === 8) {
-    currentFase.value = 16;
-    const res = []
-    for (let i = 0; i < lengthAllMatches; i++) {
-      const home = teamsAll.shift()
-      teamsAll = teamsAll.sort(() => Math.random() - 0.5)
-      const away = teamsAll.shift()
-      res.push({
-        stage: 'CURRENT',
-        team1: { teamId: home.id,name: home.name, score: '0' },
-        team2: { teamId: away.id, name: away.name, score: '0' }
-      })
-    }
-    sortedMatches.oitavas = res;
-  }
-  else if (lengthAllMatches === 4) {
-    currentFase.value = 8;
-    const res = []
-    for (let i = 0; i < lengthAllMatches; i++) {
-      const home = teamsAll.shift()
-      teamsAll = teamsAll.sort(() => Math.random() - 0.5)
-      const away = teamsAll.shift()
-      res.push({
-        stage: 'CURRENT',
-        team1: { teamId: home.id,name: home.name, score: '0' },
-        team2: { teamId: away.id, name: away.name, score: '0' }
-      })
-    }
-    sortedMatches.quarterFinals = res;
-
-    console.log("sortedMatches: ",sortedMatches)
-  }
-
-  else if (lengthAllMatches === 2) {
-    currentFase.value = 4;
-    const x = [...teamsAll]
-    console.log("x: ",x)
-    for (let i = 0; i < lengthAllMatches; i++) {
-      const home = teamsAll.pop()
-      teamsAll = teamsAll.sort(() => Math.random() - 0.5)
-      const away = teamsAll.pop() || teamsAll[0]
-      sortedMatches.semiFinals.push({
-        stage: 'CURRENT',
-        team1: { teamId: home.id, name: home.name, score: '0' },
-        team2: { teamId: away.id, name: away.name, score: '0' }
-      })
-    }
-  }
-
-  return sortedMatches
-}
-
-const matches = ref({
-  oitavas: [],
-  quarterFinals: [],
-  semiFinals: [],
-  final: []
-})
+};
 
 onMounted(async () => {
-  const { teamIds = [], qntTime, name } = await daoChampionsShip.getById(idChampionsShip.value);
-  const qntTeams = teamIds.length || 0;
-  console.log("qntTeams: ",qntTeams)
+  const {
+    teams = [],
+    qntTime,
+    name,
+    matches = [],
+  } = await DAOChanpionShip.getById(idChampionsShip.value);
+  const qntTeams = teams.length || 0;
+  currentFase.value = qntTeams;
   nameCup.value = name;
   if (qntTime == qntTeams) {
     try {
-      const classification = await daoClassifications.search([{ field: 'championsShipId', operator: '==', value: idChampionsShip.value }]);
-      if (classification != undefined && classification.length > 0) {
-        matches.value = classification[0].matches;
-        currentFase.value = classification[0].currentFase;
+      if (matches != undefined && matches.length > 0) {
+        matchesGames.value = defineMatch(matches, qntTeams);
         isCurrentCup.value = true;
         isLoading.value = false;
         return;
       }
-      const daoTeams = new DAOService(TEAM_COLLECTION);
-      const teams = await daoTeams.getByIds(teamIds);
-
-      matches.value = sortMatches(teams)
-
-      await daoClassifications.create({
-        championsShipId: idChampionsShip.value,
-        currentFase: currentFase.value,
-        matches: matches.value
-      })
-
+      const machGenerate = generatedRoundMatchCup(teams);
+      matchesGames.value = defineMatch(machGenerate, qntTeams);
+      await DAOChanpionShip.update(idChampionsShip.value, {
+        matches: machGenerate,
+      });
+      isCurrentCup.value = true;
+      return;
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   }
   isCurrentCup.value = false;
   isLoading.value = false;
+  console.log("matchesGames: ", matchesGames.value);
 });
-
 </script>
 
 <template>
-  <LoadComponent :isLoading="isLoading"/>
+  <LoadComponent :isLoading="isLoading" />
   <div v-if="isCurrentCup" class="knockout-stage">
     <h1>Eliminatórias</h1>
     <div class="brackets">
-      <RoundComponent title="Oitavas de final" v-if="16 <= currentFase">
-        <MatchComponent v-for="(match, index) in matches.oitavas"
+      <RoundComponent title="Oitavas de final" v-if="16 == currentFase">
+        <MatchComponent v-for="(match, index) in matchesGames.oitavas"
                :key="index"
                :match="match" />
       </RoundComponent>
       <RoundComponent title="Quartas de final" v-if="8 <= currentFase">
-        <MatchComponent v-for="(match, index) in matches.quarterFinals"
+        <MatchComponent v-for="(match, index) in matchesGames.quarterFinals"
                :key="index"
                :match="match" />
       </RoundComponent>
 
       <RoundComponent title="Semifinais" v-if="4 <= currentFase">
-        <MatchComponent v-for="(match, index) in matches.semiFinals"
+        <MatchComponent v-for="(match, index) in matchesGames.semiFinals"
                :key="index"
                :match="match" />
       </RoundComponent>
 
       <RoundComponent title="Final" v-if="2 <= currentFase">
-        <MatchComponent v-for="(match, index) in matches.final"
+        <MatchComponent v-for="(match, index) in matchesGames.final"
                :key="index"
                :match="match" />
       </RoundComponent>
     </div>
   </div>
   <div v-else>
-      <h2>{{ `A copa ${nameCup} vai começar em breve!` }}</h2>
-      <p>Aguarde ate todos os times serem preenchido e o sorteio do chaveamento ser concluido.</p>
-    </div>
+    <h2>{{ `A copa ${nameCup} vai começar em breve!` }}</h2>
+    <p>
+      Aguarde ate todos os times serem preenchido e o sorteio do chaveamento ser
+      concluido.
+    </p>
+  </div>
 </template>
 
 <style scoped>
