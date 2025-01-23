@@ -5,7 +5,7 @@ const players = ref([
   { id: 1, name: 'João Silva', number: 10, yellowCards: 0, redCards: 0, goals: 0 },
   { id: 2, name: 'Pedro Santos', number: 9, yellowCards: 0, redCards: 0, goals: 0 },
   { id: 3, name: 'Carlos Oliveira', number: 7, yellowCards: 0, redCards: 0, goals: 0 },
-])
+]);
 
 const addYellowCard = (player) => {
   player.yellowCards++
