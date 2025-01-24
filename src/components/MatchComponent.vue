@@ -1,10 +1,6 @@
 <script setup>
 defineProps({
   match: {
-    date: {
-      type: String,
-      required: true
-    },
     stage: {
       type: String,
       required: true
