@@ -1,14 +1,3 @@
-<template>
-  <div class="search">
-    <div v-for="( ChanpionsShip, index ) in state" :key="index" class="chanpionships">
-      <span>Name: {{ ChanpionsShip.name }} </span>
-      <span>vagas: {{ ChanpionsShip.qntTime }}</span>
-      <span>Tipo: {{ ChanpionsShip.type }}</span>
-      <button type="button" @click="buttonRedirect(ChanpionsShip.id)">detalhes</button>
-    </div>
-  </div>
-</template>
-
 <script setup>
 import { ref, onMounted } from "vue";
 import { DAOChanpionShip } from "@/services";
@@ -19,7 +8,7 @@ const URL_ROUTER_CHAMPION_SHIP = '/search/championship/details/';
 const state = ref([
   // { name: "brasileirão", qntTime: 12,  type: "cup"},
   // { name: "cop do brasil", qntTime: 18,  type: "league"}
-]); // Estado que irá armazenar os dados
+]);
 
 const buttonRedirect = (championShipId) => {
   router.push({ name: 'championsshipdetails', params: { id: championShipId } })
@@ -36,6 +25,17 @@ onMounted(async () => {
 });
 
 </script>
+<template>
+  <div class="search">
+    <div v-for="( ChanpionsShip, index ) in state" :key="index" class="chanpionships">
+      <span>Name: {{ ChanpionsShip.name }} </span>
+      <span>vagas: {{ ChanpionsShip.qntTime - ChanpionsShip.teams.length }}</span>
+      <span>Tipo: {{ ChanpionsShip.type }}</span>
+      <button type="button" @click="buttonRedirect(ChanpionsShip.id)">detalhes</button>
+    </div>
+  </div>
+</template>
+
 
 <style scoped>
 .search {

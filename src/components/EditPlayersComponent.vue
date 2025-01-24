@@ -89,7 +89,7 @@ onMounted(() => {
       // const uuid = user.uid;
       // getByIdTeam(uuid);
       stateListPlayers.teamId = globalStore.getMyTeamId;
-      const response = await DAOPlayers.getByField('teamId', globalStore.getMyTeamId);
+      const response = await DAOPlayers.getByField('teamId', globalStore.getMyTeam.id);
       console.log(stateListPlayers.teamId)
       console.log(globalStore.getMyTeamId)
       stateListPlayers.currentListPlayers = response;
@@ -157,6 +157,10 @@ onMounted(() => {
   width: 80vw;
   padding: 10px;
   margin: 16px;
+}
+
+tr {
+  overflow: scroll;
 }
 
 input {
