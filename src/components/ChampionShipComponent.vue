@@ -41,7 +41,7 @@ const subcribeChanpinsShip = async () => {
 const defaultResquest = async () => {
   try {
     const responseChampionsShip = await DAOChanpionShip.getById(route.params.id);
-    console.log('champ', responseChampionsShip);
+    // console.log('champ', responseChampionsShip);
     state.chanpionsShip = responseChampionsShip;
   } catch (error) {
     console.error('Erro ao carregar os dados:', error);
@@ -69,6 +69,9 @@ onMounted(async () => {
       </span>
       <span v-if="chanpionsShip.type">
         Tipo: {{ chanpionsShip.type === "cup" ? 'Mata Mata' : 'Pontos Corridos' }}
+      </span>
+      <span v-if="chanpionsShip.type">
+        Premiação: {{ `R$ ${chanpionsShip.value}` }}
       </span>
     </div>
     <button :class="['btn', { 'btn-red': buttonIsDisable }]"

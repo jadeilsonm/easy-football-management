@@ -3,13 +3,13 @@ import { onMounted, reactive } from "vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useRoute } from 'vue-router'
 import router from "@/router";
-import { DAORoundMatches } from "@/services";
+import { DAOChanpionShip, DAOPlayers } from "@/services";
 const auth = getAuth();
 const route = useRoute();
 const state = reactive({
-  teams1: null,
-  teams2: null,
-  result: null
+  data: null,
+  team1: {},
+  team2: {}
 })
 
 const backUrl = () => {
@@ -17,10 +17,19 @@ const backUrl = () => {
 };
 
 const resquestDefault = async () => {
-  const classificationId= route.params;
-  const responseRoundMatches = await DAORoundMatches.getByField("chanpionShipId", classificationId)
-  console.log("matchResult", classificationId);
-  console.log("matchResult", responseRoundMatches);
+  const responseChanpionShip = await DAOChanpionShip.getById(route.params.championshipID);
+  const x = responseChanpionShip.matches
+    .filter(round => round.round == route.params.numberRound);
+  console.log("matchResult", x[0].games[route.params.numberMatch].team1);
+  state.data = responseChanpionShip;
+  state.team1 = x[0].games[route.params.numberMatch].team1
+  state.team2 = x[0].games[route.params.numberMatch].team2
+  console.log("matchResult", state.team1.teamId);
+  
+  const playersTeam1 = await DAOPlayers.getByField('teamId', state.team1.teamId);
+  const playersTeam2 = await DAOPlayers.getByField('teamId', state.team2.teamId);
+  console.log("matchResult", playersTeam1);
+  
 } 
 
 onMounted(async () => {
