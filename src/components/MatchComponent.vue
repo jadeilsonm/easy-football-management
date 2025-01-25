@@ -5,7 +5,6 @@ import { onMounted } from 'vue';
 
 const auth = getAuth();
 
-
 const props = defineProps({
   championshipID: {
     type: String,
@@ -58,10 +57,6 @@ const { championshipID, match, matchValue, round } = props;
 
 
 const buttonRedirect = (url, championshipID, numberRound, numberMatch) => {
-  console.log('url', url)
-  console.log('championshipID', championshipID)
-  console.log('numberRound', numberRound)
-  console.log('numberMatch', numberMatch)
   router.push({ name: url, params: { championshipID, numberRound, numberMatch } })
 };
 
@@ -71,15 +66,12 @@ onMounted(async () => {
       router.push('/login');
     }
   });
-  // const champion = await DAOChanpionShip.getById(championshipID);
-  // championShip.value = champion;
-  // veriFyMatch(champion);
 }
 );
 </script>
 
 <template>
-  <div class="match" @click="() => buttonRedirect('/manager/matches/result/round', championshipID, round, `match${matchValue}`)">
+  <div class="match" @click="() => buttonRedirect('/manager/matches/result/round', championshipID, round, matchValue)">
     <div class="match-header">
       <span class="stage">{{ match.stage }}</span>
     </div>
