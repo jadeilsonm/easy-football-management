@@ -36,25 +36,25 @@ const defineMatch = (match, qntTeams) => {
   switch (qntTeams) {
     case 16:
       return {
-        oitavas: Object.values(match[0].games) || [],
-        quarterFinals: Object.values(match[1].games) || [],
-        semiFinals: Object.values(match[2].games) || [],
-        final: Object.values(match[3].games) || [],
+        oitavas: Object.entries(match[0].games) || [],
+        quarterFinals: Object.entries(match[1].games) || [],
+        semiFinals: Object.entries(match[2].games) || [],
+        final: Object.entries(match[3].games) || [],
       };
     case 8:
       return {
-        quarterFinals: Object.values(match[0].games) || [],
-        semiFinals: Object.values(match[1].games) || [],
-        final:  Object.values(match[2].games) || [],
+        quarterFinals: Object.entries(match[0].games) || [],
+        semiFinals: Object.entries(match[1].games) || [],
+        final:  Object.entries(match[2].games) || [],
       };
     case 4:
       return {
-        semiFinals: Object.values(match[0].games) || [],
-        final: Object.values(match[1].games) || [],
+        semiFinals: Object.entries(match[0].games) || [],
+        final: Object.entries(match[1].games) || [],
       };
     case 2:
       return {
-        final: Object.values(match[0].games) || [],
+        final: Object.entries(match[0].games) || [],
       };
   }
 };
@@ -100,16 +100,16 @@ onMounted(async () => {
       <RoundComponent title="Oitavas de final" v-if="16 == currentFase">
         <MatchComponent v-for="(match, index) in matchesGames.oitavas"
                :key="index"
-               :match="match"
-               :matchValue="index + 1"
+               :match="match[1]"
+               :matchValue="match[0]"
                :round="round"
                :championshipID="idChampionsShip" />
       </RoundComponent>
       <RoundComponent title="Quartas de final" v-if="8 <= currentFase">
         <MatchComponent v-for="(match, index) in matchesGames.quarterFinals"
                :key="index"
-               :match="match"
-               :matchValue="index + 1"
+               :match="match[1]"
+               :matchValue="match[0]"
                :round="round"
                :championshipID="idChampionsShip" />
       </RoundComponent>
@@ -117,8 +117,8 @@ onMounted(async () => {
       <RoundComponent title="Semifinais" v-if="4 <= currentFase">
         <MatchComponent v-for="(match, index) in matchesGames.semiFinals"
                :key="index"
-               :match="match"
-               :matchValue="index + 1"
+               :match="match[1]"
+               :matchValue="match[0]"
                :round="round"
                :championshipID="idChampionsShip" />
       </RoundComponent>
@@ -126,8 +126,8 @@ onMounted(async () => {
       <RoundComponent title="Final" v-if="2 <= currentFase">
         <MatchComponent v-for="(match, index) in matchesGames.final"
                :key="index"
-               :match="match"
-               :matchValue="index + 1"
+               :match="match[1]"
+               :matchValue="match[0]"
                :round="round"
                :championshipID="idChampionsShip" />
       </RoundComponent>
