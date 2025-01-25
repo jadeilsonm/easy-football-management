@@ -22,7 +22,7 @@ const buttonRedirect = (url, championshipID, numberRound, numberMatch) => {
     <h2>Rodada {{ round.round }}</h2>
     <ul>
       <li v-for="(match, key) in round.games" :key="key"
-        @click="buttonRedirect('/manager/league/matches/round', championshipID, round.round, key)">
+        @click="buttonRedirect('/manager/matches/result/round', championshipID, round.round, key)">
         {{ match.team1.name }} vs {{ match.team2.name }}
       </li>
     </ul>

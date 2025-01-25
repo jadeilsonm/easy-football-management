@@ -48,7 +48,7 @@ const sortMatches = (teamsAll) => {
       const home = teamsAll.shift();
       teamsAll = teamsAll.sort(() => Math.random() - 0.5);
       const away = teamsAll.shift();
-      res[`match ${i + 1}`] = {
+      res[`match${i + 1}`] = {
         stage: home.id != null ? "CURRENT" : "PENDENT",
         team1: templateObj(home.name, home.id),
         team2: templateObj(away.name, away.id),
@@ -61,7 +61,7 @@ const sortMatches = (teamsAll) => {
       const home = teamsAll.shift();
       teamsAll = teamsAll.sort(() => Math.random() - 0.5);
       const away = teamsAll.shift();
-      res[`match ${i + 1}`] = {
+      res[`match${i + 1}`] = {
         stage: home.id != null ? "CURRENT" : "PENDENT",
         team1: templateObj(home.name, home.id),
         team2: templateObj(away.name, away.id),
@@ -74,7 +74,7 @@ const sortMatches = (teamsAll) => {
       const home = teamsAll.pop();
       teamsAll = teamsAll.sort(() => Math.random() - 0.5);
       const away = teamsAll.pop() || teamsAll[0];
-      res[`match ${i + 1}`] = {
+      res[`match${i + 1}`] = {
         stage: home.id != null ? "CURRENT" : "PENDENT",
         team1: templateObj(home.name, home.id),
         team2: templateObj(away.name, away.id),
@@ -85,34 +85,28 @@ const sortMatches = (teamsAll) => {
 };
 
 const generatedRoundMatchCup = (listTeams) => {
-  console.log("listTeams", listTeams);
   const countList = listTeams.length;
   const result = [];
   const x = sortMatches(listTeams);
-  result.push(x);
-  console.log(countList);
+  result.push({games : x, round: 1});
   if (countList == 2) {
     return result;
   }
   if (countList == 4) {
     const l = sortMatches(mapToMatch(2));
-    console.log("2: ", l);
-    result.push(l);
+    result.push({games : l, round: 2});
   }
   if (countList == 8) {
     const l = sortMatches(mapToMatch(4));
-    console.log("2: ", l);
-    result.push(l);
-    result.push(sortMatches(mapToMatch(2)));
+    result.push({games : l,round: 2});
+    result.push({games: sortMatches(mapToMatch(2)), round: 3});
   }
   if (countList == 16) {
     const l = sortMatches(mapToMatch(8));
-    console.log("2: ", l);
-    result.push(l);
-    result.push(sortMatches(mapToMatch(4)));
-    result.push(sortMatches(mapToMatch(2)));
+    result.push({games : l, round: 2});
+    result.push({games: sortMatches(mapToMatch(4)), round: 3});
+    result.push({games: sortMatches(mapToMatch(2)), round: 4});
   }
-  console.log("result", result);
   return result;
 };
 
@@ -127,7 +121,6 @@ const genereateRoundMatches = (listTeams) => {
 
   for (let round = 0; round < numberOfRounds; round++) {
     const currentRound = {};
-
     for (let game = 0; game < gamesPerRound; game++) {
       const team1 = teams[game];
       const team2 = teams[totalTeams - 1 - game];
