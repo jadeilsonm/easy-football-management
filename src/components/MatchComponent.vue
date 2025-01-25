@@ -1,5 +1,24 @@
 <script setup>
-defineProps({
+import router from '@/router';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { onMounted } from 'vue';
+
+const auth = getAuth();
+
+
+const props = defineProps({
+  championshipID: {
+    type: String,
+    required: true
+  },
+  round: {
+    type: String,
+    required: true
+  },
+  matchValue: {
+    type: String,
+    required: true
+  },
   match: {
     stage: {
       type: String,
@@ -11,9 +30,9 @@ defineProps({
         required: true
       },
       score: {
-      type: String,
-      required: true
-    },
+        type: String,
+        required: true
+      },
       winner: {
         type: Boolean,
         required: false
@@ -25,20 +44,42 @@ defineProps({
         required: true
       },
       score: {
-      type: String,
-      required: true
-    },
+        type: String,
+        required: true
+      },
       winner: {
-      type: Boolean,
-      required: false
-    },
+        type: Boolean,
+        required: false
+      },
     }
   }
 })
+const { championshipID, match, matchValue, round } = props;
+
+
+const buttonRedirect = (url, championshipID, numberRound, numberMatch) => {
+  console.log('url', url)
+  console.log('championshipID', championshipID)
+  console.log('numberRound', numberRound)
+  console.log('numberMatch', numberMatch)
+  router.push({ name: url, params: { championshipID, numberRound, numberMatch } })
+};
+
+onMounted(async () => {
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      router.push('/login');
+    }
+  });
+  // const champion = await DAOChanpionShip.getById(championshipID);
+  // championShip.value = champion;
+  // veriFyMatch(champion);
+}
+);
 </script>
 
 <template>
-  <div class="match">
+  <div class="match" @click="() => buttonRedirect('/manager/matches/result/round', championshipID, round, `match${matchValue}`)">
     <div class="match-header">
       <span class="stage">{{ match.stage }}</span>
     </div>

@@ -18,17 +18,16 @@ defineProps({
   },
 });
 
+const round = ref(1);
 const matchesGames = ref({
   oitavas: [],
   quarterFinals: [],
   semiFinals: [],
   final: []
 });
-
+const championsShip = ref({});
 const currentFase = ref(0);
-
 const isCurrentCup = ref(false);
-
 const isLoading = ref(true);
 
 const nameCup = ref("");
@@ -37,36 +36,38 @@ const defineMatch = (match, qntTeams) => {
   switch (qntTeams) {
     case 16:
       return {
-        oitavas: Object.values(match[0]) || [],
-        quarterFinals: Object.values(match[1]) || [],
-        semiFinals: Object.values(match[2]) || [],
-        final: Object.values(match[3]) || [],
+        oitavas: Object.values(match[0].games) || [],
+        quarterFinals: Object.values(match[1].games) || [],
+        semiFinals: Object.values(match[2].games) || [],
+        final: Object.values(match[3].games) || [],
       };
     case 8:
       return {
-        quarterFinals: Object.values(match[0]) || [],
-        semiFinals: Object.values(match[1]) || [],
-        final:  Object.values(match[2]) || [],
+        quarterFinals: Object.values(match[0].games) || [],
+        semiFinals: Object.values(match[1].games) || [],
+        final:  Object.values(match[2].games) || [],
       };
     case 4:
       return {
-        semiFinals: Object.values(match[0]) || [],
-        final: Object.values(match[1]) || [],
+        semiFinals: Object.values(match[0].games) || [],
+        final: Object.values(match[1].games) || [],
       };
     case 2:
       return {
-        final: Object.values(match[0]) || [],
+        final: Object.values(match[0].games) || [],
       };
   }
 };
 
 onMounted(async () => {
+  const champion = await DAOChanpionShip.getById(idChampionsShip.value);
   const {
     teams = [],
     qntTime,
     name,
     matches = [],
-  } = await DAOChanpionShip.getById(idChampionsShip.value);
+  } = champion;
+  championsShip.value = champion;
   const qntTeams = teams.length || 0;
   currentFase.value = qntTeams;
   nameCup.value = name;
@@ -74,25 +75,21 @@ onMounted(async () => {
     try {
       if (matches != undefined && matches.length > 0) {
         matchesGames.value = defineMatch(matches, qntTeams);
-        isCurrentCup.value = true;
-        isLoading.value = false;
-        return;
+      } else {
+        const machGenerate = generatedRoundMatchCup(teams);
+        matchesGames.value = defineMatch(machGenerate, qntTeams);
+        await DAOChanpionShip.update(idChampionsShip.value, {
+          matches: machGenerate,
+        });
       }
-      const machGenerate = generatedRoundMatchCup(teams);
-      matchesGames.value = defineMatch(machGenerate, qntTeams);
-      await DAOChanpionShip.update(idChampionsShip.value, {
-        matches: machGenerate,
-      });
-      isCurrentCup.value = true;
-      return;
     } catch (error) {
       console.error(error);
     }
+    isCurrentCup.value = true;
   }
-  isCurrentCup.value = false;
   isLoading.value = false;
-  console.log("matchesGames: ", matchesGames.value);
 });
+
 </script>
 
 <template>
@@ -103,24 +100,36 @@ onMounted(async () => {
       <RoundComponent title="Oitavas de final" v-if="16 == currentFase">
         <MatchComponent v-for="(match, index) in matchesGames.oitavas"
                :key="index"
-               :match="match" />
+               :match="match"
+               :matchValue="index + 1"
+               :round="round"
+               :championshipID="idChampionsShip" />
       </RoundComponent>
       <RoundComponent title="Quartas de final" v-if="8 <= currentFase">
         <MatchComponent v-for="(match, index) in matchesGames.quarterFinals"
                :key="index"
-               :match="match" />
+               :match="match"
+               :matchValue="index + 1"
+               :round="round"
+               :championshipID="idChampionsShip" />
       </RoundComponent>
 
       <RoundComponent title="Semifinais" v-if="4 <= currentFase">
         <MatchComponent v-for="(match, index) in matchesGames.semiFinals"
                :key="index"
-               :match="match" />
+               :match="match"
+               :matchValue="index + 1"
+               :round="round"
+               :championshipID="idChampionsShip" />
       </RoundComponent>
 
       <RoundComponent title="Final" v-if="2 <= currentFase">
         <MatchComponent v-for="(match, index) in matchesGames.final"
                :key="index"
-               :match="match" />
+               :match="match"
+               :matchValue="index + 1"
+               :round="round"
+               :championshipID="idChampionsShip" />
       </RoundComponent>
     </div>
   </div>
