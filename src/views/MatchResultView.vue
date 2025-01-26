@@ -75,9 +75,7 @@ const resquestDefault = async () => {
 
 onMounted(async () => {
   onAuthStateChanged(auth, (user) => {
-    if (user) {
-      console.log("ok")
-    } else {
+    if (!user) {
       router.push('/login');
     }
   });
