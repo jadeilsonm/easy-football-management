@@ -27,7 +27,7 @@ onMounted(async () => {
     const response = await DAOChanpionShip.getById(route.params.id);
     console.log('champ', response);
     state.data = response;
-    if (response.teams.length == response.qntTime) {
+    if (response.teams.length === response.qntTime && !response.matches) {
       const matches = genereateRoundMatches(response.teams);
       await DAOChanpionShip.update(response.id, { matches });
     }

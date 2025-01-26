@@ -8,8 +8,8 @@ const auth = getAuth();
 const route = useRoute();
 
 const chanpionShip = ref(null);
-const teamOne = ref({players: []});
-const teamTwo = ref({players: []});
+const teamOne = ref({ players: [] });
+const teamTwo = ref({ players: [] });
 const scoreHome = ref(0);
 const scoreAway = ref(0);
 
@@ -43,15 +43,17 @@ const saveMacthResult = async () => {
 };
 
 const isExistePlayesInTeam = (matchs) => {
-  if (matchs.filter(round => round.round == numberRound)[0].games[numberMatch].team1.players){
+  if (matchs.filter(round => round.round == numberRound)[0].games[numberMatch].team1.players) {
     return matchs
-    .filter(round => round.round == numberRound)[0].games[numberMatch].team1.players.length > 0 && matchs
-    .filter(round => round.round == numberRound)[0].games[numberMatch].team2.players.length > 0
+      .filter(round => round.round == numberRound)[0].games[numberMatch].team1.players.length > 0 && matchs
+        .filter(round => round.round == numberRound)[0].games[numberMatch].team2.players.length > 0
   } return false;
 }
 
 const returnTeam = (responseChanpionShip, team) => {
-  return responseChanpionShip.matches.filter(round => round.round == numberRound)[0].games[numberMatch][team]
+  const teamResponse = responseChanpionShip.matches.filter(round => round.round == numberRound)[0].games[numberMatch][team];
+  teamResponse.players.sort((a, b) => Number(a.number) - Number(b.number));
+  return teamResponse;
 }
 
 const addCardYellow = (team, index) => {
@@ -71,7 +73,7 @@ const addGols = (team, index, operation) => {
   }
   let teamChange = team == 'teamOne' ? teamOne.value : teamTwo.value;
   teamChange.players[index].gols = operation == '+' ? teamChange.players[index].gols += 1 : teamChange.players[index].gols -= 1;
-  team == 'teamOne' ? (scoreHome.value = operation == '+' ? scoreHome.value += 1 :  scoreHome.value -= 1) : (scoreAway.value = operation == '+' ? scoreAway.value += 1 :  scoreAway.value -= 1);
+  team == 'teamOne' ? (scoreHome.value = operation == '+' ? scoreHome.value += 1 : scoreHome.value -= 1) : (scoreAway.value = operation == '+' ? scoreAway.value += 1 : scoreAway.value -= 1);
   team == 'teamOne' ? teamOne.value = teamChange : teamTwo.value = teamChange;
 }
 
@@ -88,6 +90,7 @@ const resquestDefault = async () => {
     playersteamOne.forEach(player => {
       teamOneWithPlayes.players = [...teamOneWithPlayes.players, { ...player, gols: 0, redCard: 0, yellowCard: 0 }]
     });
+    teamOneWithPlayes.players.sort((a, b) => Number(a.number) - Number(b.number));
     teamOne.value = teamOneWithPlayes;
     let teamTwoWithPlayes = roundMatch[0].games[numberMatch].team2;
     teamTwoWithPlayes.players = [];
@@ -95,11 +98,12 @@ const resquestDefault = async () => {
     playersteamTwo.forEach(player => {
       teamTwoWithPlayes.players = [...teamTwoWithPlayes.players, { ...player, gols: 0, redCard: 0, yellowCard: 0 }]
     });
+    teamOneWithPlayes.players.sort((a, b) => Number(a.number) - Number(b.number));
     teamTwo.value = teamTwoWithPlayes;
   } else {
-    teamOne.value  = returnTeam(responseChanpionShip, 'team1')
+    teamOne.value = returnTeam(responseChanpionShip, 'team1')
     scoreHome.value = teamOne.value.score
-    teamTwo.value  = returnTeam(responseChanpionShip, 'team2')
+    teamTwo.value = returnTeam(responseChanpionShip, 'team2')
     scoreAway.value = teamTwo.value.score
   }
 }
@@ -124,85 +128,129 @@ onMounted(async () => {
     <div>
       <h1>Edite o Resultado</h1>
     </div>
-    {{ teamOne.name }} {{ scoreHome }} x  {{ scoreAway }} {{ teamTwo.name }}
-    <table>
-      <thead>
-        <tr>
-          <th>Nome</th>
-          <th>gols</th>
-          <th>cartões amarelos</th>
-          <th>cartões vermelhos</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(player, index) in teamOne.players" :key="index">
-          <td>
-            <span>{{ player.name }}</span>
-          </td>
-          <td>
-            <button type="button" :disabled="player.gols <= 0"
-              @click="addGols('teamOne', index, '-')">-</button>
-            <span>{{ player.gols }}</span>
-            <button type="button" @click="addGols('teamOne', index, '+')">+</button>
-          </td>
-          <td>
-            <button type="button" :disabled="player.redCard <= 0 || player.yellowCard == 2"
-              @click="() => { teamOne.players[index].redCard = player.redCard - 1 }">-</button>
-            <span>{{ player.redCard }}</span>
-            <button type="button" :disabled="player.redCard >= 1"
-              @click="() => { teamOne.players[index].redCard = player.redCard + 1 }">+</button>
-          </td>
-          <td>
-            <button type="button" :disabled="player.yellowCard <= 0"
-              @click="() => { teamOne.players[index].yellowCard = player.yellowCard - 1 }">-</button>
-            <span>{{ player.yellowCard }}</span>
-            <button type="button" :disabled="player.yellowCard >= 2" @click="addCardYellow('teamOne', index)">+</button>
-          </td>
-        </tr>
+    <h2>{{ teamOne.name }} {{ scoreHome }} x {{ scoreAway }} {{ teamTwo.name }}</h2>
+    <div class="match">
+      <table>
+        <thead>
+          <tr>
+            <th>Numero</th>
+            <th>Nome</th>
+            <th>gols</th>
+            <th>cartões vermelhos</th>
+            <th>cartões amarelos</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(player, index) in teamOne.players" :key="index">
+            <td>
+              <span>{{ player.number }}</span>
+            </td>
+            <td>
+              <span>{{ player.name }}</span>
+            </td>
+            <td>
+              <button type="button" :disabled="player.gols <= 0" @click="addGols('teamOne', index, '-')">-</button>
+              <span>{{ player.gols }}</span>
+              <button type="button" @click="addGols('teamOne', index, '+')">+</button>
+            </td>
+            <td>
+              <button type="button" :disabled="player.redCard <= 0 || player.yellowCard == 2"
+                @click="() => { teamOne.players[index].redCard = player.redCard - 1 }">-</button>
+              <span>{{ player.redCard }}</span>
+              <button type="button" :disabled="player.redCard >= 1"
+                @click="() => { teamOne.players[index].redCard = player.redCard + 1 }">+</button>
+            </td>
+            <td>
+              <button type="button" :disabled="player.yellowCard <= 0"
+                @click="() => { teamOne.players[index].yellowCard = player.yellowCard - 1 }">-</button>
+              <span>{{ player.yellowCard }}</span>
+              <button type="button" :disabled="player.yellowCard >= 2"
+                @click="addCardYellow('teamOne', index)">+</button>
+            </td>
+          </tr>
 
-      </tbody>
-    </table>
+        </tbody>
+      </table>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Nome</th>
-          <th>gols</th>
-          <th>cartões amarelos</th>
-          <th>cartões vermelhos</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(player, index) in teamTwo.players" :key="index">
-          <td>
-            <span>{{ player.name }}</span>
-          </td>
-          <td>
-            <button type="button" :disabled="player.gols <= 0"
-              @click="addGols('teamTwo', index, '-')">-</button>
-            <span>{{ player.gols }}</span>
-            <button type="button" @click="addGols('teamTwo', index, '+')">+</button>
-          </td>
-          <td>
-            <button type="button" :disabled="player.redCard <= 0 || player.yellowCard == 2"
-              @click="() => { teamTwo.players[index].redCard = player.redCard - 1 }">-</button>
-            <span>{{ player.redCard }}</span>
-            <button type="button" :disabled="player.redCard >= 1"
-              @click="() => { teamTwo.players[index].redCard = player.redCard + 1 }">+</button>
-          </td>
-          <td>
-            <button type="button" :disabled="player.yellowCard <= 0"
-              @click="() => { teamTwo.players[index].yellowCard = player.yellowCard - 1 }">-</button>
-            <span>{{ player.yellowCard }}</span>
-            <button type="button" :disabled="player.yellowCard >= 2" @click="addCardYellow('teamTwo', index)">+</button>
-          </td>
-        </tr>
-
-      </tbody>
-    </table>
-
+      <table>
+        <thead>
+          <tr>
+            <th>Numero</th>
+            <th>Nome</th>
+            <th>gols</th>
+            <th>cartões amarelos</th>
+            <th>cartões vermelhos</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(player, index) in teamTwo.players.sort(a, b => a.number - b.number)" :key="index">
+            <td>
+              <span>{{ player.number }}</span>
+            </td>
+            <td>
+              <span>{{ player.name }}</span>
+            </td>
+            <td>
+              <button type="button" :disabled="player.gols <= 0" @click="addGols('teamTwo', index, '-')">-</button>
+              <span>{{ player.gols }}</span>
+              <button type="button" @click="addGols('teamTwo', index, '+')">+</button>
+            </td>
+            <td>
+              <button type="button" :disabled="player.redCard <= 0 || player.yellowCard == 2"
+                @click="() => { teamTwo.players[index].redCard = player.redCard - 1 }">-</button>
+              <span>{{ player.redCard }}</span>
+              <button type="button" :disabled="player.redCard >= 1"
+                @click="() => { teamTwo.players[index].redCard = player.redCard + 1 }">+</button>
+            </td>
+            <td>
+              <button type="button" :disabled="player.yellowCard <= 0"
+                @click="() => { teamTwo.players[index].yellowCard = player.yellowCard - 1 }">-</button>
+              <span>{{ player.yellowCard }}</span>
+              <button type="button" :disabled="player.yellowCard >= 2"
+                @click="addCardYellow('teamTwo', index)">+</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
   <button type="button" @click="saveMacthResult()">Salvar</button>
 </template>
 
-<style scoped></style>
+<style scoped>
+
+.league {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.match {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: start;
+
+  & h2 {
+    margin: 0 10px;
+    display: inline-block;
+  }
+}
+
+table {
+    margin: 0 25px;
+    & th {
+      border-bottom: 1px solid #105203;
+      padding: 10px;
+      margin: 0 10px;
+    }
+    & td {
+      padding: 3px;
+      margin: 0 10px;
+    }
+  }
+
+
+
+</style>
