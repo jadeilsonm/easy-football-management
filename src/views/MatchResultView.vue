@@ -1,16 +1,18 @@
 <script setup>
-import { onMounted, reactive } from "vue";
+import { onMounted, ref } from "vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useRoute } from 'vue-router'
 import router from "@/router";
 import { DAOChanpionShip, DAOPlayers } from "@/services";
 const auth = getAuth();
 const route = useRoute();
-const state = reactive({
-  ChanpionShip: null,
-  team1: {},
-  team2: {}
-})
+
+const chanpionShip = ref(null);
+const teamOne = ref({players: []});
+const teamTwo = ref({players: []});
+const scoreHome = ref(0);
+const scoreAway = ref(0);
+
 
 const { championshipID, numberRound, numberMatch } = route.params;
 
@@ -19,44 +21,92 @@ const backUrl = () => {
 };
 
 const saveMacthResult = async () => {
-  state.ChanpionShip.matches[numberRound].games[numberMatch].team1 = state.team1
-  state.ChanpionShip.matches[numberRound].games[numberMatch].team2 = state.team2
-
-  await DAOChanpionShip.update(championshipID, state.ChanpionShip)
-};
-
-const resquestDefault = async () => {
-
-  const responseChanpionShip = await DAOChanpionShip.getById(championshipID);
-  const x = responseChanpionShip.matches
-    .filter(round => round.round == numberRound);
-  state.ChanpionShip = responseChanpionShip;
-  state.team1 = x[0].games[numberMatch].team1
-  state.team1.players = []
-  state.team2 = x[0].games[numberMatch].team2
-  state.team2.players = []
-  if (!responseChanpionShip.matches[numberRound].games[numberMatch].team1.players) {
-    console.log('123')
-    const playersTeam1 = await DAOPlayers.getByField('teamId', state.team1.teamId);
-    playersTeam1.forEach(player => {
-      state.team1.players = [...state.team1.players, { ...player, gols: 0, redCard: 0, yellowCard: 0 }]
-    });
-    const playersTeam2 = await DAOPlayers.getByField('teamId', state.team2.teamId);
-
-    playersTeam2.forEach(player => {
-      state.team2.players = [...state.team2.players, { ...player, gols: 0, redCard: 0, yellowCard: 0 }]
+  let state = chanpionShip.value;
+  if (state.type == 'cup') {
+    state.matches.forEach(match => {
+      if (match.round == numberRound) {
+        match.games[numberMatch].teamOne = teamOne.value;
+        match.games[numberMatch].teamOne.score = scoreHome.value;
+        match.games[numberMatch].teamOne.stage = 'FINISHED';
+        match.games[numberMatch].teamTwo = teamTwo.value;
+        match.games[numberMatch].teamTwo.score = scoreAway.value;
+        match.games[numberMatch].teamTwo.stage = 'FINISHED';
+      }
     });
   } else {
-    state.team1 = responseChanpionShip.matches[numberRound].games[numberMatch].team1
-    state.team2 = responseChanpionShip.matches[numberRound].games[numberMatch].team2
+    state.matches[numberRound].games[numberMatch].teamOne = teamOne.value
+    state.matches[numberRound].games[numberMatch].teamOne.score = scoreHome.value;
+    state.matches[numberRound].games[numberMatch].teamTwo = teamTwo.value
+    state.matches[numberRound].games[numberMatch].teamTwo.score = scoreHome.value;
+  }
+  await DAOChanpionShip.update(championshipID, state)
+};
+
+const isExistePlayesInTeam = (matchs) => {
+  if (matchs.filter(round => round.round == numberRound)[0].games[numberMatch].team1.players){
+    return matchs
+    .filter(round => round.round == numberRound)[0].games[numberMatch].team1.players.length > 0 && matchs
+    .filter(round => round.round == numberRound)[0].games[numberMatch].team2.players.length > 0
+  } return false;
+}
+
+const returnTeam = (responseChanpionShip, team) => {
+  return responseChanpionShip.matches.filter(round => round.round == numberRound)[0].games[numberMatch][team]
+}
+
+const addCardYellow = (team, index) => {
+  let teamChange = team == 'teamOne' ? teamOne.value : teamTwo.value;
+  teamChange.players[index].yellowCard = teamChange.players[index].yellowCard + 1;
+  if (teamChange.players[index].yellowCard >= 2) {
+    teamChange.players[index].redCard = 1;
+  }
+  team == 'teamOne' ? teamOne.value = teamChange : teamTwo.value = teamChange;
+}
+
+const addGols = (team, index, operation) => {
+  if (operation == '-' && team == 'teamOne' && teamOne.value.players[index].gols == 0) {
+    return;
+  } else if (operation == '-' && team == 'teamTwo' && teamTwo.value.players[index].gols == 0) {
+    return;
+  }
+  let teamChange = team == 'teamOne' ? teamOne.value : teamTwo.value;
+  teamChange.players[index].gols = operation == '+' ? teamChange.players[index].gols += 1 : teamChange.players[index].gols -= 1;
+  team == 'teamOne' ? (scoreHome.value = operation == '+' ? scoreHome.value += 1 :  scoreHome.value -= 1) : (scoreAway.value = operation == '+' ? scoreAway.value += 1 :  scoreAway.value -= 1);
+  team == 'teamOne' ? teamOne.value = teamChange : teamTwo.value = teamChange;
+}
+
+const resquestDefault = async () => {
+  const responseChanpionShip = await DAOChanpionShip.getById(championshipID);
+  chanpionShip.value = responseChanpionShip;
+  const isPlayesExist = isExistePlayesInTeam(responseChanpionShip.matches)
+  const roundMatch = responseChanpionShip.matches
+    .filter(round => round.round == numberRound);
+  if (!isPlayesExist) {
+    let teamOneWithPlayes = roundMatch[0].games[numberMatch].team1;
+    teamOneWithPlayes.players = [];
+    const playersteamOne = await DAOPlayers.getByField('teamId', teamOneWithPlayes.teamId);
+    playersteamOne.forEach(player => {
+      teamOneWithPlayes.players = [...teamOneWithPlayes.players, { ...player, gols: 0, redCard: 0, yellowCard: 0 }]
+    });
+    teamOne.value = teamOneWithPlayes;
+    let teamTwoWithPlayes = roundMatch[0].games[numberMatch].team2;
+    teamTwoWithPlayes.players = [];
+    const playersteamTwo = await DAOPlayers.getByField('teamId', teamTwoWithPlayes.teamId);
+    playersteamTwo.forEach(player => {
+      teamTwoWithPlayes.players = [...teamTwoWithPlayes.players, { ...player, gols: 0, redCard: 0, yellowCard: 0 }]
+    });
+    teamTwo.value = teamTwoWithPlayes;
+  } else {
+    teamOne.value  = returnTeam(responseChanpionShip, 'team1')
+    scoreHome.value = teamOne.value.score
+    teamTwo.value  = returnTeam(responseChanpionShip, 'team2')
+    scoreAway.value = teamTwo.value.score
   }
 }
 
 onMounted(async () => {
   onAuthStateChanged(auth, (user) => {
-    if (user) {
-      console.log("ok")
-    } else {
+    if (!user) {
       router.push('/login');
     }
   });
@@ -74,6 +124,7 @@ onMounted(async () => {
     <div>
       <h1>Edite o Resultado</h1>
     </div>
+    {{ teamOne.name }} {{ scoreHome }} x  {{ scoreAway }} {{ teamTwo.name }}
     <table>
       <thead>
         <tr>
@@ -84,40 +135,34 @@ onMounted(async () => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(player, index) in state.team1.players" :key="index">
+        <tr v-for="(player, index) in teamOne.players" :key="index">
           <td>
             <span>{{ player.name }}</span>
           </td>
           <td>
             <button type="button" :disabled="player.gols <= 0"
-            @click="() => { state.team1.players[index].gols = player.gols - 1 }">-</button>
+              @click="addGols('teamOne', index, '-')">-</button>
             <span>{{ player.gols }}</span>
-            <button type="button" @click="() => { state.team1.players[index].gols = player.gols + 1 }">+</button>
+            <button type="button" @click="addGols('teamOne', index, '+')">+</button>
           </td>
           <td>
             <button type="button" :disabled="player.redCard <= 0 || player.yellowCard == 2"
-            @click="() => { state.team1.players[index].redCard = player.redCard - 1 }">-</button>
+              @click="() => { teamOne.players[index].redCard = player.redCard - 1 }">-</button>
             <span>{{ player.redCard }}</span>
             <button type="button" :disabled="player.redCard >= 1"
-            @click="() => { state.team1.players[index].redCard = player.redCard + 1 }">+</button>
+              @click="() => { teamOne.players[index].redCard = player.redCard + 1 }">+</button>
           </td>
           <td>
             <button type="button" :disabled="player.yellowCard <= 0"
-            @click="() => { state.team1.players[index].yellowCard = player.yellowCard - 1 }">-</button>
+              @click="() => { teamOne.players[index].yellowCard = player.yellowCard - 1 }">-</button>
             <span>{{ player.yellowCard }}</span>
-            <button type="button" :disabled="player.yellowCard >= 2"
-              @click="() => { 
-                state.team1.players[index].yellowCard = player.yellowCard + 1;
-                if (player.yellowCard >= 2) {
-                  state.team1.players[index].redCard = 1;
-                }
-            }">+</button>
+            <button type="button" :disabled="player.yellowCard >= 2" @click="addCardYellow('teamOne', index)">+</button>
           </td>
         </tr>
-        
+
       </tbody>
     </table>
-    
+
     <table>
       <thead>
         <tr>
@@ -128,41 +173,34 @@ onMounted(async () => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(player, index) in state.team2.players" :key="index">
+        <tr v-for="(player, index) in teamTwo.players" :key="index">
           <td>
             <span>{{ player.name }}</span>
           </td>
           <td>
             <button type="button" :disabled="player.gols <= 0"
-            @click="() => { state.team2.players[index].gols = player.gols - 1 }">-</button>
+              @click="addGols('teamTwo', index, '-')">-</button>
             <span>{{ player.gols }}</span>
-            <button type="button" @click="() => { 
-              state.team2.players[index].gols = player.gols + 1 
-            }">+</button>
+            <button type="button" @click="addGols('teamTwo', index, '+')">+</button>
           </td>
           <td>
             <button type="button" :disabled="player.redCard <= 0 || player.yellowCard == 2"
-            @click="() => { state.team2.players[index].redCard = player.redCard - 1 }">-</button>
+              @click="() => { teamTwo.players[index].redCard = player.redCard - 1 }">-</button>
             <span>{{ player.redCard }}</span>
             <button type="button" :disabled="player.redCard >= 1"
-            @click="() => { state.team2.players[index].redCard = player.redCard + 1 }">+</button>
+              @click="() => { teamTwo.players[index].redCard = player.redCard + 1 }">+</button>
           </td>
           <td>
             <button type="button" :disabled="player.yellowCard <= 0"
-            @click="() => { state.team2.players[index].yellowCard = player.yellowCard - 1 }">-</button>
+              @click="() => { teamTwo.players[index].yellowCard = player.yellowCard - 1 }">-</button>
             <span>{{ player.yellowCard }}</span>
-            <button type="button" :disabled="player.yellowCard >= 2"
-              @click="() => { state.team2.players[index].yellowCard = player.yellowCard + 1;
-              if (player.yellowCard >= 2) {
-                  state.team1.players[index].redCard = 1;
-              }
-            }">+</button>
+            <button type="button" :disabled="player.yellowCard >= 2" @click="addCardYellow('teamTwo', index)">+</button>
           </td>
         </tr>
-        
+
       </tbody>
     </table>
-    
+
   </div>
   <button type="button" @click="saveMacthResult()">Salvar</button>
 </template>

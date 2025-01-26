@@ -11,13 +11,6 @@ const route = useRoute();
 
 const idChampionsShip = ref(route.params.id);
 
-defineProps({
-  teamsAll: {
-    type: Array,
-    required: true,
-  },
-});
-
 const round = ref(1);
 const matchesGames = ref({
   oitavas: [],
@@ -102,7 +95,7 @@ onMounted(async () => {
                :key="index"
                :match="match[1]"
                :matchValue="match[0]"
-               :round="round"
+               :round="round.toString()"
                :championshipID="idChampionsShip" />
       </RoundComponent>
       <RoundComponent title="Quartas de final" v-if="8 <= currentFase">
@@ -110,7 +103,7 @@ onMounted(async () => {
                :key="index"
                :match="match[1]"
                :matchValue="match[0]"
-               :round="round"
+               :round="round.toString()"
                :championshipID="idChampionsShip" />
       </RoundComponent>
 
@@ -119,7 +112,7 @@ onMounted(async () => {
                :key="index"
                :match="match[1]"
                :matchValue="match[0]"
-               :round="round"
+               :round="round.toString()"
                :championshipID="idChampionsShip" />
       </RoundComponent>
 
@@ -128,7 +121,7 @@ onMounted(async () => {
                :key="index"
                :match="match[1]"
                :matchValue="match[0]"
-               :round="round"
+               :round="round.toString()"
                :championshipID="idChampionsShip" />
       </RoundComponent>
     </div>
