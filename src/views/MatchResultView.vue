@@ -35,7 +35,9 @@ const saveMacthResult = async () => {
     });
   } else {
     state.matches[numberRound].games[numberMatch].teamOne = teamOne.value
+    state.matches[numberRound].games[numberMatch].teamOne.score = scoreHome.value;
     state.matches[numberRound].games[numberMatch].teamTwo = teamTwo.value
+    state.matches[numberRound].games[numberMatch].teamTwo.score = scoreHome.value;
   }
   await DAOChanpionShip.update(championshipID, state)
 };
