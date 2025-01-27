@@ -1,16 +1,13 @@
 <script setup>
-import { onMounted, reactive, toRefs } from "vue";
-import { DAOChanpionShip } from "@/services";
+import { onMounted, ref } from "vue";
 import { useRoute } from 'vue-router'
 import router from "@/router";
-import { genereateRoundMatches } from "@/services/ServiceRoundMatches";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { generateClassification } from "@/services/ServiceClassification";
 const route = useRoute();
 
-const state = reactive({
-  data: {}
-});
-
-const { data } = toRefs(state);
+const state = ref([]);
+const championshipID = route.params.id;
 
 const backUrl = () => {
   router.push({ name: 'manager' });
@@ -23,14 +20,14 @@ const buttonRedirect = (url, paramsId) => {
 }
 
 onMounted(async () => {
-  try {
-    const response = await DAOChanpionShip.getById(route.params.id);
-    console.log('champ', response);
-    state.data = response;
-    if (response.teams.length === response.qntTime && !response.matches) {
-      const matches = genereateRoundMatches(response.teams);
-      await DAOChanpionShip.update(response.id, { matches });
+  onAuthStateChanged(getAuth(), (user) => {
+    if (!user) {
+      router.push('/login');
     }
+  });
+  try {
+    const responseClassification = await generateClassification(championshipID);
+    state.value = responseClassification;
   } catch (error) {
     console.error('Erro ao carregar os dados:', error);
   }
@@ -54,23 +51,23 @@ onMounted(async () => {
           <th>SG</th>
           <th>%</th>
         </tr>
-        <tr v-for="(teams, index) in data.teams" :key="index">
-          <!-- <th>{{ teams.teamId }}</th> -->
-          <!-- <th>{{ teams.P }}</th>
-          <th>{{ teams.J }}</th>
-          <th>{{ teams.V }}</th>
-          <th>{{ teams.E }}</th>
-          <th>{{ teams.D }}</th>
-          <th>{{ teams.GP }}</th>
-          <th>{{ teams.GC }}</th>
-          <th>{{ teams.GP - teams.GC }}</th>
-          <th>{{ teams.A }}</th> -->
+        <tr v-for="(teams, index) in state" :key="index">
+          <th>{{ teams.name }}</th>
+           <th>{{ teams.pontos }}</th>
+          <th>{{ teams.totalGames }}</th>
+          <th>{{ teams.totalVictories }}</th>
+          <th>{{ teams.totalDraws }}</th>
+          <th>{{ teams.totalLosses }}</th>
+          <th>{{ teams.goalsFavor }}</th>
+          <th>{{ teams.goalsOwn }}</th>
+          <th>{{ teams.goalsFavor - teams.goalsOwn }}</th>
+          <th>{{ teams.efficiency }}</th>
         </tr>
       </tbody>
     </table>
     <span>P: Pontos J: Jogos V: Vitórias E: Empates D: Derrotas GP: Gols Pró GC: Gols Contra SG: Saldo de gols %:
       Aproveitamento</span>
-    <button type="button" @click="() => buttonRedirect(`/manager/league/matches`, data.id)">
+    <button type="button" @click="() => buttonRedirect(`/manager/league/matches`, championshipID)">
       Gerenciar Jogos
     </button>
     <button @click="backUrl">Voltar</button>

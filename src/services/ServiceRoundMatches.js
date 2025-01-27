@@ -133,7 +133,7 @@ const genereateRoundMatches = (listTeams) => {
     teams.splice(1, 0, teams.pop());
   }
 
-  for (let round = 0; round < numberOfRounds; round++) {
+  for (let round = 3; round < (numberOfRounds * 2); round++) {
     const returnRound = {};
 
     for (let game = 0; game < gamesPerRound; game++) {
