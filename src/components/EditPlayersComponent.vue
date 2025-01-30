@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, onBeforeMount, onMounted } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { DAOPlayers } from "@/services"
 import router from '@/router';
@@ -20,8 +20,6 @@ const stateListPlayers = reactive({
 
 const insertPlayers = async () => {
   try {
-    console.log({ ...stateListPlayers.currentListInput, teamId: stateListPlayers.teamId });
-    console.log(stateListPlayers);
     await DAOPlayers.create({ ...stateListPlayers.currentListInput, teamId: stateListPlayers.teamId });
     stateListPlayers.currentListInput = { name: '', position: '', number: '' };
     await reSeedsPlayersInList();
@@ -71,27 +69,14 @@ const reSeedsPlayersInList = async () => {
   }
 };
 
-// const getByIdTeam = async (userId) => {
-//   try {
-//     const response = await DAOPlayers.getByField('userId', userId);
-//     // stateListPlayers.teamId = response[0].id;
-//     // localStorage.setItem("data", JSON.stringify({ userId, teamId: response[0].id }));
-//   } catch (error) {
-//     console.error('Erro ao carregar os dados:', error);
-//   }
-// };
 
 const auth = getAuth();
 
 onMounted(() => {
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      // const uuid = user.uid;
-      // getByIdTeam(uuid);
       stateListPlayers.teamId = globalStore.getMyTeamId;
       const response = await DAOPlayers.getByField('teamId', globalStore.getMyTeam.id);
-      console.log(stateListPlayers.teamId)
-      console.log(globalStore.getMyTeamId)
       stateListPlayers.currentListPlayers = response;
     } else {
       globalStore.clearUserData();
@@ -100,49 +85,36 @@ onMounted(() => {
   });
 })
 
-// onBeforeMount(async () => {
-//   try {
-//     const response = await DAOPlayers.getByField('teamId', globalStore.getMyTeamId);
-//     stateListPlayers.teamId = globalStore.getMyTeamId;
-//     // const response = await DAOPlayers.getByField('userId', globalStore.getUserId);
-//     stateListPlayers.currentListPlayers = response;
-//   } catch (error) {
-//     console.error('Erro ao carregar os dados:', error);
-//   }
-// });
-
 </script>
 
 <template>
   <div class="edit-team">
-    <div v-if="editingPlayerIndex === null">
+    <div class="form-container">
       <input v-model="stateListPlayers.currentListInput.name" placeholder="Nome" />
       <input v-model="stateListPlayers.currentListInput.position" placeholder="Posição" />
       <input v-model="stateListPlayers.currentListInput.number" placeholder="Número" type="number" min="1" />
-      <button @click="insertPlayers">Inserir</button>
-    </div>
-    <div v-else>
-      <input v-model="stateListPlayers.currentListInputUpdate.name" placeholder="Nome" />
-      <input v-model="stateListPlayers.currentListInputUpdate.position" placeholder="Posição" />
-      <input v-model="stateListPlayers.currentListInputUpdate.number" placeholder="Número" type="number" min="1" />
-      <button @click="updatePlayer">Atualizar Jogador</button>
-      <button @click="cancelEdit">Cancelar</button>
+      <button v-if="editingPlayerIndex === null" @click="insertPlayers">Inserir</button>
+      <button v-else @click="updatePlayer">Atualizar Jogador</button>
+      <button v-if="editingPlayerIndex !== null" @click="cancelEdit">Cancelar</button>
     </div>
     <table>
       <thead>
-        <tr :key="50">
+        <tr>
           <th>Nome</th>
           <th>Posição</th>
-          <th>numero</th>
+          <th>Número</th>
+          <th>Ações</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(players, index) in stateListPlayers.currentListPlayers" :key="index">
-          <th>{{ players.name }} </th>
-          <th>{{ players.position }} </th>
-          <th>{{ players.number }} </th>
-          <th><button @click="editPlayer(index)">Editar</button></th>
-          <th><button @click="DeletePlayer(index)">Excluir</button></th>
+          <td>{{ players.name }}</td>
+          <td>{{ players.position }}</td>
+          <td>{{ players.number }}</td>
+          <td>
+            <button @click="editPlayer(index)">Editar</button>
+            <button @click="DeletePlayer(index)">Excluir</button>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -155,22 +127,39 @@ onMounted(() => {
   flex-direction: column;
   height: 70vh;
   width: 80vw;
-  padding: 10px;
+  padding: 20px;
   margin: 16px;
+  background-color: #1f1f1f;
+  align-items: center;
+  justify-content: end;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
 }
 
-tr {
-  overflow: scroll;
+.form-container {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 700px;
+  justify-content: center;
+  position: sticky;
+  top: 0;
+  background-color: #1f1f1f;
+  padding: 6px;
+  z-index: 1;
 }
 
 input {
-  background-color: black;
+  background-color: #2c2c2c;
   color: white;
-  border: 1px solid #42b883;
+  border: 1px;
   padding: 10px;
   font-size: 1em;
   border-radius: 4px;
-  width: 20%;
+  width: 100%;
   box-sizing: border-box;
 }
 
@@ -180,59 +169,68 @@ input::placeholder {
 }
 
 button {
-  all: unset;
-  background-color: black;
+  background-color: #42b883;
   color: white;
-  border: 1px solid #42b883;
-  padding: 5px;
-  font-size: 1em;
+  padding: 8px;
+  font-size: 0.9em;
   border-radius: 4px;
-  width: auto;
-  box-sizing: border-box;
   cursor: pointer;
-  text-align: center;
-  display: inline-block;
-  margin-bottom: 10px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  width: auto;
+  align-self: center;
+}
+
+button:hover {
+  background-color: #36a372;
+  transform: scale(1.05);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 320px;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #2c2c2c;
+  color: white;
+}
+
+td {
+  background-color: #1f1f1f;
+  color: white;
 }
 
 @media (max-width: 768px) {
+  .edit-team {
+    width: 90vw;
+    padding: 15px;
+  }
+
+  .form-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
   input {
     font-size: 0.9em;
     padding: 8px;
   }
-}
 
-.container {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
+  button {
+    font-size: 0.9em;
+    padding: 8px;
+  }
 
-label {
-  font-size: 16px;
-  margin-bottom: 10px;
-  display: block;
-}
-
-select {
-  width: 200px;
-  padding: 8px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #fafafa;
-  outline: none;
-}
-
-select:focus {
-  border-color: #007bff;
-  background-color: #f1f9ff;
-}
-
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+  th, td {
+    font-size: 0.9em;
+    padding: 8px;
+  }
 }
 </style>

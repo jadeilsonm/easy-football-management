@@ -57,9 +57,9 @@ onMounted(async () => {
 
 <template>
   <div class="chanpions-ship-details">
-    <div v-if="state.chanpionsShip">
+    <div v-if="state.chanpionsShip" class="details-container">
       <span v-if="chanpionsShip.name">
-        Name: {{ chanpionsShip.name }}
+        Nome: {{ chanpionsShip.name }}
       </span>
       <span v-if="chanpionsShip.qntTime">
         Quantidade: {{ chanpionsShip.qntTime }}
@@ -90,24 +90,25 @@ onMounted(async () => {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 10px;
+  border-radius: 20px; /* Aumenta a borda arredondada */
   padding: 20px;
   margin: 15px;
   background-color: #1f1f1f;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Aumenta a sombra */
+  overflow-y: auto;
 }
 
-.chanpions-ship-details div {
+.details-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-bottom: 20px;
+  gap: 10px;
 }
 
-.chanpions-ship-details span {
+.details-container span {
   font-size: 18px;
   color: #ddd;
-  margin: 5px 0;
 }
 
 button {
@@ -116,7 +117,7 @@ button {
   margin-top: 10px;
   font-size: 18px;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px; /* Aumenta a borda arredondada */
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
@@ -144,7 +145,7 @@ button:last-of-type:hover {
 .btn {
   padding: 10px 20px;
   font-size: 16px;
-  border-radius: 5px;
+  border-radius: 10px; /* Aumenta a borda arredondada */
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
@@ -169,7 +170,7 @@ button:last-of-type:hover {
     padding: 15px;
   }
 
-  .chanpions-ship-details span {
+  .details-container span {
     font-size: 16px;
   }
 

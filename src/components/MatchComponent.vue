@@ -72,16 +72,14 @@ onMounted(async () => {
 
 <template>
   <div class="match" @click="() => buttonRedirect('/manager/matches/result/round', championshipID, round, matchValue)">
-    <div class="match-header">
-      <span class="stage">{{ match.stage }}</span>
-    </div>
     <div class="team" :class="{ winner: match.team1.winner }">
       <span class="name">{{ match.team1.name }}</span>
-      <span class="score">{{ match.team1.score }}</span>
+      <span class="score">{{ match.team1.score || 0}}</span>
     </div>
+    X
     <div class="team" :class="{ winner: match.team2.winner }">
       <span class="name">{{ match.team2.name }}</span>
-      <span class="score">{{ match.team2.score }}</span>
+      <span class="score">{{ match.team2.score || 0}}</span>
     </div>
   </div>
 </template>

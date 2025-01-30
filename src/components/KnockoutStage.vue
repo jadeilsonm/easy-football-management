@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, reactive } from "vue";
 import RoundComponent from "./RoundComponent.vue";
 import MatchComponent from "./MatchComponent.vue";
 import { useRoute } from "vue-router";
@@ -29,25 +29,25 @@ const defineMatch = (match, qntTeams) => {
   switch (qntTeams) {
     case 16:
       return {
-        oitavas: Object.entries(match[0].games) || [],
-        quarterFinals: Object.entries(match[1].games) || [],
-        semiFinals: Object.entries(match[2].games) || [],
-        final: Object.entries(match[3].games) || [],
+        oitavas: Object.entries(match[0].games).sort((a, b) => Number(a[0].replace("match", "")) - Number(b[0].replace("match", ""))) || [],
+        quarterFinals: Object.entries(match[1].games).sort((a, b) => Number(a[0].replace("match", "")) - Number(b[0].replace("match", ""))) || [],
+        semiFinals: Object.entries(match[2].games).sort((a, b) => Number(a[0].replace("match", "")) - Number(b[0].replace("match", ""))) || [],
+        final: Object.entries(match[3].games).sort((a, b) => Number(a[0].replace("match", "")) - Number(b[0].replace("match", ""))) || [],
       };
     case 8:
       return {
-        quarterFinals: Object.entries(match[0].games) || [],
-        semiFinals: Object.entries(match[1].games) || [],
-        final:  Object.entries(match[2].games) || [],
+        quarterFinals: Object.entries(match[0].games).sort((a, b) => Number(a[0].replace("match", "")) - Number(b[0].replace("match", ""))) || [],
+        semiFinals: Object.entries(match[1].games).sort((a, b) => Number(a[0].replace("match", "")) - Number(b[0].replace("match", ""))) || [],
+        final:  Object.entries(match[2].games).sort((a, b) => Number(a[0].replace("match", "")) - Number(b[0].replace("match", ""))) || [],
       };
     case 4:
       return {
-        semiFinals: Object.entries(match[0].games) || [],
-        final: Object.entries(match[1].games) || [],
+        semiFinals: Object.entries(match[0].games).sort((a, b) => Number(a[0].replace("match", "")) - Number(b[0].replace("match", ""))) || [],
+        final: Object.entries(match[1].games).sort((a, b) => Number(a[0].replace("match", "")) - Number(b[0].replace("match", ""))) || [],
       };
     case 2:
       return {
-        final: Object.entries(match[0].games) || [],
+        final: Object.entries(match[0].games).sort((a, b) => Number(a[0].replace("match", "")) - Number(b[0].replace("match", ""))) || [],
       };
   }
 };
@@ -82,6 +82,7 @@ onMounted(async () => {
   }
   isLoading.value = false;
 });
+
 
 </script>
 
@@ -148,10 +149,80 @@ onMounted(async () => {
   justify-content: center;
   align-items: center;
   margin-top: 2rem;
+  position: relative; /* Adiciona posição relativa para os elementos filhos */
 }
 
 h1 {
   text-align: center;
   margin-bottom: 2rem;
+}
+
+.knockout-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 1600px;
+  padding: 20px;
+  background-color: #1f1f1f;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.match {
+  display: flex;
+  flex-direction: column; /* Altera para coluna para deixar um time abaixo do outro */
+  align-items: center;
+  width: 100%;
+  max-width: 400px; /* Define um tamanho máximo para os cards */
+  border: 1px solid #ccc;
+  border-radius: 15px; /* Adiciona bordas arredondadas */
+  overflow: hidden; /* Garante que o conteúdo não ultrapasse as bordas */
+  background-color: #1c1c1c; /* Define a cor de fundo próxima do preto */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adiciona uma sombra para destaque */
+  transition: transform 0.2s ease; /* Adiciona uma transição suave */
+}
+
+.match:hover {
+  transform: scale(1.05); /* Aumenta o card ao passar o mouse */
+}
+
+.team {
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: #333;
+  color: #fff;
+}
+
+.team.winner {
+  background-color: #28a745; /* Cor verde para o time vencedor */
+}
+
+.vs {
+  color: #fff;
+}
+
+.line {
+  position: absolute;
+  width: 2px;
+  background-color: #fff;
+}
+
+.line.horizontal {
+  height: 50px;
+}
+
+.line.vertical {
+  height: 2px;
+  width: 50px;
+}
+
+@media (max-width: 768px) {
+  .knockout-stage {
+    padding: 10px;
+  }
+
+  .team {
+    padding: 5px 10px;
+  }
 }
 </style>

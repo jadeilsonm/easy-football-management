@@ -25,7 +25,6 @@ a,
 @media (hover: hover) {
   a:hover {
     margin: 0 auto;
-    border: 1px solid #42b883;
     color: #42b883;
     border-radius: 26px;
     width: 95%;

@@ -4,6 +4,8 @@ import { useRoute } from 'vue-router'
 import router from "@/router";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { generateClassification } from "@/services/ServiceClassification";
+import NavBar from '@/components/NavBar.vue'; // Importa a NavBar
+
 const route = useRoute();
 
 const state = ref([]);
@@ -33,14 +35,22 @@ onMounted(async () => {
   }
 });
 
+const buttonsValues = [
+  { path: '/home/team/editteam', value: 'Principal' },
+  { path: '/manager/created', value: 'Criar Campeonato' },
+  { path: '/manager/league', value: 'Campeonatos' },
+  { path: '/login', value: 'Sair' }
+]
+
 </script>
 
 <template>
+  <NavBar :buttonsValues="buttonsValues" />
   <div class="league">
     <table>
       <tbody>
         <tr :key="1">
-          <th>N</th>
+          <th>NOME</th>
           <th>P</th>
           <th>J</th>
           <th>V</th>
@@ -79,34 +89,37 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  background-color: #1c1c1c; /* Define a cor de fundo da tabela */
+  border-radius: 10px; /* Adiciona bordas arredondadas */
+  overflow: hidden; /* Garante que o conteúdo não ultrapasse as bordas */
 }
 
 th,
 td {
-  padding: 8px 12px;
+  padding: 12px 15px; /* Aumenta o padding para melhor espaçamento */
   text-align: center;
-  /* border: 1px solid #ddd; */
+  color: #fff; /* Define a cor do texto para branco */
 }
 
-/* th {
+th {
   font-weight: bold;
-  background-color: #f4f4f4;
+  background-color: #333; /* Define a cor de fundo do cabeçalho */
 }
 
 tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: #2c2c2c; /* Define a cor de fundo das linhas pares */
 }
 
 tr:hover {
-  background-color: #f1f1f1;
-} */
+  background-color: #444; /* Define a cor de fundo ao passar o mouse */
+}
 
 span {
   display: block;
   margin-top: 20px;
   font-size: 14px;
   text-align: center;
-  color: #666;
+  color: #ccc; /* Define a cor do texto para cinza claro */
 }
 
 button {
@@ -116,6 +129,7 @@ button {
   margin: 10px;
   border: none;
   border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Adiciona transições suaves */
 }
 
 button[type="button"] {
@@ -125,6 +139,7 @@ button[type="button"] {
 
 button[type="button"]:hover {
   background-color: #218838;
+  transform: scale(1.05); /* Aumenta o botão ao passar o mouse */
 }
 
 button {
@@ -134,5 +149,6 @@ button {
 
 button:hover {
   background-color: #c82333;
+  transform: scale(1.05); /* Aumenta o botão ao passar o mouse */
 }
 </style>

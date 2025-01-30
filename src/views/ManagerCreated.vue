@@ -28,14 +28,13 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-
 const select = [
   { text: "COPA", value: "cup" },
   { text: "LIGA", value: "league" },
 ];
 
 const buttonsValues = [
-  { path: "/home", value: "Home" },
+  { path: "/home/team/editteam", value: "Home" },
   { path: "/manager/created", value: "Criar Campeonato" },
   { path: "/manager/profile", value: "Editar perfil" },
   { path: "/manager", value: "Campeonatos" },
@@ -137,66 +136,99 @@ const clearReactive = () => {
 
 <style scoped>
 .button {
-  padding: 10px;
-  border-radius: 7px;
-  width: 30%;
-  box-shadow: none;
-  font-size: medium;
+  padding: 12px 20px;
+  border-radius: 12px;
+  width: 35%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
   background-color: #42b883;
-  border: 2px solid #ffffff;
+  border: none;
   color: white;
   margin: 20px;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .button:hover {
   background-color: #1c1e21;
-  border: 2px solid #42b883;
-  color: #ffffff;
+  color: #42b883;
+  transform: translateY(-2px);
 }
 
 main {
   display: flex;
   flex-direction: column;
-  background-color: #000000;
+  background-color: #121212;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 90dvh;
+  height: 90vh;
+  padding: 20px;
 }
 
 .select {
   display: flex;
   flex-direction: row;
   margin: 10px;
-  width: 40%;
+  width: 50%;
   align-items: center;
   justify-content: space-between;
+}
 
-  select {
-    background-color: #1c1e21;
-    border: 1px solid #42b883;
-    color: white;
-    width: 190px;
-  }
+.select select {
+  background-color: #1c1e21;
+  border: 1px solid #42b883;
+  color: #ffffff;
+  width: 200px;
+  padding: 8px;
+  border-radius: 10px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.select select:focus {
+  border-color: #42b883;
+  box-shadow: 0 0 5px rgba(66, 184, 131, 0.5);
+}
+
+.select select option {
+  background-color: #1c1e21;
+  color: #ffffff;
 }
 
 select {
   padding: 10px;
-  border-radius: 7px;
+  border-radius: 10px;
   box-shadow: none;
 }
 
 .container {
   border: 1px solid #42b883;
   background-color: #1c1e21;
-  padding: 80px;
+  padding: 60px;
   display: flex;
-  width: 80%;
-  height: 80%;
+  width: 70%;
+  height: auto;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-radius: 26px;
+  border-radius: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 800px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  background-color: #121212;
+  min-height: 100vh;
+  font-family: 'Arial', sans-serif;
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
 }
 </style>

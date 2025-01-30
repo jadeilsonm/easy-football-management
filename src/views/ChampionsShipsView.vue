@@ -2,7 +2,6 @@
 import NavBar from '@/components/NavBar.vue';
 import router from '@/router';
 import { DAOChanpionShip } from '@/services';
-import { CHAMPIONS_SHIP_COLLECTION } from '@/Utils/constantes';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { onBeforeMount, reactive, ref } from 'vue';
 
@@ -90,28 +89,57 @@ const goDetais = (e) => {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-around;
+  gap: 20px; /* Adiciona espaço entre os cards */
 }
 
 .card {
   display: flex;
-  flex-direction: row;
-  width: 30%;
+  flex-direction: column; /* Altera para coluna para melhor responsividade */
+  width: 100%;
+  max-width: 350px; /* Aumenta o tamanho máximo para os cards */
   border: 1px solid #ccc;
-  height: 25vh;
-
-  && img {
-    width: 40%;
-    height: 100%;
-  }
-
-  && div {
-    padding: 15px;
-    overflow: hidden;
-  }
+  border-radius: 15px; /* Adiciona bordas arredondadas */
+  overflow: hidden; /* Garante que o conteúdo não ultrapasse as bordas */
+  background-color: #1c1c1c; /* Define a cor de fundo próxima do preto */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adiciona uma sombra para destaque */
+  transition: transform 0.2s ease; /* Adiciona uma transição suave */
 }
 
-p {
+.card:hover {
+  transform: scale(1.05); /* Aumenta o card ao passar o mouse */
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+}
+
+.card div {
+  padding: 15px;
+  background-color: #2c2c2c; /* Adiciona um fundo mais claro para contraste */
+}
+
+.card h3 {
+  margin: 0;
+  font-size: 1.2em;
+  color: #fff; /* Define a cor do texto para branco */
+}
+
+.card p {
+  margin: 10px 0;
+  color: #ccc; /* Define a cor do texto para cinza claro */
   word-wrap: break-word;
   word-break: break-word;
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card {
+    width: 90%;
+  }
 }
 </style>
