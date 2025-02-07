@@ -17,6 +17,7 @@
     "firebase-tools": "^13.27.0",
     "pinia": "^2.2.4",
     "pinia-plugin-persistedstate": "^4.2.0",
+    "vee-validate": "^4.15.0",
     "vue": "^3.5.12",
     "vue-router": "^4.4.5",
     "vuefire": "^3.2.0",

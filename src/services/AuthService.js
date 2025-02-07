@@ -9,7 +9,7 @@ export class AuthService {
   async login(email, password) {
     try {
       const user = await signInWithEmailAndPassword(this.auth, email, password)
-      if (user.user.uid) router.push('/home');
+      if (user.user.uid) router.push('/home/team/editteam');
     } catch (error) {
       console.error("Error signing in: ", error);
       alert('Credentials error');

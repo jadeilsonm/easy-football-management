@@ -42,10 +42,9 @@ export default {
 }
 
 .aside input {
-  background-color: #10422c00;
+  background-color: #01ff9100;
   border: none;
   color: white;
-  /* padding: 15px 32px; */
   text-align: center;
   text-decoration: none;
   display: inline-block;
@@ -88,11 +87,11 @@ export default {
   border-radius: 5px;
   text-align: center;
   cursor: pointer;
-  background-color: #35374c;
+  background-color: #42b883;
   transition: all 0.3s ease;
 }
 
 .sidebar .menu-item:hover {
-  background-color: #4b4e6a;
+  background-color: #25634a;
 }
 </style>

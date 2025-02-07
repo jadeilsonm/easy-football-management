@@ -1,6 +1,8 @@
 <script setup>
 import router from '@/router';
 import { defineProps } from 'vue';
+import { AuthService } from '@/services/AuthService';
+import { PiniaStore } from '@/stores';
 
 defineProps({
   buttonsValues: {
@@ -12,9 +14,18 @@ defineProps({
   }
 });
 
+const globalStore = PiniaStore();
+
+const auth = new AuthService();
+
 const home = () => {
-  console.log('home');
   router.push('/home/team/editteam');
+}
+
+const singup = async () => {
+  await auth.logout();
+  globalStore.clearUserData();
+  router.push('/login');
 }
 
 </script>
@@ -27,7 +38,8 @@ const home = () => {
     </button>
     <ul>
       <li v-for="item in buttonsValues" :key="item.value">
-        <router-link class="menu-item" :to="item.path">{{ item.value }}</router-link>
+        <router-link class="menu-item" :to="item.path" v-if="item.value != 'Sair'">{{ item.value }}</router-link>
+        <a class="menu-item" v-else @click="singup">{{ item.value }}</a>
       </li>
     </ul>
   </nav>
@@ -86,7 +98,7 @@ ul {
 }
 
 .menu-item:hover {
-  color: #00ff22;
+  color: #42b883;
   transform: scale(1.1);
 }
 
@@ -97,7 +109,7 @@ ul {
   left: 50%;
   width: 0;
   height: 2px;
-  background-color: #00ff0d;
+  background-color: #42b883;
   transition: width 0.3s ease, left 0.3s ease;
 }
 

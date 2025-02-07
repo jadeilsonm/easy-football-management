@@ -2,13 +2,8 @@
 import { ref, onMounted } from "vue";
 import { DAOChanpionShip } from "@/services";
 import router from "@/router";
-const URL_ROUTER_CHAMPION_SHIP = '/search/championship/details/';
 
-
-const state = ref([
-  // { name: "brasileirão", qntTime: 12,  type: "cup"},
-  // { name: "cop do brasil", qntTime: 18,  type: "league"}
-]);
+const state = ref([]);
 
 const buttonRedirect = (championShipId) => {
   router.push({ name: 'championsshipdetails', params: { id: championShipId } })
@@ -18,7 +13,6 @@ onMounted(async () => {
   try {
     const response = await DAOChanpionShip.getAll();
     state.value = response.filter(chanpionShip => chanpionShip.status === "CREATED");
-    //console.log("seach state.value",state.value)
   } catch (error) {
     console.error('Erro ao carregar os dados:', error);
   }
@@ -39,18 +33,22 @@ onMounted(async () => {
 
 <style scoped>
 .search {
-  height: 70vh;
+  height: 80vh;
   width: 80vw;
-  border: solid 1px green;
+  border: solid 1px #42b883;
   display: flex;
-  margin: 15px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 }
 
 .chanpionships {
   background-color: #1f1f1f;
   border-radius: 8px;
   padding: 20px;
-  margin: 15px;
+  width: 300px;
+  margin: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   transition: transform 0.2s ease;
 }
@@ -70,7 +68,7 @@ onMounted(async () => {
 
 
 button {
-  background-color: #06ee2dd7;
+  background-color: #42b883;
   color: #ffffff;
   border: none;
   padding: 10px 20px;
@@ -81,7 +79,7 @@ button {
 }
 
 button:hover {
-  background-color: #06ee2d88;
+  background-color: #25634a;
 }
 
 @media (max-width: 768px) {

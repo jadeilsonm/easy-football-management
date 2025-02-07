@@ -2,32 +2,23 @@
 import NavBar from '@/components/NavBar.vue';
 import router from '@/router';
 import { DAOChanpionShip } from '@/services';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { onBeforeMount, reactive, ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { PiniaStore } from '@/stores';
 
-const auth = getAuth();
 const userID = ref('');
 
-const reactiveChampionsShips = reactive({
-  result: []
-})
+const reactiveChampionsShips = ref([]);
+
 const getChampionsShips = async (userID) => {
-  console.log("userID: ", userID);
   const response = await DAOChanpionShip.search([{ field: 'status', operator: '==', value: 'CREATED' }, { field: 'userOwner', operator: '==', value: userID }]);
   return response;
 }
 
+const globalStore = PiniaStore();
 
-
-onBeforeMount(async () => {
-  await onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      router.push('/login');
-    }
-    userID.value = user.uid;
-    reactiveChampionsShips.result = await getChampionsShips(user.uid);
-  });
-
+onMounted(async () => {
+  userID.value = globalStore.userId;
+  reactiveChampionsShips.value = await getChampionsShips(userID.value);
 })
 
 const buttonsValues = [
@@ -47,7 +38,7 @@ const goDetais = (e) => {
   <NavBar :buttonsValues="buttonsValues" />
   <div class="container">
     <div class="card" @click="() => goDetais(`/manager/${r.type}/${r.id}`)"
-      v-for="r, i in reactiveChampionsShips.result" :key="i">
+      v-for="r, i in reactiveChampionsShips" :key="i">
       <img v-if="r.type === 'ligue'"
         src="https://cdn.gencraft.com/prod/user/f2b9531a-8f21-4aec-8615-542b334d8d12/ab913fbe-1b83-49bb-a38d-8bec70ae4545/image/image0_0.jpg?Expires=1741554731&Signature=JkktQrnSs5d6kRe8TfbmEuMMv9nf~6UehZkvUmUGxSvz7~2ECmHAS1fva4iCnMWe~8UbJI2Ic7MLPlLN6OSayJshoOFosEPRjjMaYXKr-ltq3ssNnk76UL62-jS~6WzWI5Z3BffN~drVpMQK-tY1ek6kGs~3NAFt9q92MdWyZFiQ2LIrZVWtEqZI5StYD2cPk-6Xk~dvCnXBlDfSzObM160CnYIQxAq3b1oXWfo4d6NnOBf2PjM8cxFS3ebsdBMYpi~jWs3IaXPt~iH65MxQP6OSunquE6MpJxZjThQaojshz6usPkXud7fHtwsaNRucbrWjMUJfxr3Q7NBtYMnHYQ__&Key-Pair-Id=K3RDDB1TZ8BHT8"
         alt="">
@@ -89,24 +80,24 @@ const goDetais = (e) => {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-around;
-  gap: 20px; /* Adiciona espaço entre os cards */
+  gap: 20px;
 }
 
 .card {
   display: flex;
-  flex-direction: column; /* Altera para coluna para melhor responsividade */
+  flex-direction: column;
   width: 100%;
-  max-width: 350px; /* Aumenta o tamanho máximo para os cards */
+  max-width: 350px;
   border: 1px solid #ccc;
-  border-radius: 15px; /* Adiciona bordas arredondadas */
-  overflow: hidden; /* Garante que o conteúdo não ultrapasse as bordas */
-  background-color: #1c1c1c; /* Define a cor de fundo próxima do preto */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adiciona uma sombra para destaque */
-  transition: transform 0.2s ease; /* Adiciona uma transição suave */
+  border-radius: 15px;
+  overflow: hidden;
+  background-color: #1c1c1c;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
 }
 
 .card:hover {
-  transform: scale(1.05); /* Aumenta o card ao passar o mouse */
+  transform: scale(1.05);
 }
 
 .card img {
@@ -116,7 +107,7 @@ const goDetais = (e) => {
 
 .card div {
   padding: 15px;
-  background-color: #2c2c2c; /* Adiciona um fundo mais claro para contraste */
+  background-color: #1c1e21; /* Adiciona um fundo mais claro para contraste */
 }
 
 .card h3 {

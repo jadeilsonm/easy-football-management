@@ -41,7 +41,6 @@ const subcribeChanpinsShip = async () => {
 const defaultResquest = async () => {
   try {
     const responseChampionsShip = await DAOChanpionShip.getById(route.params.id);
-    // console.log('champ', responseChampionsShip);
     state.chanpionsShip = responseChampionsShip;
   } catch (error) {
     console.error('Erro ao carregar os dados:', error);
@@ -67,6 +66,9 @@ onMounted(async () => {
       <span v-if="chanpionsShip.qntTime">
         Vagas: {{ state.chanpionsShip.qntTime - state.chanpionsShip.teams.length }}
       </span>
+      <span v-if="chanpionsShip.description">
+        Description: {{ chanpionsShip.description }}
+      </span>
       <span v-if="chanpionsShip.type">
         Tipo: {{ chanpionsShip.type === "cup" ? 'Mata Mata' : 'Pontos Corridos' }}
       </span>
@@ -84,24 +86,26 @@ onMounted(async () => {
 
 <style scoped>
 .chanpions-ship-details {
-  height: 70vh;
+  height: 85vh;
   width: 80vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 20px; /* Aumenta a borda arredondada */
+  border-radius: 20px;
   padding: 20px;
   margin: 15px;
   background-color: #1f1f1f;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Aumenta a sombra */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   overflow-y: auto;
 }
 
 .details-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  padding: 20px;
+  width: 30%;
+  align-items: start;
   margin-bottom: 20px;
   gap: 10px;
 }
@@ -112,24 +116,24 @@ onMounted(async () => {
 }
 
 button {
-  width: 80%;
-  padding: 12px;
+  width: 30%;
   margin-top: 10px;
-  font-size: 18px;
+  padding: 10px 20px;
+  font-size: 16px;
   border: none;
-  border-radius: 10px; /* Aumenta a borda arredondada */
+  border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 button:first-of-type {
-  background-color: #28a745;
+  background-color: #42b883;
   color: white;
 }
 
 button:first-of-type:hover {
-  background-color: #218838;
-  transform: scale(1.05);
+  background-color: #25634a;
+  transform: scale(1.0);
 }
 
 button:last-of-type {
@@ -139,13 +143,13 @@ button:last-of-type {
 
 button:last-of-type:hover {
   background-color: #0056b3;
-  transform: scale(1.05);
+  transform: scale(1.0);
 }
 
 .btn {
   padding: 10px 20px;
   font-size: 16px;
-  border-radius: 10px; /* Aumenta a borda arredondada */
+  border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }

@@ -126,7 +126,6 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   height: 70vh;
-  width: 80vw;
   padding: 20px;
   margin: 16px;
   background-color: #1f1f1f;

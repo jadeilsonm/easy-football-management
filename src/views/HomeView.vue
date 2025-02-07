@@ -3,7 +3,6 @@ import AsideComponent from "@/components/AsideComponent.vue";
 import { RouterView } from "vue-router";
 import { onMounted } from "vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import router from '@/router';
 import { DAOTeams } from '../services/index'
 import { PiniaStore } from '@/stores';
 import NavBar from "@/components/NavBar.vue";
@@ -34,8 +33,6 @@ onMounted(() => {
       const uuid = user.uid;
       globalStore.setUserId(uuid);
       getByIdTeam(uuid);
-    } else {
-      router.push('/login');
     }
   });
 });
@@ -80,7 +77,7 @@ onMounted(() => {
 
 .main-content {
   flex-grow: 1;
-  margin-left: 20px;
+  margin: 20px;
   background-color: #1a1a1a;
   padding: 20px;
   border-radius: 10px;
