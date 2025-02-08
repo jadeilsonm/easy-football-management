@@ -1,20 +1,14 @@
 <script setup>
 import router from "@/router";
 
-
 defineProps({
   round: Object,
   championshipID: String
 });
 
-// console.log('RoundsComponent', round);
 const buttonRedirect = (url, championshipID, numberRound, numberMatch) => {
-  // console.log('url', url)
-  // console.log('chanpionShipId', chanpionShipId)
-  // console.log('numberRound', numberRound)
-  // console.log('numberMatch', numberMatch)
   router.push({ name: url, params: { championshipID, numberRound, numberMatch } })
-}//manager/league/matches/:chanpionShipId/round/:numberRound/match/:numberMatch
+}
 </script>
 
 <template>
@@ -23,7 +17,7 @@ const buttonRedirect = (url, championshipID, numberRound, numberMatch) => {
     <ul>
       <li v-for="(match, key) in round.games" :key="key"
         @click="buttonRedirect('/manager/matches/result/round', championshipID, round.round, key)">
-        {{ match.team1.name }} vs {{ match.team2.name }}
+        <span class="comb"> {{ match.team1.name }} </span><span class="comb" style="width: 10px;"> - </span>  <samp class="comb">{{ match.team2.name }}</samp>
       </li>
     </ul>
   </div>
@@ -34,58 +28,74 @@ const buttonRedirect = (url, championshipID, numberRound, numberMatch) => {
 
 
 <style scoped>
-/* .round {
-  margin-bottom: 20px;
-} */
+
+
 .round {
   margin-bottom: 20px;
   padding: 10px;
   text-align: left;
-  border: 1px solid #ccc;
-  /* Adiciona uma borda leve para delimitar o componente */
-  border-radius: 8px;
-  /* Bordas arredondadas */
+  border: 1px solid #25634a;
+  height: 85vh;
+  border-radius: 26px;
+  background-color: #1c1e21;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.comb {
+  width: 250px;
 }
 
 h2 {
   font-size: 1.5em;
-  /* color: #333; */
   margin-bottom: 10px;
   text-align: center;
-  /* Centraliza o título */
+  color: #42b883;
 }
 
 ul {
   list-style-type: none;
   padding: 0;
+
+  & li {
+    display: flex;
+    justify-content: space-evenly;
+    font-size: 1.1em;
+    color: #ffffff;
+    padding: 5px;
+    margin-bottom: 10px;
+    text-align: center;
+    border-bottom: 5px solid #25634a;
+    border-top: 1px solid #25634a;
+    border-left: 1px solid #25634a;
+    border-right: 5px solid #25634a;
+    transition: background-color 0.3s;
+    &:hover {
+      background-color: #1a1a1a;
+    }
+  }
 }
 
 .match-item {
   font-size: 1.1em;
-  color: #444;
+  color: #ffffff;
   padding: 5px;
-  border-bottom: 1px solid #ddd;
-  /* Borda entre os jogos */
+  border-bottom: 1px solid #42b883;
   transition: background-color 0.3s;
   display: flex;
   justify-content: center;
-  /* Centraliza os itens na linha */
 }
 
 .match-item:last-child {
   border-bottom: none;
-  /* Remove a borda da última linha */
 }
 
 .match-item:hover {
-  background-color: #f1f1f1;
-  /* Destaca os itens ao passar o mouse */
+  background-color: #1a1a1a;
 }
 
 .team-name {
   font-weight: bold;
   text-align: center;
-  /* Centraliza o nome dos times */
 }
 
 .pagination {

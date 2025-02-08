@@ -40,7 +40,7 @@ function updateInputValue(event) {
 
 <style scoped>
 .input {
-  width: 100%;
+  width: 50%;
   display: flex;
   flex-direction: column;
   margin: 10px 0;
@@ -53,14 +53,14 @@ input {
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   background-color: #1c1e21;
-  border: 1px solid #42b883;
+  border: 1px solid #2b2b2b;
   color: white;
   width: 100%;
   transition: border-color 0.3s ease;
 }
 
 input:focus {
-  border-color: #42b883;
+  border-color: #b3b3b3;
   outline: none;
 }
 </style>

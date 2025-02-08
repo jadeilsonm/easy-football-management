@@ -13,7 +13,7 @@ const buttonsValues = [
 
 <template>
   <div class="cup-view">
-    <Navbar :buttonsValues="buttonsValues"/> <!-- Adicionar o componente Navbar -->
+    <Navbar :buttonsValues="buttonsValues"/>
     <KnockoutStage />
   </div>
 </template>
@@ -33,7 +33,7 @@ body {
   align-items: center;
   justify-content: center;
   margin: 0 auto;
-  background-color: #1f1f1f;
+  background-color: #1a1a1a;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }

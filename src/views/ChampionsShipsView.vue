@@ -79,7 +79,7 @@ const goDetais = (e) => {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: center;
   gap: 20px;
 }
 

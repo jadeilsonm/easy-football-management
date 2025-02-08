@@ -19,6 +19,7 @@ import MatchResultView from '@/views/MatchResultView.vue'
 import { PiniaStore } from '@/stores'
 import { onAuthStateChanged } from 'firebase/auth'
 import { getAuth } from 'firebase/auth'
+import AboutView from '@/views/AboutView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,7 +27,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'about',
-      component: HomeView
+      component: AboutView
     },
     {
       path: '/manager/created',

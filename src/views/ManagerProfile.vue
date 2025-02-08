@@ -5,10 +5,8 @@ import { DAOService } from '@/services/DAOService';
 import { uploadFile } from '@/services/S3Bucket';
 import LoadComponent from '@/components/LoadComponent.vue';
 import InputGeneric from '@/components/InputGeneric.vue';
-import router from '@/router';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { PiniaStore } from '@/stores';
 
-const auth = getAuth();
 
 const dao = new DAOService('users');
 
@@ -23,6 +21,14 @@ const reactiveProfile = reactive({
   state: '',
   country: '',
   teamFavorite: '',
+  inputname: '',
+  inputemail: '',
+  inputimgProfile: '',
+  inputphone: '',
+  inputcity: '',
+  inputstate: '',
+  inputcountry: '',
+  inputteamFavorite: '',
   isActivateModal: false,
   currentUser: '',
   isLoad: true,
@@ -34,13 +40,13 @@ const reactiveProfile = reactive({
   },
   save: async () => {
     await dao.update(reactiveProfile.currentUser.id, {
-      name: reactiveProfile.name,
-      imgProfile: reactiveProfile.imgProfile,
-      phone: maskPhone(reactiveProfile.phone),
-      city: reactiveProfile.city,
-      state: reactiveProfile.state,
-      country: reactiveProfile.country,
-      teamFavorite: reactiveProfile.teamFavorite
+      name: reactiveProfile.inputname,
+      imgProfile: reactiveProfile.inputimgProfile,
+      phone: maskPhone(reactiveProfile.inputphone),
+      city: reactiveProfile.inputcity,
+      state: reactiveProfile.inputstate,
+      country: reactiveProfile.inputcountry,
+      teamFavorite: reactiveProfile.inputteamFavorite
     });
   },
   changeModal: () => {
@@ -51,11 +57,9 @@ const reactiveProfile = reactive({
 
 function maskPhone(input) {
   let value = input.replace(/\D/g, "");
-
   if (value.length > 11) {
     value = value.slice(0, 11);
   }
-
   if (value.length > 10) {
     value = value.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
   } else if (value.length > 6) {
@@ -85,16 +89,11 @@ const getUserValues = async (userID) => {
   reactiveProfile.isLoad = false;
 }
 
-onMounted(() => {
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      console.log('Usuário autenticado');
-      const uuid = user.uid;
-      getUserValues(uuid);
-    } else {
-      router.push('/login');
-    }
-  });
+const globalStore = PiniaStore();
+
+onMounted(async () => {
+  const userId = globalStore.userId;
+  await getUserValues(userId);
 })
 
 
@@ -109,13 +108,11 @@ onMounted(() => {
         <h2>Perfil</h2>
         <img :src="reactiveProfile.imgProfile" alt="" srcset="">
         <div>
-          <h4>Nome: {{ reactiveProfile.name }}</h4>
-          <p>Email: {{ reactiveProfile.email }}</p>
-          <p>Telefone: {{ reactiveProfile.phone }}</p>
-          <p>Cidade: {{ reactiveProfile.city }}</p>
-          <p>Estado: {{ reactiveProfile.state }}</p>
-          <p>Pais: {{ reactiveProfile.country }}</p>
-          <p>Time Favorito: {{ reactiveProfile.teamFavorite }}</p>
+          <p>Telefone: {{ reactiveProfile.inputphone }}</p>
+          <p>Cidade: {{ reactiveProfile.inputcity }}</p>
+          <p>Estado: {{ reactiveProfile.inputstate }}</p>
+          <p>Pais: {{ reactiveProfile.inputcountry }}</p>
+          <p>Time Favorito: {{ reactiveProfile.inputteamFavorite }}</p>
         </div>
       </div>
 

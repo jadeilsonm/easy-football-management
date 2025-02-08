@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, reactive } from "vue";
+import { onMounted, ref } from "vue";
 import RoundComponent from "./RoundComponent.vue";
 import MatchComponent from "./MatchComponent.vue";
 import { useRoute } from "vue-router";
@@ -138,7 +138,8 @@ onMounted(async () => {
 
 <style scoped>
 .knockout-stage {
-  background-color: #1a1a1a;
+  background-color: #1f1f1f;
+  margin-top: 15px;
   padding: 2rem;
   color: white;
 }
@@ -146,10 +147,12 @@ onMounted(async () => {
 .brackets {
   display: flex;
   gap: 2rem;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
+  width: 70%;
   margin-top: 2rem;
-  position: relative; /* Adiciona posição relativa para os elementos filhos */
+  margin-left: 30px;
+  position: relative;
 }
 
 h1 {
@@ -161,40 +164,27 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 1600px;
+  width: 90%;
   padding: 20px;
-  background-color: #1f1f1f;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.match {
-  display: flex;
-  flex-direction: column; /* Altera para coluna para deixar um time abaixo do outro */
-  align-items: center;
-  width: 100%;
-  max-width: 400px; /* Define um tamanho máximo para os cards */
-  border: 1px solid #ccc;
-  border-radius: 15px; /* Adiciona bordas arredondadas */
-  overflow: hidden; /* Garante que o conteúdo não ultrapasse as bordas */
-  background-color: #1c1c1c; /* Define a cor de fundo próxima do preto */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adiciona uma sombra para destaque */
-  transition: transform 0.2s ease; /* Adiciona uma transição suave */
-}
+
 
 .match:hover {
-  transform: scale(1.05); /* Aumenta o card ao passar o mouse */
+  transform: scale(1.05);
 }
 
 .team {
   padding: 10px 20px;
   border-radius: 5px;
-  background-color: #333;
+  background-color: #1a1a1a;
   color: #fff;
 }
 
 .team.winner {
-  background-color: #28a745; /* Cor verde para o time vencedor */
+  background-color: #28a745;
 }
 
 .vs {
