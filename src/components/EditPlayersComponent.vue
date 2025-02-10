@@ -68,7 +68,8 @@ const cancelEdit = () => {
 
 const reSeedsPlayersInList = async () => {
   try {
-    const response = await DAOPlayers.getByField('teamId', globalStore.getMyTeam.id);
+    console.log(stateListPlayers.teamId)
+    const response = await DAOPlayers.getByField('teamId', stateListPlayers.teamId);
     stateListPlayers.currentListPlayers = response;
   } catch (error) {
     console.error('Erro ao carregar os dados:', error);
