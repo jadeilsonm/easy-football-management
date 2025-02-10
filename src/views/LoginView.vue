@@ -24,15 +24,12 @@ const valisEmail =  () => {
         'Email inválido' : '';
       isDisabled.value = !emailRegex.test(email.value) === 0 || !passwordRegex.test(password.value);
     }
-
-    // console.log(isDisabled.value, "disabled");
 };
 const validatePassword = () => {
   const isValidPassword =  passwordRegex.test(password.value);
   errorPassword.value = !isValidPassword ? 'Password inválido' : '';
   if (email.value.length > 3)
     isDisabled.value = !emailRegex.test(email.value) === 0 || !passwordRegex.test(password.value);
-  // console.log(isDisabled.value);
 };
 
 const login = async () => {
@@ -82,9 +79,6 @@ const loginGoogle = async () => {
   height: 100dvh;
   width: 100vw;
 }
-
-
-
 
 .container {
   border-radius: 26px;

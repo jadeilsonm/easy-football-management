@@ -28,14 +28,13 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-
 const select = [
   { text: "COPA", value: "cup" },
   { text: "LIGA", value: "league" },
 ];
 
 const buttonsValues = [
-  { path: "/home", value: "Home" },
+  { path: "/home/team/editteam", value: "Home" },
   { path: "/manager/created", value: "Criar Campeonato" },
   { path: "/manager/profile", value: "Editar perfil" },
   { path: "/manager", value: "Campeonatos" },
@@ -95,14 +94,15 @@ const clearReactive = () => {
 </script>
 
 <template>
+<div class="container-manager">
   <NavBar :buttonsValues="buttonsValues" />
   <main>
     <div class="container">
       <Input
-        inputType="text"
-        label="Nome do campeonato:"
-        cssApply="input"
-        v-model="reactiveInputManager.inputName"
+      inputType="text"
+      label="Nome do campeonato:"
+      cssApply="input"
+      v-model="reactiveInputManager.inputName"
       />
       <Input
         inputType="number"
@@ -119,13 +119,13 @@ const clearReactive = () => {
         </select>
       </label>
       <Input
-        inputType="number"
-        label="Quantidade de times:"
-        cssApply="input"
-        v-model="reactiveInputManager.inputQntTime"
+      inputType="number"
+      label="Quantidade de times:"
+      cssApply="input"
+      v-model="reactiveInputManager.inputQntTime"
       />
       <Input
-        inputType="text"
+      inputType="text"
         label="Descrição:"
         cssApply="input"
         v-model="reactiveInputManager.description"
@@ -133,70 +133,110 @@ const clearReactive = () => {
       <button class="button" @click="createLeague">Criar</button>
     </div>
   </main>
+</div>
 </template>
 
 <style scoped>
+.container-manager {
+  background-color: #1c1e21;
+}
+
 .button {
-  padding: 10px;
-  border-radius: 7px;
-  width: 30%;
-  box-shadow: none;
-  font-size: medium;
+  padding: 12px 20px;
+  border-radius: 12px;
+  width: 35%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
   background-color: #42b883;
-  border: 2px solid #ffffff;
+  border: none;
   color: white;
   margin: 20px;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .button:hover {
-  background-color: #1c1e21;
-  border: 2px solid #42b883;
-  color: #ffffff;
+  background-color: #25634a;
+  transform: translateY(-2px);
 }
 
 main {
   display: flex;
   flex-direction: column;
-  background-color: #000000;
+  background-color: #1c1e21;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 90dvh;
+  height: 90vh;
+  padding: 20px;
 }
 
 .select {
   display: flex;
   flex-direction: row;
   margin: 10px;
-  width: 40%;
+  width: 50%;
   align-items: center;
   justify-content: space-between;
+}
 
-  select {
-    background-color: #1c1e21;
-    border: 1px solid #42b883;
-    color: white;
-    width: 190px;
-  }
+.select select {
+  background-color: #1c1e21;
+  border: 1px solid #292929;
+  color: #ffffff;
+  width: 400px;
+  padding: 8px;
+  border-radius: 10px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.select select:focus {
+  border-color: #636363;
+  box-shadow: 0 0 5px rgba(94, 94, 94, 0.5);
+}
+
+.select select option {
+  background-color: #1c1e21;
+  color: #ffffff;
 }
 
 select {
   padding: 10px;
-  border-radius: 7px;
+  border-radius: 10px;
   box-shadow: none;
 }
 
 .container {
-  border: 1px solid #42b883;
-  background-color: #1c1e21;
-  padding: 80px;
+  background-color: #1a1a1a;
+  padding: 60px;
   display: flex;
-  width: 80%;
-  height: 80%;
+  width: 90%;
+  height: 80vh;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-radius: 26px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  background-color: #121212;
+  min-height: 100vh;
+  font-family: 'Arial', sans-serif;
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+
+  main {
+    margin: 0;
+    padding: 0;
+  }
+  .container {
+    padding: 0;
+    width: 100%;
+  }
 }
 </style>

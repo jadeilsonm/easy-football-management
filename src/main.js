@@ -1,5 +1,4 @@
 import './assets/main.css'
-
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
@@ -22,7 +21,7 @@ app.use(VueFire, {
 });
 
 const pinia = createPinia();
-pinia.use(piniaPersist) 
+pinia.use(piniaPersist)
 app.use(pinia);
 
 app.use(router);

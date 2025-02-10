@@ -72,16 +72,13 @@ onMounted(async () => {
 
 <template>
   <div class="match" @click="() => buttonRedirect('/manager/matches/result/round', championshipID, round, matchValue)">
-    <div class="match-header">
-      <span class="stage">{{ match.stage }}</span>
-    </div>
     <div class="team" :class="{ winner: match.team1.winner }">
       <span class="name">{{ match.team1.name }}</span>
-      <span class="score">{{ match.team1.score }}</span>
+      <span class="score">{{ match.team1.score || 0}}</span>
     </div>
-    <div class="team" :class="{ winner: match.team2.winner }">
+    <div class="team1" :class="{ winner: match.team2.winner }">
       <span class="name">{{ match.team2.name }}</span>
-      <span class="score">{{ match.team2.score }}</span>
+      <span class="score">{{ match.team2.score || 0}}</span>
     </div>
   </div>
 </template>
@@ -91,27 +88,27 @@ onMounted(async () => {
   background-color: #2a2a2a;
   border-radius: 8px;
   padding: 1rem;
-  margin-bottom: 1rem;
-  width: 250px;
-}
-
-.match-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
-  font-size: 0.8rem;
-  color: #888;
+  width: 300px;
 }
 
 .team {
   display: flex;
   align-items: center;
   padding: 0.5rem;
+  background-color: rgba(70, 69, 69, 0.2);
+  gap: 0.5rem;
+}
+
+.team1 {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  background-color: rgba(70, 69, 69, 0.5);
   gap: 0.5rem;
 }
 
 .winner {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(158, 62, 62, 0.1);
   border-radius: 4px;
 }
 

@@ -29,25 +29,25 @@ const defineMatch = (match, qntTeams) => {
   switch (qntTeams) {
     case 16:
       return {
-        oitavas: Object.entries(match[0].games) || [],
-        quarterFinals: Object.entries(match[1].games) || [],
-        semiFinals: Object.entries(match[2].games) || [],
-        final: Object.entries(match[3].games) || [],
+        oitavas: Object.entries(match[0].games).sort((a, b) => Number(a[0].replace("match", "")) - Number(b[0].replace("match", ""))) || [],
+        quarterFinals: Object.entries(match[1].games).sort((a, b) => Number(a[0].replace("match", "")) - Number(b[0].replace("match", ""))) || [],
+        semiFinals: Object.entries(match[2].games).sort((a, b) => Number(a[0].replace("match", "")) - Number(b[0].replace("match", ""))) || [],
+        final: Object.entries(match[3].games).sort((a, b) => Number(a[0].replace("match", "")) - Number(b[0].replace("match", ""))) || [],
       };
     case 8:
       return {
-        quarterFinals: Object.entries(match[0].games) || [],
-        semiFinals: Object.entries(match[1].games) || [],
-        final:  Object.entries(match[2].games) || [],
+        quarterFinals: Object.entries(match[0].games).sort((a, b) => Number(a[0].replace("match", "")) - Number(b[0].replace("match", ""))) || [],
+        semiFinals: Object.entries(match[1].games).sort((a, b) => Number(a[0].replace("match", "")) - Number(b[0].replace("match", ""))) || [],
+        final:  Object.entries(match[2].games).sort((a, b) => Number(a[0].replace("match", "")) - Number(b[0].replace("match", ""))) || [],
       };
     case 4:
       return {
-        semiFinals: Object.entries(match[0].games) || [],
-        final: Object.entries(match[1].games) || [],
+        semiFinals: Object.entries(match[0].games).sort((a, b) => Number(a[0].replace("match", "")) - Number(b[0].replace("match", ""))) || [],
+        final: Object.entries(match[1].games).sort((a, b) => Number(a[0].replace("match", "")) - Number(b[0].replace("match", ""))) || [],
       };
     case 2:
       return {
-        final: Object.entries(match[0].games) || [],
+        final: Object.entries(match[0].games).sort((a, b) => Number(a[0].replace("match", "")) - Number(b[0].replace("match", ""))) || [],
       };
   }
 };
@@ -82,6 +82,7 @@ onMounted(async () => {
   }
   isLoading.value = false;
 });
+
 
 </script>
 
@@ -137,7 +138,8 @@ onMounted(async () => {
 
 <style scoped>
 .knockout-stage {
-  background-color: #1a1a1a;
+  background-color: #1f1f1f;
+  margin-top: 15px;
   padding: 2rem;
   color: white;
 }
@@ -145,13 +147,72 @@ onMounted(async () => {
 .brackets {
   display: flex;
   gap: 2rem;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
+  width: 70%;
   margin-top: 2rem;
+  margin-left: 30px;
+  position: relative;
 }
 
 h1 {
   text-align: center;
   margin-bottom: 2rem;
+}
+
+.knockout-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90%;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+
+.match:hover {
+  transform: scale(1.05);
+}
+
+.team {
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: #1a1a1a;
+  color: #fff;
+}
+
+.team.winner {
+  background-color: #28a745;
+}
+
+.vs {
+  color: #fff;
+}
+
+.line {
+  position: absolute;
+  width: 2px;
+  background-color: #fff;
+}
+
+.line.horizontal {
+  height: 50px;
+}
+
+.line.vertical {
+  height: 2px;
+  width: 50px;
+}
+
+@media (max-width: 768px) {
+  .knockout-stage {
+    padding: 10px;
+  }
+
+  .team {
+    padding: 5px 10px;
+  }
 }
 </style>

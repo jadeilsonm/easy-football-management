@@ -16,6 +16,10 @@ import CupView from '@/views/CupView.vue'
 import LeagueComponent from '@/views/LeagueView.vue'
 import RoundMatchesView from '@/views/RoundMatchesView.vue'
 import MatchResultView from '@/views/MatchResultView.vue'
+import { PiniaStore } from '@/stores'
+import { onAuthStateChanged } from 'firebase/auth'
+import { getAuth } from 'firebase/auth'
+import AboutView from '@/views/AboutView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,47 +27,55 @@ const router = createRouter({
     {
       path: '/',
       name: 'about',
-      component: HomeView
+      component: AboutView
     },
     {
       path: '/manager/created',
       name: 'manager/created',
-      component: ManagerCreated
+      component: ManagerCreated,
+      meta: { requiresAuth: true }
     },
     {
       path: '/manager',
       name: 'manager',
-      component: ChampionsShipsView
+      component: ChampionsShipsView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/manager/cup/:id',
       name: 'manager/cup',
-      component: CupView
+      component: CupView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/manager/league/:id',
       name: 'manager/league',
-      component: LeagueComponent
+      component: LeagueComponent,
+      meta: { requiresAuth: true }
     },
     {
       path: '/manager/league/matches/:id',
       name: '/manager/league/matches',
-      component: RoundMatchesView
+      component: RoundMatchesView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/manager/matches/result/:championshipID/round/:numberRound/match/:numberMatch',
       name: '/manager/matches/result/round',
-      component: MatchResultView
+      component: MatchResultView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/manager/Profile',
       name: 'manager/Profile',
-      component: ManagerProfile
+      component: ManagerProfile,
+      meta: { requiresAuth: true }
     },
     {
       path: '/home',
       name: 'home',
       component: HomeView,
+      meta: { requiresAuth: true },
       children: [
         {
           path: 'team', name: 'team', component: PlayersComponent,
@@ -89,7 +101,6 @@ const router = createRouter({
         },
       ]
     },
-
     {
       path: '/login',
       name: 'login',
@@ -103,9 +114,29 @@ const router = createRouter({
     {
       path: '/copa',
       name: 'copa',
-      component: CopaView
+      component: CopaView,
+      meta: { requiresAuth: true }
     }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  const auth = getAuth();
+  const globalStore = PiniaStore();
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+
+  if (requiresAuth) {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        next();
+      } else {
+        globalStore.clearUserData();
+        next('/login')
+      }
+    })
+  } else {
+    next();
+  }
 })
 
 export default router

@@ -1,5 +1,4 @@
 <script>
-  import { RouterView }  from 'vue-router';
 
 </script>
 
@@ -48,5 +47,26 @@ button:hover {
 .activate {
   color: white;
   background-color: #17583b;
+}
+
+.form-containe {
+  z-index: 1;
+}
+
+@media screen and (max-width: 768px) {
+  .team {
+    width: 100vw;
+    padding: 10px;
+    border: none;
+    border-radius: 0;
+    justify-content: center;
+    align-items: center;
+  }
+
+  button {
+    font-size: 0.9em;
+    padding: 8px;
+  }
+
 }
 </style>

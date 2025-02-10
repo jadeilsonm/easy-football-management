@@ -1,19 +1,32 @@
-<script >
+<script>
 export default {
   mounted() {
     //console.log(this.$route.path); // Exibe o parâmetro 'id' da rota
-
-  }
-}
+  },
+};
 </script>
 
 <template>
-  <div class="aside">
-    <img src="../assets/logo_oficial.png"  />
-    <input type="button" value="Meu Time" @click="$router.push('/home/team/editteam')">
-    <input type="button" value="Meus Torneios" @click="$router.push('/home/subscribed')">
-    <input type="button" value="Buscar Torneios" @click="$router.push('/home/search')">
-
+  <div class="sidebar">
+    <img src="../assets/logo_oficial.png" />
+    <input
+    class="menu-item"
+      type="button"
+      value="Meu Time"
+      @click="$router.push('/home/team/editteam')"
+    />
+    <input
+      type="button"
+      class="menu-item"
+      value="Meus Torneios"
+      @click="$router.push('/home/subscribed')"
+    />
+    <input
+      type="button"
+      class="menu-item"
+      value="Buscar Torneios"
+      @click="$router.push('/home/search')"
+    />
   </div>
 </template>
 
@@ -29,10 +42,9 @@ export default {
 }
 
 .aside input {
-  background-color: #10422c00;
+  background-color: #01ff9100;
   border: none;
   color: white;
-  /* padding: 15px 32px; */
   text-align: center;
   text-decoration: none;
   display: inline-block;
@@ -47,11 +59,57 @@ export default {
 }
 
 .aside button {
-  background-color: #42b883
+  background-color: #42b883;
 }
 
 .aside img {
   width: 100px;
   margin: 0 auto;
+}
+
+.sidebar {
+  width: 15%;
+  background-color: #27293d;
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.sidebar .menu-item {
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #42b883;
+  transition: all 0.3s ease;
+}
+
+.sidebar .menu-item:hover {
+  background-color: #25634a;
+}
+
+@media screen and (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    padding: 10px;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  .sidebar .menu-item {
+    width: 32%;
+    font-size: 0.7rem;
+  }
+
+  .sidebar img {
+    display: none;
+  }
+
 }
 </style>

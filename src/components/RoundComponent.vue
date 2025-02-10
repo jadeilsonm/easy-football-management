@@ -20,7 +20,9 @@ defineProps({
 .round {
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
   gap: 1rem;
+  height: 75vh;
 }
 
 h2 {
@@ -32,6 +34,8 @@ h2 {
 .matches {
   display: flex;
   flex-direction: column;
+  height: 100%;
+  justify-content: space-around;
   gap: 1rem;
 }
 </style>
