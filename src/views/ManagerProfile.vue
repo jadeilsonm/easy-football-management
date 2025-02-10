@@ -269,5 +269,17 @@ select {
   div {
     margin: 10px;
   }
+
+  @media (max-width: 768px) {
+
+main {
+  margin: 0;
+  padding: 0;
+}
+.container {
+  padding: 0;
+  width: 100%;
+}
+}
 }
 </style>

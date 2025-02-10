@@ -18,8 +18,14 @@ const stateListPlayers = reactive({
   currentListPlayers: []
 });
 
+const pt = ['AT', 'MC', 'LD', 'LE', 'GL', 'VOL', 'ZG']
+
 const insertPlayers = async () => {
   try {
+    if (!pt.includes(stateListPlayers.currentListInput.position)) {
+      alert('Posição inválida');
+      return;
+    }
     await DAOPlayers.create({ ...stateListPlayers.currentListInput, teamId: stateListPlayers.teamId });
     stateListPlayers.currentListInput = { name: '', position: '', number: '' };
     await reSeedsPlayersInList();
