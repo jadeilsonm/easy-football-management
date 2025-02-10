@@ -81,7 +81,8 @@ const auth = getAuth();
 onMounted(() => {
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      stateListPlayers.teamId = globalStore.getMyTeamId;
+      stateListPlayers.teamId = globalStore.getMyTeam.id;
+      console.log(stateListPlayers.teamId)
       const response = await DAOPlayers.getByField('teamId', globalStore.getMyTeam.id);
       stateListPlayers.currentListPlayers = response;
     } else {
