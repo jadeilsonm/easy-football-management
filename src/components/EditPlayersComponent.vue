@@ -89,14 +89,15 @@ onMounted(() => {
 
 <template>
   <div class="edit-team">
-    <div class="form-container">
-      <input v-model="stateListPlayers.currentListInput.name" placeholder="Nome" />
-      <input v-model="stateListPlayers.currentListInput.position" placeholder="Posição" />
-      <input v-model="stateListPlayers.currentListInput.number" placeholder="Número" type="number" min="1" />
-      <button v-if="editingPlayerIndex === null" @click="insertPlayers">Inserir</button>
-      <button v-else @click="updatePlayer">Atualizar Jogador</button>
-      <button v-if="editingPlayerIndex !== null" @click="cancelEdit">Cancelar</button>
-    </div>
+      <div class="form-container">
+        <input v-model="stateListPlayers.currentListInput.name" placeholder="Nome" />
+        <input v-model="stateListPlayers.currentListInput.position" placeholder="Posição" />
+        <input v-model="stateListPlayers.currentListInput.number" placeholder="Número" type="number" min="1" />
+        <button v-if="editingPlayerIndex === null" @click="insertPlayers">Inserir</button>
+        <button v-else @click="updatePlayer">Atualizar Jogador</button>
+        <button v-if="editingPlayerIndex !== null" @click="cancelEdit">Cancelar</button>
+      </div>
+
     <table>
       <thead>
         <tr>
@@ -206,13 +207,16 @@ td {
   color: white;
 }
 
-@media (max-width: 768px) {
+@media  (max-width: 768px) {
   .edit-team {
-    width: 90vw;
+    width: 80vw;
     padding: 15px;
+    border: none;
+    border-radius: 0;
   }
 
   .form-container {
+    display: none;
     flex-direction: column;
     gap: 10px;
   }
@@ -223,12 +227,13 @@ td {
   }
 
   button {
+    width: 70px;
     font-size: 0.9em;
     padding: 8px;
   }
 
   th, td {
-    font-size: 0.9em;
+    font-size: 0.7em;
     padding: 8px;
   }
 }

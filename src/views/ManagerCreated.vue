@@ -229,8 +229,14 @@ body {
 }
 
 @media (max-width: 768px) {
+
+  main {
+    margin: 0;
+    padding: 0;
+  }
   .container {
-    padding: 10px;
+    padding: 0;
+    width: 100%;
   }
 }
 </style>

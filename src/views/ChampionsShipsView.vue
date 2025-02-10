@@ -51,8 +51,8 @@ const goDetais = (e) => {
         <p v-else>{{ `Venha participar do ${r.name}, um evento emocionante para jogadores de todos os níveis! Prepare-se
           para competir, se divertir e ter a chance de levar prêmios incríveis para casa, no valor de R$ ${r.value}` }}
         </p>
-        <p>R$ {{ r.value }}</p>
-        <p>Quantidade de times: {{ r.qntTime }}</p>
+        <p class="hide">R$ {{ r.value }}</p>
+        <p class="hide">Quantidade de times: {{ r.qntTime }}</p>
       </div>
     </div>
   </div>
@@ -130,7 +130,11 @@ const goDetais = (e) => {
   }
 
   .card {
-    width: 90%;
+    width: 70%;
+    height: 75vh;
+    & .hide {
+      display: none;
+    }
   }
 }
 </style>

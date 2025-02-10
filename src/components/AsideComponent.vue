@@ -94,4 +94,22 @@ export default {
 .sidebar .menu-item:hover {
   background-color: #25634a;
 }
+
+@media screen and (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    padding: 10px;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  .sidebar .menu-item {
+    width: 32%;
+    font-size: 0.7rem;
+  }
+
+  .sidebar img {
+    display: none;
+  }
+
+}
 </style>

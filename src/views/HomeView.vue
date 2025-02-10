@@ -12,7 +12,7 @@ const globalStore = PiniaStore();
 const buttonsValues = [
   { path: '/manager', value: 'Gerenciar Torneios' },
   { path: '/manager/created', value: 'Criar Campeonato' },
-  { path: '/manager/perfil', value: 'Perfil' },
+  { path: '/manager/profile', value: 'Perfil' },
   { path: '/login', value: 'Sair' }
 ];
 
@@ -88,7 +88,7 @@ onMounted(() => {
 @media (max-width: 768px) {
   .content {
     flex-direction: column;
-    padding: 10px;
+    padding: 2px;
   }
 
   .sidebar {
@@ -97,7 +97,13 @@ onMounted(() => {
   }
 
   .main-content {
-    margin-left: 0;
+    border-radius: 0;
+    margin: 0;
+    padding: 0;
+  }
+  .team {
+    border: none;
+    border-radius: 0;
   }
 }
 </style>

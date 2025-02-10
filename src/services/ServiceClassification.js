@@ -26,7 +26,6 @@ const staticTeam = {
 const sortClassification = (chanpionShip) => {
   const teams = {};
   chanpionShip.matches.forEach((round) => {
-    console.log("round game", round.games);
     for (const key in round.games) {
       const { team1, team2 } = round.games[key];
       if (!teams[team1.teamId]) {
@@ -46,9 +45,6 @@ const sortClassification = (chanpionShip) => {
         teams[team2.teamId].goalsDifference = teams[team2.teamId].goalsFavor - teams[team2.teamId].goalsOwn;
 
         if (team1.score > team2.score) {
-          console.log("ok");
-          console.log("match", round.games[key]);
-          console.log("team1", teams[team1.teamId].totalGames);
           teams[team1.teamId].totalVictories += 1;
           teams[team2.teamId].totalLosses += 1;
           teams[team1.teamId].pontos += 3;
@@ -64,23 +60,20 @@ const sortClassification = (chanpionShip) => {
         }
       }
     };
-    console.log("finish", teams);
   });
 
-  console.log("teams", teams);
-  const x = Object.values(teams).sort((a, b) => {
+  let x = Object.values(teams).sort((a, b) => {
     if (a.pontos === b.pontos) {
       if (a.totalVictories === b.totalVictories) {
-        if (a.goalsDifference === b.goalsDifference) {
+        if (a.goalsFavor - a.goalsOwn === b.goalsFavor - b.goalsOwn) {
           return a.goalsFavor - b.goalsFavor;
         }
-        return a.goalsDifference - b.goalsDifference;
+        return (b.goalsFavor - b.goalsOwn) - (a.goalsFavor - a.goalsOwn);
       }
-      return a.totalVictories - b.totalVictories;
+      return b.totalVictories - a.totalVictories;
     }
     return b.pontos - a.pontos;
   });
-  console.log("x", x);
   return x;
 };
 

@@ -74,7 +74,6 @@ function maskPhone(input) {
 }
 
 const getUserValues = async (userID) => {
-  console.log(userID);
   const resultUser = await dao.getByField('userId', userID);
   const user = resultUser[0];
   reactiveProfile.currentUser = user;

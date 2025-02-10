@@ -1,6 +1,6 @@
 <script setup>
 import router from '@/router';
-import { defineProps } from 'vue';
+import { defineProps, ref } from 'vue';
 import { AuthService } from '@/services/AuthService';
 import { PiniaStore } from '@/stores';
 
@@ -22,6 +22,12 @@ const home = () => {
   router.push('/home/team/editteam');
 }
 
+const isMenuActive = ref(false);
+
+const toggleMenu = () => {
+  isMenuActive.value = !isMenuActive.value;
+};
+
 const singup = async () => {
   await auth.logout();
   globalStore.clearUserData();
@@ -36,7 +42,12 @@ const singup = async () => {
       <img v-if="imgProfile" :src="imgProfile" alt="imagem de perfil do usuario" srcset="">
       <img v-else src="../assets/profil.png" alt="imagem de perfil do usuario">
     </button>
-    <ul>
+    <div class="hamburger" @click="toggleMenu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    <ul :class="{ 'nav-active': isMenuActive }">
       <li v-for="item in buttonsValues" :key="item.value">
         <router-link class="menu-item" :to="item.path" v-if="item.value != 'Sair'">{{ item.value }}</router-link>
         <a class="menu-item" v-else @click="singup">{{ item.value }}</a>
@@ -55,7 +66,6 @@ const singup = async () => {
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   width: 100%;
-  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -122,4 +132,76 @@ ul {
   list-style-type: none;
   padding: 5px 10px;
 }
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.hamburger span {
+  height: 3px;
+  width: 25px;
+  background: #fff;
+  margin: 4px 0;
+  transition: 0.4s;
+}
+
+@media screen and (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .nav-active {
+    margin-top: 10px;
+    background-color: #1a1a1a;
+  }
+
+  ul {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    background-color: #333;
+    padding: 10px 0;
+  }
+
+  ul.nav-active {
+    display: flex;
+  }
+
+  li {
+    text-align: center;
+    padding: 10px 0;
+  }
+
+  .menu-item {
+    font-size: 18px;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .navBar {
+    padding: 10px;
+  }
+
+  .logo img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .hamburger span {
+    width: 20px;
+  }
+
+  .menu-item {
+    font-size: 16px;
+  }
+}
+
+
+
+
 </style>

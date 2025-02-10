@@ -5,7 +5,7 @@ import Navbar from '@/components/NavBar.vue';
 const buttonsValues = [
   { path: '/manager', value: 'Gerenciar Torneios' },
   { path: '/manager/created', value: 'Criar Campeonato' },
-  { path: '/manager/perfil', value: 'Perfil' },
+  { path: '/manager/profile', value: 'Perfil' },
   { path: '/login', value: 'Sair' }
 ];
 
