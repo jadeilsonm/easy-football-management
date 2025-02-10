@@ -55,8 +55,8 @@ const updatePlayer = async () => {
   await reSeedsPlayersInList();
 };
 
-const DeletePlayer = async (indexDeletePlayer) => {
-  await DAOPlayers.delete(stateListPlayers.currentListPlayers[indexDeletePlayer].id);
+const DeletePlayer = async (id) => {
+  await DAOPlayers.delete(id);
   await reSeedsPlayersInList();
   console.log(stateListPlayers);
 };
@@ -121,8 +121,8 @@ onMounted(() => {
           <td>{{ players.position }}</td>
           <td>{{ players.number }}</td>
           <td>
-            <button @click="editPlayer(index)">Editar</button>
-            <button @click="DeletePlayer(index)">Excluir</button>
+            <button @click="editPlayer(players.id)">Editar</button>
+            <button @click="DeletePlayer(players.id)">Excluir</button>
           </td>
         </tr>
       </tbody>
