@@ -121,7 +121,7 @@ onMounted(() => {
           <td>{{ players.position }}</td>
           <td>{{ players.number }}</td>
           <td>
-            <button @click="editPlayer(players.id)">Editar</button>
+            <button @click="editPlayer(index)">Editar</button>
             <button @click="DeletePlayer(players.id)">Excluir</button>
           </td>
         </tr>
