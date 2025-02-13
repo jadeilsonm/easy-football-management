@@ -84,8 +84,10 @@ const reSeedsPlayersInList = async () => {
   }
 };
 
+const auth = getAuth();
+
 onMounted(() => {
-  onAuthStateChanged(getAuth, async (user) => {
+  onAuthStateChanged(auth, async (user) => {
     if (user) {
       const uuid = user.uid;
       globalStore.setUserId(uuid);
