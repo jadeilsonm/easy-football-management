@@ -1,7 +1,8 @@
 <script setup>
 import { ref, reactive, onMounted } from "vue";
-import { DAOPlayers } from "@/services"
+import { DAOPlayers, DAOTeams } from "@/services"
 import { PiniaStore } from '@/stores';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 const globalStore = PiniaStore();
 
 const editingPlayerIndex = ref(null)
@@ -64,6 +65,15 @@ const cancelEdit = () => {
   stateListPlayers.currentListInputUpdate = { name: '', position: '', number: '' };
 };
 
+const getByIdTeam = async (userId) => {
+  try {
+    const [response] = await DAOTeams.getByField('userId', userId);
+    globalStore.setMyTeam(response);
+  } catch (error) {
+    console.error('Erro ao carregar os dados:', error);
+  }
+};
+
 const reSeedsPlayersInList = async () => {
   try {
     console.log(stateListPlayers.teamId)
@@ -74,12 +84,19 @@ const reSeedsPlayersInList = async () => {
   }
 };
 
-onMounted(async () => {
+onMounted(() => {
+  onAuthStateChanged(getAuth, async (user) => {
+    if (user) {
+      const uuid = user.uid;
+      globalStore.setUserId(uuid);
+      await getByIdTeam(uuid);
+    }
 
-      stateListPlayers.teamId = globalStore.getMyTeam.id;
-      const response = await DAOPlayers.getByField('teamId', globalStore.getMyTeam.id);
-      stateListPlayers.currentListPlayers = response;
-})
+    stateListPlayers.teamId = globalStore.getMyTeam.id;
+    const response = await DAOPlayers.getByField('teamId', globalStore.getMyTeam.id);
+    stateListPlayers.currentListPlayers = response;
+  });
+});
 
 </script>
 
