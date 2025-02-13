@@ -36,7 +36,7 @@ const insertPlayers = async () => {
 
 const editPlayer = (index) => {
   editingPlayerIndex.value = index;
-  stateListPlayers.currentListInputUpdate = { ...stateListPlayers.currentListPlayers[index] };
+  stateListPlayers.currentListInputUpdate = stateListPlayers.currentListInput;
 };
 
 const updatePlayer = async () => {
@@ -83,7 +83,6 @@ onMounted(() => {
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       stateListPlayers.teamId = globalStore.getMyTeam.id;
-      console.log(stateListPlayers.teamId)
       const response = await DAOPlayers.getByField('teamId', globalStore.getMyTeam.id);
       stateListPlayers.currentListPlayers = response;
     } else {
