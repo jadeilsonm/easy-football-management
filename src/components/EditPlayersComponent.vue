@@ -35,6 +35,7 @@ const insertPlayers = async () => {
 
 const editPlayer = (index) => {
   editingPlayerIndex.value = index;
+  stateListPlayers.currentListInput = stateListPlayers.currentListPlayers[editingPlayerIndex.value];
   stateListPlayers.currentListInputUpdate = stateListPlayers.currentListInput;
 };
 
