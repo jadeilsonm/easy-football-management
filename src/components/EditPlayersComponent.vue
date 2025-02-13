@@ -64,6 +64,7 @@ const DeletePlayer = async (id) => {
 const cancelEdit = () => {
   editingPlayerIndex.value = null;
   stateListPlayers.currentListInputUpdate = { name: '', position: '', number: '' };
+  stateListPlayers.currentListInput = { name: '', position: '', number: '' };
 };
 
 const getByIdTeam = async (userId) => {
