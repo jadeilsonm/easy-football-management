@@ -1,8 +1,6 @@
 <script setup>
 import { ref, reactive, onMounted } from "vue";
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { DAOPlayers } from "@/services"
-import router from '@/router';
 import { PiniaStore } from '@/stores';
 const globalStore = PiniaStore();
 
@@ -76,20 +74,11 @@ const reSeedsPlayersInList = async () => {
   }
 };
 
+onMounted(async () => {
 
-const auth = getAuth();
-
-onMounted(() => {
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
       stateListPlayers.teamId = globalStore.getMyTeam.id;
       const response = await DAOPlayers.getByField('teamId', globalStore.getMyTeam.id);
       stateListPlayers.currentListPlayers = response;
-    } else {
-      globalStore.clearUserData();
-      router.push('/login');
-    }
-  });
 })
 
 </script>
