@@ -5,7 +5,7 @@ import { STATUS } from "@/Enums/status";
 import { reactive } from "vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 // import { DAOService } from "@/services/DAOService";
-import { DAOChanpionShip, DAOClassification } from "@/services";
+// import { DAOChanpionShip, DAOClassification } from "@/services";
 import router from "@/router";
 
 const reactiveInputManager = reactive({

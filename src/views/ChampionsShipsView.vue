@@ -1,7 +1,7 @@
 <script setup>
 import NavBar from '@/components/NavBar.vue';
 import router from '@/router';
-import { DAOChanpionShip } from '@/services';
+// import { DAOChanpionShip } from '@/services';
 import { ref, onMounted } from 'vue';
 import { PiniaStore } from '@/stores';
 

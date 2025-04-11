@@ -1,14 +1,14 @@
 <script setup>
 import NavBar from '@/components/NavBar.vue';
 import { onMounted, reactive } from 'vue';
-import { DAOService } from '@/services/DAOService';
-import { uploadFile } from '@/services/S3Bucket';
+// import { DAOService } from '@/services/DAOService';
+// import { uploadFile } from '@/services/S3Bucket';
 import LoadComponent from '@/components/LoadComponent.vue';
 import InputGeneric from '@/components/InputGeneric.vue';
 import { PiniaStore } from '@/stores';
 
 
-const dao = new DAOService('users');
+// const dao = new DAOService('users');
 
 const buttonsValues = [{path:'/home/team/editteam',value:'Principal'}, {path:'/manager/created',value:'Criar Campeonato'}, {path:'/manager/league',value:'Campeonatos'}, {path:'/login',value:'Sair'}]
 
@@ -33,21 +33,21 @@ const reactiveProfile = reactive({
   currentUser: '',
   isLoad: true,
   uploadImage: async (e) => {
-    const file = e.target.files[0];
-    const dataUpload = await uploadFile(file);
-    console.log(dataUpload);
-    reactiveProfile.imgProfile = dataUpload;
+    // const file = e.target.files[0];
+    // const dataUpload = await uploadFile(file);
+    // console.log(dataUpload);
+    // reactiveProfile.imgProfile = dataUpload;
   },
   save: async () => {
-    await dao.update(reactiveProfile.currentUser.id, {
-      name: reactiveProfile.inputname,
-      imgProfile: reactiveProfile.inputimgProfile,
-      phone: maskPhone(reactiveProfile.inputphone),
-      city: reactiveProfile.inputcity,
-      state: reactiveProfile.inputstate,
-      country: reactiveProfile.inputcountry,
-      teamFavorite: reactiveProfile.inputteamFavorite
-    });
+    // await dao.update(reactiveProfile.currentUser.id, {
+    //   name: reactiveProfile.inputname,
+    //   imgProfile: reactiveProfile.inputimgProfile,
+    //   phone: maskPhone(reactiveProfile.inputphone),
+    //   city: reactiveProfile.inputcity,
+    //   state: reactiveProfile.inputstate,
+    //   country: reactiveProfile.inputcountry,
+    //   teamFavorite: reactiveProfile.inputteamFavorite
+    // });
   },
   changeModal: () => {
     reactiveProfile.isActivateModal = !reactiveProfile.isActivateModal;
@@ -74,18 +74,18 @@ function maskPhone(input) {
 }
 
 const getUserValues = async (userID) => {
-  const resultUser = await dao.getByField('userId', userID);
-  const user = resultUser[0];
-  reactiveProfile.currentUser = user;
-  reactiveProfile.name = user.name;
-  reactiveProfile.email = user.email;
-  reactiveProfile.imgProfile = user.imgProfile || '../../src/assets/profil.png';
-  reactiveProfile.phone = user.phone || '(99) 99999-9999';
-  reactiveProfile.city = user.city || '';
-  reactiveProfile.state = user.state || '';
-  reactiveProfile.country = user.country || '';
-  reactiveProfile.teamFavorite = user.teamFavorite || '';
-  reactiveProfile.isLoad = false;
+  // const resultUser = await dao.getByField('userId', userID);
+  // const user = resultUser[0];
+  // reactiveProfile.currentUser = user;
+  // reactiveProfile.name = user.name;
+  // reactiveProfile.email = user.email;
+  // reactiveProfile.imgProfile = user.imgProfile || '../../src/assets/profil.png';
+  // reactiveProfile.phone = user.phone || '(99) 99999-9999';
+  // reactiveProfile.city = user.city || '';
+  // reactiveProfile.state = user.state || '';
+  // reactiveProfile.country = user.country || '';
+  // reactiveProfile.teamFavorite = user.teamFavorite || '';
+  // reactiveProfile.isLoad = false;
 }
 
 const globalStore = PiniaStore();

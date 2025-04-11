@@ -1,8 +1,8 @@
 <script setup>
 import { ref, reactive, onMounted } from "vue";
-import { DAOPlayers, DAOTeams } from "@/services"
+// import { DAOPlayers, DAOTeams } from "@/services"
 import { PiniaStore } from '@/stores';
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+// import { getAuth, onAuthStateChanged } from "firebase/auth";
 const globalStore = PiniaStore();
 
 const editingPlayerIndex = ref(null)
@@ -19,19 +19,19 @@ const stateListPlayers = reactive({
 
 const pt = ['AT', 'MC', 'LD', 'LE', 'GL', 'VOL', 'ZG']
 
-const insertPlayers = async () => {
-  try {
-    if (!pt.includes(stateListPlayers.currentListInput.position)) {
-      alert('Posição inválida');
-      return;
-    }
-    await DAOPlayers.create({ ...stateListPlayers.currentListInput, teamId: stateListPlayers.teamId });
-    stateListPlayers.currentListInput = { name: '', position: '', number: '' };
-    await reSeedsPlayersInList();
-  } catch (error) {
-    console.error('Erro ao inserir os dados:', error);
-  }
-};
+// const insertPlayers = async () => {
+//   try {
+//     if (!pt.includes(stateListPlayers.currentListInput.position)) {
+//       alert('Posição inválida');
+//       return;
+//     }
+//     await DAOPlayers.create({ ...stateListPlayers.currentListInput, teamId: stateListPlayers.teamId });
+//     stateListPlayers.currentListInput = { name: '', position: '', number: '' };
+//     await reSeedsPlayersInList();
+//   } catch (error) {
+//     console.error('Erro ao inserir os dados:', error);
+//   }
+// };
 
 const editPlayer = (index) => {
   editingPlayerIndex.value = index;
@@ -42,13 +42,13 @@ const editPlayer = (index) => {
 const updatePlayer = async () => {
   const { id } = stateListPlayers.currentListPlayers[editingPlayerIndex.value]
   if (editingPlayerIndex.value !== null) {
-    await DAOPlayers.update(id, stateListPlayers.currentListInputUpdate);
+    // await DAOPlayers.update(id, stateListPlayers.currentListInputUpdate);
     cancelEdit();
   }
 
   try {
     const { id, name, position, number } = stateListPlayers.currentListInputUpdate
-    await DAOPlayers.update(id, { name, position, number });
+    // await DAOPlayers.update(id, { name, position, number });
   } catch (error) {
     console.error('Erro ao editar os dados:', error);
   }
@@ -56,7 +56,7 @@ const updatePlayer = async () => {
 };
 
 const DeletePlayer = async (id) => {
-  await DAOPlayers.delete(id);
+  // await DAOPlayers.delete(id);
   await reSeedsPlayersInList();
   console.log(stateListPlayers);
 };
@@ -69,8 +69,8 @@ const cancelEdit = () => {
 
 const getByIdTeam = async (userId) => {
   try {
-    const [response] = await DAOTeams.getByField('userId', userId);
-    globalStore.setMyTeam(response);
+    // const [response] = await DAOTeams.getByField('userId', userId);
+    // globalStore.setMyTeam(response);
   } catch (error) {
     console.error('Erro ao carregar os dados:', error);
   }
@@ -79,27 +79,26 @@ const getByIdTeam = async (userId) => {
 const reSeedsPlayersInList = async () => {
   try {
     console.log(stateListPlayers.teamId)
-    const response = await DAOPlayers.getByField('teamId', stateListPlayers.teamId);
-    stateListPlayers.currentListPlayers = response;
+    // const response = await DAOPlayers.getByField('teamId', stateListPlayers.teamId);
+    // stateListPlayers.currentListPlayers = response;
   } catch (error) {
     console.error('Erro ao carregar os dados:', error);
   }
 };
 
-const auth = getAuth();
+// const auth = getAuth();
 
 onMounted(() => {
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      const uuid = user.uid;
-      globalStore.setUserId(uuid);
-      await getByIdTeam(uuid);
-    }
+  // onAuthStateChanged(auth, async (user) => {
+  //   if (user) {
+  //     const uuid = user.uid;
+  //     globalStore.setUserId(uuid);
+  //     await getByIdTeam(uuid);
+  //   }
 
-    stateListPlayers.teamId = globalStore.getMyTeam.id;
-    const response = await DAOPlayers.getByField('teamId', globalStore.getMyTeam.id);
-    stateListPlayers.currentListPlayers = response;
-  });
+  //   stateListPlayers.teamId = globalStore.getMyTeam.id;
+
+  // });
 });
 
 </script>

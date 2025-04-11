@@ -29,53 +29,53 @@ const router = createRouter({
       name: 'about',
       component: AboutView
     },
-    {
-      path: '/manager/created',
-      name: 'manager/created',
-      component: ManagerCreated,
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/manager',
-      name: 'manager',
-      component: ChampionsShipsView,
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/manager/cup/:id',
-      name: 'manager/cup',
-      component: CupView,
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/manager/league/:id',
-      name: 'manager/league',
-      component: LeagueComponent,
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/manager/league/matches/:id',
-      name: '/manager/league/matches',
-      component: RoundMatchesView,
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/manager/matches/result/:championshipID/round/:numberRound/match/:numberMatch',
-      name: '/manager/matches/result/round',
-      component: MatchResultView,
-      meta: { requiresAuth: true }
-    },
+    // {
+    //   path: '/manager/created',
+    //   name: 'manager/created',
+    //   component: ManagerCreated,
+    //   // meta: { requiresAuth: true }
+    // },
+    // {
+    //   path: '/manager',
+    //   name: 'manager',
+    //   component: ChampionsShipsView,
+    //   // meta: { requiresAuth: true }
+    // },
+    // {
+    //   path: '/manager/cup/:id',
+    //   name: 'manager/cup',
+    //   component: CupView,
+    //   // meta: { requiresAuth: true }
+    // },
+    // {
+    //   path: '/manager/league/:id',
+    //   name: 'manager/league',
+    //   component: LeagueComponent,
+    //   // meta: { requiresAuth: true }
+    // },
+    // {
+    //   path: '/manager/league/matches/:id',
+    //   name: '/manager/league/matches',
+    //   component: RoundMatchesView,
+    //   // meta: { requiresAuth: true }
+    // },
+    // {
+    //   path: '/manager/matches/result/:championshipID/round/:numberRound/match/:numberMatch',
+    //   name: '/manager/matches/result/round',
+    //   component: MatchResultView,
+    //   // meta: { requiresAuth: true }
+    // },
     {
       path: '/manager/Profile',
       name: 'manager/Profile',
       component: ManagerProfile,
-      meta: { requiresAuth: true }
+      // meta: { requiresAuth: true }
     },
     {
       path: '/home',
       name: 'home',
       component: HomeView,
-      meta: { requiresAuth: true },
+      // meta: { requiresAuth: true },
       children: [
         {
           path: 'team', name: 'team', component: PlayersComponent,
@@ -90,15 +90,15 @@ const router = createRouter({
             }
           ]
         },
-        { path: 'subscribed', name: 'subscribed', component: SubscribedComponent },
-        {
-          path: 'search', name: 'search', component: SearchComponent,
-        },
-        {
-          path: 'championship/details/:id',
-          name: 'championsshipdetails',
-          component: ChampionShipComponent,
-        },
+      //   { path: 'subscribed', name: 'subscribed', component: SubscribedComponent },
+      //   {
+      //     path: 'search', name: 'search', component: SearchComponent,
+      //   },
+      //   {
+      //     path: 'championship/details/:id',
+      //     name: 'championsshipdetails',
+      //     component: ChampionShipComponent,
+      //   },
       ]
     },
     {
@@ -111,32 +111,32 @@ const router = createRouter({
       name: 'register',
       component: RegisterView
     },
-    {
-      path: '/copa',
-      name: 'copa',
-      component: CopaView,
-      meta: { requiresAuth: true }
-    }
+    // {
+    //   path: '/copa',
+    //   name: 'copa',
+    //   component: CopaView,
+    //   // meta: { requiresAuth: true }
+    // }
   ]
 })
 
-router.beforeEach((to, from, next) => {
-  const auth = getAuth();
-  const globalStore = PiniaStore();
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+// router.beforeEach((to, from, next) => {
+//   const auth = getAuth();
+//   const globalStore = PiniaStore();
+//   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
-  if (requiresAuth) {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        next();
-      } else {
-        globalStore.clearUserData();
-        next('/login')
-      }
-    })
-  } else {
-    next();
-  }
-})
+//   if (requiresAuth) {
+//     onAuthStateChanged(auth, (user) => {
+//       if (user) {
+//         next();
+//       } else {
+//         globalStore.clearUserData();
+//         next('/login')
+//       }
+//     })
+//   } else {
+//     next();
+//   }
+// })
 
 export default router

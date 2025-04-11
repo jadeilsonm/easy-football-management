@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, toRefs, onMounted } from "vue";
-import { DAOChanpionShip } from "@/services";
+// import { DAOChanpionShip } from "@/services";
 import { useRoute } from 'vue-router'
 import router from "@/router";
 import { PiniaStore } from '@/stores';

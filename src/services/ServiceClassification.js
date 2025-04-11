@@ -1,15 +1,15 @@
-import { DAOChanpionShip } from ".";
+// import { DAOChanpionShip } from ".";
 import { genereateRoundMatches } from "./ServiceRoundMatches";
 
-const getChampionShip = async (championShipId) => {
-  const result = await DAOChanpionShip.getById(championShipId);
-  if (result.matches === undefined) {
-    const matchsGenerated = genereateRoundMatches(result.teams);
-    result.matches = matchsGenerated;
-    await DAOChanpionShip.update(championShipId, result);
-  }
-  return result;
-};
+// const getChampionShip = async (championShipId) => {
+//   // const result = await DAOChanpionShip.getById(championShipId);
+//   if (result.matches === undefined) {
+//     const matchsGenerated = genereateRoundMatches(result.teams);
+//     result.matches = matchsGenerated;
+//     await DAOChanpionShip.update(championShipId, result);
+//   }
+//   return result;
+// };
 
 const staticTeam = {
   pontos: 0,

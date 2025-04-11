@@ -2,12 +2,12 @@
 import AsideComponent from "@/components/AsideComponent.vue";
 import { RouterView } from "vue-router";
 import { onMounted } from "vue";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { DAOTeams } from '../services/index'
+// import { getAuth, onAuthStateChanged } from "firebase/auth";
+// import { DAOTeams } from '../services/index'
 import { PiniaStore } from '@/stores';
 import NavBar from "@/components/NavBar.vue";
 
-const globalStore = PiniaStore();
+// const globalStore = PiniaStore();
 
 const buttonsValues = [
   { path: '/manager', value: 'Gerenciar Torneios' },
@@ -17,24 +17,24 @@ const buttonsValues = [
 ];
 
 const getByIdTeam = async (userId) => {
-  try {
-    const [response] = await DAOTeams.getByField('userId', userId);
-    globalStore.setMyTeam(response);
-  } catch (error) {
-    console.error('Erro ao carregar os dados:', error);
-  }
+  // try {
+  //   const [response] = await DAOTeams.getByField('userId', userId);
+  //   globalStore.setMyTeam(response);
+  // } catch (error) {
+  //   console.error('Erro ao carregar os dados:', error);
+  // }
 };
 
-const auth = getAuth();
+// const auth = getAuth();
 
 onMounted(() => {
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      const uuid = user.uid;
-      globalStore.setUserId(uuid);
-      getByIdTeam(uuid);
-    }
-  });
+  // onAuthStateChanged(auth, (user) => {
+  //   if (user) {
+  //     const uuid = user.uid;
+  //     globalStore.setUserId(uuid);
+  //     getByIdTeam(uuid);
+  //   }
+  // });
 });
 </script>
 

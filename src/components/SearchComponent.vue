@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { DAOChanpionShip } from "@/services";
+// import { DAOChanpionShip } from "@/services";
 import router from "@/router";
 
 const state = ref([]);
@@ -9,14 +9,14 @@ const buttonRedirect = (championShipId) => {
   router.push({ name: 'championsshipdetails', params: { id: championShipId } })
 }
 
-onMounted(async () => {
-  try {
-    const response = await DAOChanpionShip.getAll();
-    state.value = response.filter(chanpionShip => chanpionShip.status === "CREATED");
-  } catch (error) {
-    console.error('Erro ao carregar os dados:', error);
-  }
-});
+// onMounted(async () => {
+//   try {
+//     const response = await DAOChanpionShip.getAll();
+//     state.value = response.filter(chanpionShip => chanpionShip.status === "CREATED");
+//   } catch (error) {
+//     console.error('Erro ao carregar os dados:', error);
+//   }
+// });
 
 </script>
 <template>
