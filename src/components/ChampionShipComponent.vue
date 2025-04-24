@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, toRefs, onMounted } from "vue";
-// import { DAOChanpionShip } from "@/services";
+import { RequestChampionshipsByIdAPI } from "@/services/api/RequestChampionshipsAPI";
 import { useRoute } from 'vue-router'
 import router from "@/router";
 import { PiniaStore } from '@/stores';
@@ -40,7 +40,8 @@ const subcribeChanpinsShip = async () => {
 
 const defaultResquest = async () => {
   try {
-    const responseChampionsShip = await DAOChanpionShip.getById(route.params.id);
+    const [responseChampionsShip] = await RequestChampionshipsByIdAPI(route.params.id);
+    console.log('responseChampionsShip', responseChampionsShip);
     state.chanpionsShip = responseChampionsShip;
   } catch (error) {
     console.error('Erro ao carregar os dados:', error);

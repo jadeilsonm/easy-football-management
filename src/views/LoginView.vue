@@ -35,6 +35,7 @@ const validatePassword = () => {
 
 const login = async () => {
   try {
+    console.log({email: email.value, password: password.value});
     const responseAPI = await RequestLoginAPI({email: email.value, password: password.value});
     globalStore.setToken(responseAPI.token);
     router.push('/home');
@@ -71,7 +72,7 @@ const loginGoogle = async () => {
         <input type="text" placeholder="Email" v-model="email" @keyup="valisEmail">
         <input type="password" placeholder="Senha" v-model="password" @keyup="validatePassword">
 
-        <button @click="login" :disabled='isDisabled'>Entrar</button>
+        <button @click="login" :disabled='false'>Entrar</button>
         <button @click="loginGoogle" class="google">Entrar com <img src="../assets/google.png" class="google-img" srcset=""></button>
         <router-link to="/register">Não tem uma conta? Registre-se</router-link>
         <span v-if="error">{{ error }}</span>

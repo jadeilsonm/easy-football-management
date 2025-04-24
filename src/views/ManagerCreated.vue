@@ -3,7 +3,7 @@ import NavBar from "@/components/NavBar.vue";
 import Input from "@/components/InputGeneric.vue";
 import { STATUS } from "@/Enums/status";
 import { reactive } from "vue";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+// import { getAuth, onAuthStateChanged } from "firebase/auth";
 // import { DAOService } from "@/services/DAOService";
 // import { DAOChanpionShip, DAOClassification } from "@/services";
 import router from "@/router";
@@ -17,7 +17,7 @@ const reactiveInputManager = reactive({
   description: ''
 })
 
-const auth = getAuth();
+// const auth = getAuth();
 
 onAuthStateChanged(auth, (user) => {
   if (user) {

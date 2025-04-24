@@ -1,8 +1,9 @@
 <script setup>
 import { ref, reactive, onMounted } from "vue";
-// import { DAOPlayers, DAOTeams } from "@/services"
 import { PiniaStore } from '@/stores';
-// import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { RequestGenericsAPI, RequestGenericPostAPI,
+  //  RequestGenericDeleteAPI
+} from "@/services/api/RequestGenericAPI";
 const globalStore = PiniaStore();
 
 const editingPlayerIndex = ref(null)
@@ -19,19 +20,17 @@ const stateListPlayers = reactive({
 
 const pt = ['AT', 'MC', 'LD', 'LE', 'GL', 'VOL', 'ZG']
 
-// const insertPlayers = async () => {
-//   try {
-//     if (!pt.includes(stateListPlayers.currentListInput.position)) {
-//       alert('Posição inválida');
-//       return;
-//     }
-//     await DAOPlayers.create({ ...stateListPlayers.currentListInput, teamId: stateListPlayers.teamId });
-//     stateListPlayers.currentListInput = { name: '', position: '', number: '' };
-//     await reSeedsPlayersInList();
-//   } catch (error) {
-//     console.error('Erro ao inserir os dados:', error);
-//   }
-// };
+const insertPlayers = async () => {
+  try {
+    console.log({ ...stateListPlayers.currentListInput, teamId: globalStore.getMyTeam.id });
+    await RequestGenericPostAPI("/api/v1/player", '', "POST", { ...stateListPlayers.currentListInput, teamId: globalStore.getMyTeam.id }); //Url, Params, Method, Body
+    stateListPlayers.currentListPlayers.push({ ...stateListPlayers.currentListInput, teamId: stateListPlayers.teamId })
+    stateListPlayers.currentListInput = { name: '', position: '', number: '' };
+    await reSeedsPlayersInList();
+  } catch (error) {
+    console.error('Erro ao inserir os dados:', error);
+  }
+};
 
 const editPlayer = (index) => {
   editingPlayerIndex.value = index;
@@ -56,9 +55,13 @@ const updatePlayer = async () => {
 };
 
 const DeletePlayer = async (id) => {
-  // await DAOPlayers.delete(id);
-  await reSeedsPlayersInList();
-  console.log(stateListPlayers);
+  // try {
+  //   await RequestGenericDeleteAPI("/api/v1/player", id, );
+
+  // } catch (error) {
+
+  // }
+  // console.log(stateListPlayers);
 };
 
 const cancelEdit = () => {
@@ -88,7 +91,7 @@ const reSeedsPlayersInList = async () => {
 
 // const auth = getAuth();
 
-onMounted(() => {
+onMounted(async () => {
   // onAuthStateChanged(auth, async (user) => {
   //   if (user) {
   //     const uuid = user.uid;
@@ -99,6 +102,10 @@ onMounted(() => {
   //   stateListPlayers.teamId = globalStore.getMyTeam.id;
 
   // });
+  console.log(globalStore.getMyTeam.id)
+  const result = await RequestGenericsAPI("/api/v1/player/team",globalStore.getMyTeam.id,"GET");
+  console.log(result)
+  stateListPlayers.currentListPlayers = result;
 });
 
 </script>

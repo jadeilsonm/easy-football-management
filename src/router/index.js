@@ -3,22 +3,22 @@ import HomeView from '../views/HomeView.vue'
 import ManagerCreated from '@/views/ManagerCreated.vue'
 import LoginView from '../views/LoginView.vue'
 import PlayersComponent from '../components/TeamComponent.vue'
-import SubscribedComponent from '../components/SubscribedComponent.vue'
+// import SubscribedComponent from '../components/SubscribedComponent.vue'
 import SearchComponent from '../components/SearchComponent.vue'
 import StatisticPlayersComponent from '@/components/StatisticPlayersComponent.vue'
 import EditPlayersComponent from '@/components/EditPlayersComponent.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import ManagerProfile from '@/views/ManagerProfile.vue'
 import ChampionShipComponent from '@/components/ChampionShipComponent.vue'
-import CopaView from '@/views/ChampionsShipsView.vue'
-import ChampionsShipsView from '@/views/ChampionsShipsView.vue'
-import CupView from '@/views/CupView.vue'
-import LeagueComponent from '@/views/LeagueView.vue'
-import RoundMatchesView from '@/views/RoundMatchesView.vue'
-import MatchResultView from '@/views/MatchResultView.vue'
-import { PiniaStore } from '@/stores'
-import { onAuthStateChanged } from 'firebase/auth'
-import { getAuth } from 'firebase/auth'
+// import CopaView from '@/views/ChampionsShipsView.vue'
+// import ChampionsShipsView from '@/views/ChampionsShipsView.vue'
+// import CupView from '@/views/CupView.vue'
+// import LeagueComponent from '@/views/LeagueView.vue'
+// import RoundMatchesView from '@/views/RoundMatchesView.vue'
+// import MatchResultView from '@/views/MatchResultView.vue'
+// import { PiniaStore } from '@/stores'
+// import { onAuthStateChanged } from 'firebase/auth'
+// import { getAuth } from 'firebase/auth'
 import AboutView from '@/views/AboutView.vue'
 
 const router = createRouter({
@@ -29,12 +29,12 @@ const router = createRouter({
       name: 'about',
       component: AboutView
     },
-    // {
-    //   path: '/manager/created',
-    //   name: 'manager/created',
-    //   component: ManagerCreated,
-    //   // meta: { requiresAuth: true }
-    // },
+    {
+      path: '/manager/created',
+      name: 'manager/created',
+      component: ManagerCreated,
+      // meta: { requiresAuth: true }
+    },
     // {
     //   path: '/manager',
     //   name: 'manager',
@@ -91,14 +91,14 @@ const router = createRouter({
           ]
         },
       //   { path: 'subscribed', name: 'subscribed', component: SubscribedComponent },
-      //   {
-      //     path: 'search', name: 'search', component: SearchComponent,
-      //   },
-      //   {
-      //     path: 'championship/details/:id',
-      //     name: 'championsshipdetails',
-      //     component: ChampionShipComponent,
-      //   },
+        {
+          path: 'search', name: 'search', component: SearchComponent,
+        },
+        {
+          path: 'championship/details/:id',
+          name: 'championsshipdetails',
+          component: ChampionShipComponent,
+        },
       ]
     },
     {

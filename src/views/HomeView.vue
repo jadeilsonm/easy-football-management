@@ -2,12 +2,12 @@
 import AsideComponent from "@/components/AsideComponent.vue";
 import { RouterView } from "vue-router";
 import { onMounted } from "vue";
-// import { getAuth, onAuthStateChanged } from "firebase/auth";
-// import { DAOTeams } from '../services/index'
 import { PiniaStore } from '@/stores';
 import NavBar from "@/components/NavBar.vue";
 
-// const globalStore = PiniaStore();
+import { RequestGenericsAPI } from "@/services/api/RequestGenericAPI";
+
+const globalStore = PiniaStore();
 
 const buttonsValues = [
   { path: '/manager', value: 'Gerenciar Torneios' },
@@ -27,14 +27,14 @@ const getByIdTeam = async (userId) => {
 
 // const auth = getAuth();
 
-onMounted(() => {
-  // onAuthStateChanged(auth, (user) => {
-  //   if (user) {
-  //     const uuid = user.uid;
-  //     globalStore.setUserId(uuid);
-  //     getByIdTeam(uuid);
-  //   }
-  // });
+onMounted(async () => {
+  if (globalStore.getUser !== null) {
+    return;
+  }
+  const result = await RequestGenericsAPI("/api/v1/users","","GET");//Url, Params, Method, Body
+  globalStore.setUserId(result.id)
+  globalStore.setMyTeam(result.team)
+
 });
 </script>
 
