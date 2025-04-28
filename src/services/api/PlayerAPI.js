@@ -1,3 +1,4 @@
+import { API_URL } from "@/Utils/constantes";
 
 export const RequestAllPlayersTeamAPI = async (PramasId) => {
   const url = `http://localhost:8080/api/v1/players/${PramasId}`;

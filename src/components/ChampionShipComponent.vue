@@ -1,6 +1,9 @@
 <script setup>
 import { reactive, toRefs, onMounted } from "vue";
 import { RequestChampionshipsByIdAPI } from "@/services/api/RequestChampionshipsAPI";
+import { RequestChampionshipsTeamsAPI
+  , getChampionshipsTeams, DeleteChampionshipsTeams
+} from "@/services/api/RequestChampionshipsTeamsAPI";
 import { useRoute } from 'vue-router'
 import router from "@/router";
 import { PiniaStore } from '@/stores';
@@ -22,18 +25,29 @@ const backUrl = () => {
 
 const subcribeChanpinsShip = async () => {
   try {
-    const responseAPIchanpionsShip = await DAOChanpionShip.getById(chanpionsShip.value.id)
-    if(!responseAPIchanpionsShip.teams.some(team => team.id === globalStore.myTeam.id)) {
-      await DAOChanpionShip.update(chanpionsShip.value.id, {
-        teams: [
-          ...responseAPIchanpionsShip.teams,
-          globalStore.getMyTeam,
-        ]
-      })
-    } else {
-      state.isSubscribed = true
-    }
+    console.log('globalStore.getMyTeam', globalStore.myTeam);
+    console.log('globalStore.getMyTeam', globalStore.myTeam.id);
+    await RequestChampionshipsTeamsAPI({
+      teamId: globalStore.myTeam.id,
+      championshipsId: chanpionsShip.value.id
+    })
+    state.isSubscribed = true;
+
   } catch (error) {
+    state.isSubscribed = true;
+    console.error('Erro ao editar os dados:', error);
+  }
+};
+
+const unsubcribeChanpinsShip = async () => {
+  try {
+    await DeleteChampionshipsTeams({
+      teamId: globalStore.myTeam.id,
+      championshipsId: chanpionsShip.value.id
+    })
+    state.isSubscribed = false;
+  } catch (error) {
+    state.isSubscribed = true;
     console.error('Erro ao editar os dados:', error);
   }
 };
@@ -41,9 +55,19 @@ const subcribeChanpinsShip = async () => {
 const defaultResquest = async () => {
   try {
     const [responseChampionsShip] = await RequestChampionshipsByIdAPI(route.params.id);
-    console.log('responseChampionsShip', responseChampionsShip);
+    // console.log('responseChampionsShip', responseChampionsShip);
     state.chanpionsShip = responseChampionsShip;
+    const isSubscribe = await getChampionshipsTeams(({
+      teamId: globalStore.myTeam.id,
+      championshipsId: chanpionsShip.value.id
+    }));
+
+
+
+      state.isSubscribed = true;
+
   } catch (error) {
+    state.isSubscribed = false;
     console.error('Erro ao carregar os dados:', error);
   }
 }
@@ -77,9 +101,13 @@ onMounted(async () => {
         Premiação: {{ `R$ ${chanpionsShip.value}` }}
       </span>
     </div>
-    <button :class="['btn', { 'btn-red': buttonIsDisable }]"
-      :disabled="isSubscribed" @click="subcribeChanpinsShip">
-      {{ isSubscribed ? 'Já estou inscrito' : 'Inscrever-se' }}
+    <button v-if="isSubscribed"  :class="['btn-red']"
+      @click="unsubcribeChanpinsShip">
+      {{ 'Desinscrever-se' }}
+    </button>
+    <button v-else :class="['btn']"
+       @click="subcribeChanpinsShip">
+      {{ 'Inscrever-se' }}
     </button>
     <button @click="backUrl()">Voltar</button>
   </div>
