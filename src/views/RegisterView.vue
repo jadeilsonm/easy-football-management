@@ -29,7 +29,7 @@ const reactiveInputRegisterUser = reactive({
   validatePassword: () => {
     const password = reactiveInputRegisterUser.password;
     const confirmPassword = reactiveInputRegisterUser.confirmPassword;
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    const passwordRegex = /.*/ ///^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
     if (confirmPassword.length > 1) {
       reactiveInputRegisterUser.isValidPassword = ((password === confirmPassword) && passwordRegex.test(password));
       reactiveInputRegisterUser.errorPassword = !reactiveInputRegisterUser.isValidPassword ? 'Password inválido ou diferentes' : '';
@@ -51,7 +51,7 @@ const reactiveInputRegisterUser = reactive({
 const register = async () => {
   const payload = {
     email: reactiveInputRegisterUser.email,
-    username: reactiveInputRegisterUser.name,
+    name: reactiveInputRegisterUser.name,
     password: reactiveInputRegisterUser.password
   }
 
