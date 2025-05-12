@@ -17,8 +17,9 @@ const insertPlayers = async () => {
   try {
     console.log(stateListPlayers.teamId)
     await RequestGenericPostAPI("/api/v1/player", '', "POST", { ...stateListPlayers.currentListInput, teamId: globalStore.getMyTeam.id }); //Url, Params, Method, Body
-    stateListPlayers.currentListPlayers.push({ ...stateListPlayers.currentListInput, teamId: stateListPlayers.teamId })
+    // stateListPlayers.currentListPlayers.push({ ...stateListPlayers.currentListInput, teamId: stateListPlayers.teamId })
     stateListPlayers.currentListInput = { name: '', position: '', number: '' };
+    getPlayers();
   } catch (error) {
     console.error('Erro ao inserir os dados:', error);
   }
@@ -51,6 +52,7 @@ const cancelEdit = () => {
 
 const DeletePlayer = async (id) => {
   try {
+    console.log(id)
     await DeletePlayersTeamAPI(id);
     stateListPlayers.currentListPlayers = stateListPlayers.currentListPlayers.filter((player) => player.id !== id);
   } catch (error) {
@@ -58,11 +60,20 @@ const DeletePlayer = async (id) => {
   }
 };
 
+const getPlayers = async () => {
+  try {
+    const result = await RequestGenericsAPI("/api/v1/player/team", globalStore.getMyTeam.id, "GET",{});
+    console.log(result);
+    stateListPlayers.teamId = globalStore.getMyTeam.id;
+    stateListPlayers.currentListPlayers = result;
+  } catch (error) {
+    console.error('Erro ao buscar os dados:', error);
+  }
+};
+
+
 onMounted(async () => {
-  const result = await RequestGenericsAPI("/api/v1/player/team", globalStore.getMyTeam.id, "GET",{});
-  console.log(result);
-  stateListPlayers.teamId = globalStore.getMyTeam.id;
-  stateListPlayers.currentListPlayers = result;
+  getPlayers();
 });
 
 </script>
