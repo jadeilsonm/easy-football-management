@@ -1,9 +1,10 @@
 <script setup >
-import { AuthService } from '@/services/AuthService';
 import { ref } from 'vue';
+import router from '@/router';
+import { RequestLoginAPI } from "@/services/api/AuthAPI";
+import { PiniaStore } from '@/stores';
 
-
-const auth = new AuthService();
+const globalStore = PiniaStore();
 
 const error = ref('');
 
@@ -14,7 +15,7 @@ const errorEmail = ref('');
 
 const isDisabled = ref(true);
 
-const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+const passwordRegex = ".*";
 const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 
 const valisEmail =  () => {
@@ -33,11 +34,20 @@ const validatePassword = () => {
 };
 
 const login = async () => {
-  await auth.login(email.value, password.value);
+  try {
+    console.log({email: email.value, password: password.value});
+    const responseAPI = await RequestLoginAPI({email: email.value, password: password.value});
+    globalStore.setToken(responseAPI.token);
+    router.push('/home');
+  } catch (error) {
+    console.error(error);
+  }
+
 }
 
 const loginGoogle = async () => {
-  await auth.loginWhithGoogle();
+  // await auth.loginWhithGoogle();
+  console.log("not implemented");
 }
 
 </script>
@@ -62,7 +72,7 @@ const loginGoogle = async () => {
         <input type="text" placeholder="Email" v-model="email" @keyup="valisEmail">
         <input type="password" placeholder="Senha" v-model="password" @keyup="validatePassword">
 
-        <button @click="login" :disabled='isDisabled'>Entrar</button>
+        <button @click="login" :disabled='false'>Entrar</button>
         <button @click="loginGoogle" class="google">Entrar com <img src="../assets/google.png" class="google-img" srcset=""></button>
         <router-link to="/register">Não tem uma conta? Registre-se</router-link>
         <span v-if="error">{{ error }}</span>

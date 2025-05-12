@@ -5,7 +5,7 @@ import MatchComponent from "./MatchComponent.vue";
 import { useRoute } from "vue-router";
 import LoadComponent from "./LoadComponent.vue";
 import { generatedRoundMatchCup } from "@/services/ServiceRoundMatches";
-import { DAOChanpionShip } from "@/services";
+// import { DAOChanpionShip } from "@/services";
 
 const route = useRoute();
 

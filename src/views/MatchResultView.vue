@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import router from "@/router";
-import { DAOChanpionShip, DAOPlayers } from "@/services";
+// import { DAOChanpionShip, DAOPlayers } from "@/services";
 import NavBar from "@/components/NavBar.vue";
 const route = useRoute();
 

@@ -1,10 +1,11 @@
 <script setup >
 import router from '@/router';
-import { AuthService } from '@/services/AuthService';
-import { DAOService } from '@/services/DAOService';
 import { reactive } from 'vue';
+import { RequestRegisterAPI } from "@/services/api/AuthAPI";
+import { PiniaStore } from '@/stores';
 
-const auth = new AuthService();
+// const auth = new AuthService();
+const globalStore = PiniaStore();
 
 const reactiveInputRegisterUser = reactive({
   email: '',
@@ -28,7 +29,7 @@ const reactiveInputRegisterUser = reactive({
   validatePassword: () => {
     const password = reactiveInputRegisterUser.password;
     const confirmPassword = reactiveInputRegisterUser.confirmPassword;
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    const passwordRegex = /.*/ ///^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
     if (confirmPassword.length > 1) {
       reactiveInputRegisterUser.isValidPassword = ((password === confirmPassword) && passwordRegex.test(password));
       reactiveInputRegisterUser.errorPassword = !reactiveInputRegisterUser.isValidPassword ? 'Password inválido ou diferentes' : '';
@@ -38,33 +39,26 @@ const reactiveInputRegisterUser = reactive({
   errorEmail:'',
   errorPassword:'',
   verifyDisabled: () => {
-    const validate = reactiveInputRegisterUser.isValidEmail && reactiveInputRegisterUser.isValidPassword && reactiveInputRegisterUser.name.length >= 3;
-    // console.log(validate);
+    const validate = reactiveInputRegisterUser.isValidEmail
+      && reactiveInputRegisterUser.isValidPassword
+      && reactiveInputRegisterUser.name.length >= 3;
     reactiveInputRegisterUser.isDisabled = !validate;
   }
 })
 
-const dao = new DAOService('users');
+// const dao = new DAOService('users');
 
 const register = async () => {
   const payload = {
     email: reactiveInputRegisterUser.email,
     name: reactiveInputRegisterUser.name,
-    createdAt: new Date()
+    password: reactiveInputRegisterUser.password
   }
 
   try {
-    const user = await auth.register(reactiveInputRegisterUser.email, reactiveInputRegisterUser.password);
-    if (!user) {
-      alert('Erro ao criar usuário');
-      throw new Error('Erro ao criar usuário');
-    }
-    const uid = user.user.uid;
-    await dao.create({ userId: uid ,...payload });
-    const teamDao = new DAOService('teams');
-    console.log(payload.name.replace(' ')+ '` teams' );
-    await teamDao.create({ userId: uid, name: payload.name.replace(' ')+ '` teams', createdAt: new Date() });
-    router.push('/login');
+    const responseAPI = await RequestRegisterAPI(payload);
+    globalStore.setToken(responseAPI.token);
+    router.push('/home');
   } catch (error) {
     console.error(error);
   }

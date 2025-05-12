@@ -1,16 +1,17 @@
 <script setup>
 import NavBar from '@/components/NavBar.vue';
 import router from '@/router';
-import { DAOChanpionShip } from '@/services';
+import { RequestChampionshipsAPI } from '@/services/api/RequestChampionshipsAPI';
 import { ref, onMounted } from 'vue';
 import { PiniaStore } from '@/stores';
 
+// [{ field: 'status', operator: '==', value: 'CREATED' }, { field: 'userOwner', operator: '==', value: userID }]
 const userID = ref('');
 
 const reactiveChampionsShips = ref([]);
 
 const getChampionsShips = async (userID) => {
-  const response = await DAOChanpionShip.search([{ field: 'status', operator: '==', value: 'CREATED' }, { field: 'userOwner', operator: '==', value: userID }]);
+  const response = await RequestChampionshipsAPI();
   return response;
 }
 

@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, reactive, computed  } from "vue";
-import { DAOChanpionShip } from "@/services";
+// import { DAOChanpionShip } from "@/services";
 import RoundsComponent from '@/components/RoundsComponent.vue';
 import { useRoute } from 'vue-router'
 import router from "@/router";

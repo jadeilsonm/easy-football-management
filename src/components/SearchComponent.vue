@@ -1,7 +1,8 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { DAOChanpionShip } from "@/services";
+// import { DAOChanpionShip } from "@/services";
 import router from "@/router";
+import { RequestChampionshipsAPI } from "@/services/api/RequestChampionshipsAPI";
 
 const state = ref([]);
 
@@ -11,8 +12,8 @@ const buttonRedirect = (championShipId) => {
 
 onMounted(async () => {
   try {
-    const response = await DAOChanpionShip.getAll();
-    state.value = response.filter(chanpionShip => chanpionShip.status === "CREATED");
+    const response = await RequestChampionshipsAPI();
+    state.value = response//.filter(chanpionShip => chanpionShip.status === "CREATED");
   } catch (error) {
     console.error('Erro ao carregar os dados:', error);
   }
@@ -23,7 +24,7 @@ onMounted(async () => {
   <div class="search">
     <div v-for="( ChanpionsShip, index ) in state" :key="index" class="chanpionships">
       <span>Name: {{ ChanpionsShip.name }} </span>
-      <span>vagas: {{ ChanpionsShip.qntTime - ChanpionsShip.teams.length }}</span>
+      <!-- <span>vagas: {{ ChanpionsShip.quantityTeams - ChanpionsShip.teams.length }}</span> -->
       <span>Tipo: {{ ChanpionsShip.type }}</span>
       <button type="button" @click="buttonRedirect(ChanpionsShip.id)">detalhes</button>
     </div>

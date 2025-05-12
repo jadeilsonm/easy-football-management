@@ -1,33 +1,24 @@
 <script setup>
 import { ref, reactive, onMounted } from "vue";
-import { DAOPlayers, DAOTeams } from "@/services"
 import { PiniaStore } from '@/stores';
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { RequestGenericsAPI, RequestGenericPostAPI } from "@/services/api/RequestGenericAPI";
+import { DeletePlayersTeamAPI, RequestUpdatePlayerAPI } from "@/services/api/PlayerAPI";
 const globalStore = PiniaStore();
 
 const editingPlayerIndex = ref(null)
 const stateListPlayers = reactive({
   teamId: '',
-  currentListInput: {
-    name: '',
-    position: '',
-    number: ''
-  },
-  currentListInputUpdate: { name: '', position: '', number: '' },
+  currentListInput: { name: '', position: '', number: '' },
+  // currentListInputUpdate: { name: '', position: '', number: '' },
   currentListPlayers: []
 });
 
-const pt = ['AT', 'MC', 'LD', 'LE', 'GL', 'VOL', 'ZG']
-
 const insertPlayers = async () => {
   try {
-    if (!pt.includes(stateListPlayers.currentListInput.position)) {
-      alert('Posição inválida');
-      return;
-    }
-    await DAOPlayers.create({ ...stateListPlayers.currentListInput, teamId: stateListPlayers.teamId });
+    console.log(stateListPlayers.teamId)
+    await RequestGenericPostAPI("/api/v1/player", '', "POST", { ...stateListPlayers.currentListInput, teamId: globalStore.getMyTeam.id }); //Url, Params, Method, Body
+    stateListPlayers.currentListPlayers.push({ ...stateListPlayers.currentListInput, teamId: stateListPlayers.teamId })
     stateListPlayers.currentListInput = { name: '', position: '', number: '' };
-    await reSeedsPlayersInList();
   } catch (error) {
     console.error('Erro ao inserir os dados:', error);
   }
@@ -35,30 +26,21 @@ const insertPlayers = async () => {
 
 const editPlayer = (index) => {
   editingPlayerIndex.value = index;
-  stateListPlayers.currentListInput = stateListPlayers.currentListPlayers[editingPlayerIndex.value];
-  stateListPlayers.currentListInputUpdate = stateListPlayers.currentListInput;
+  stateListPlayers.currentListInput = {...stateListPlayers.currentListPlayers[editingPlayerIndex.value]};
 };
 
 const updatePlayer = async () => {
-  const { id } = stateListPlayers.currentListPlayers[editingPlayerIndex.value]
-  if (editingPlayerIndex.value !== null) {
-    await DAOPlayers.update(id, stateListPlayers.currentListInputUpdate);
-    cancelEdit();
-  }
-
+  if (editingPlayerIndex.value === null) return;
   try {
-    const { id, name, position, number } = stateListPlayers.currentListInputUpdate
-    await DAOPlayers.update(id, { name, position, number });
+    const { id, name, position, number, team } = stateListPlayers.currentListInput
+    console.log(id, { name, position, number, teamId: stateListPlayers.teamId })
+    console.log(stateListPlayers.currentListInput)
+    await RequestUpdatePlayerAPI(id, { name, position, number, teamId: team.id });
+    stateListPlayers.currentListPlayers[editingPlayerIndex.value] = {id, ...stateListPlayers.currentListInput, team }
+    cancelEdit();
   } catch (error) {
     console.error('Erro ao editar os dados:', error);
   }
-  await reSeedsPlayersInList();
-};
-
-const DeletePlayer = async (id) => {
-  await DAOPlayers.delete(id);
-  await reSeedsPlayersInList();
-  console.log(stateListPlayers);
 };
 
 const cancelEdit = () => {
@@ -67,39 +49,20 @@ const cancelEdit = () => {
   stateListPlayers.currentListInput = { name: '', position: '', number: '' };
 };
 
-const getByIdTeam = async (userId) => {
+const DeletePlayer = async (id) => {
   try {
-    const [response] = await DAOTeams.getByField('userId', userId);
-    globalStore.setMyTeam(response);
+    await DeletePlayersTeamAPI(id);
+    stateListPlayers.currentListPlayers = stateListPlayers.currentListPlayers.filter((player) => player.id !== id);
   } catch (error) {
-    console.error('Erro ao carregar os dados:', error);
+    console.error('Erro ao excluir os dados:', error);
   }
 };
 
-const reSeedsPlayersInList = async () => {
-  try {
-    console.log(stateListPlayers.teamId)
-    const response = await DAOPlayers.getByField('teamId', stateListPlayers.teamId);
-    stateListPlayers.currentListPlayers = response;
-  } catch (error) {
-    console.error('Erro ao carregar os dados:', error);
-  }
-};
-
-const auth = getAuth();
-
-onMounted(() => {
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      const uuid = user.uid;
-      globalStore.setUserId(uuid);
-      await getByIdTeam(uuid);
-    }
-
-    stateListPlayers.teamId = globalStore.getMyTeam.id;
-    const response = await DAOPlayers.getByField('teamId', globalStore.getMyTeam.id);
-    stateListPlayers.currentListPlayers = response;
-  });
+onMounted(async () => {
+  const result = await RequestGenericsAPI("/api/v1/player/team", globalStore.getMyTeam.id, "GET",{});
+  console.log(result);
+  stateListPlayers.teamId = globalStore.getMyTeam.id;
+  stateListPlayers.currentListPlayers = result;
 });
 
 </script>

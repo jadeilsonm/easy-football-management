@@ -1,7 +1,7 @@
 <script setup>
 import router from '@/router';
 import { defineProps, ref } from 'vue';
-import { AuthService } from '@/services/AuthService';
+// import { AuthService } from '@/services/AuthService';
 import { PiniaStore } from '@/stores';
 
 defineProps({
@@ -16,7 +16,7 @@ defineProps({
 
 const globalStore = PiniaStore();
 
-const auth = new AuthService();
+// const auth = new AuthService();
 
 const home = () => {
   router.push('/home/team/editteam');
@@ -29,7 +29,7 @@ const toggleMenu = () => {
 };
 
 const singup = async () => {
-  await auth.logout();
+  // await auth.logout();
   globalStore.clearUserData();
   router.push('/login');
 }
