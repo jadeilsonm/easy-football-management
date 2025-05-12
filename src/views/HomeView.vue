@@ -28,9 +28,9 @@ const getByIdTeam = async (userId) => {
 // const auth = getAuth();
 
 onMounted(async () => {
-  if (globalStore.getUser !== null) {
-    return;
-  }
+  // if (globalStore.getUser !== null) {
+  //   return;
+  // }
   const result = await RequestGenericsAPI("/api/v1/users","","GET");//Url, Params, Method, Body
   globalStore.setUserId(result.id)
   globalStore.setMyTeam(result.team)

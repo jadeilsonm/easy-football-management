@@ -15,6 +15,7 @@ const stateListPlayers = reactive({
 
 const insertPlayers = async () => {
   try {
+    console.log(stateListPlayers.teamId)
     await RequestGenericPostAPI("/api/v1/player", '', "POST", { ...stateListPlayers.currentListInput, teamId: globalStore.getMyTeam.id }); //Url, Params, Method, Body
     stateListPlayers.currentListPlayers.push({ ...stateListPlayers.currentListInput, teamId: stateListPlayers.teamId })
     stateListPlayers.currentListInput = { name: '', position: '', number: '' };
@@ -33,6 +34,7 @@ const updatePlayer = async () => {
   try {
     const { id, name, position, number, team } = stateListPlayers.currentListInput
     console.log(id, { name, position, number, teamId: stateListPlayers.teamId })
+    console.log(stateListPlayers.currentListInput)
     await RequestUpdatePlayerAPI(id, { name, position, number, teamId: team.id });
     stateListPlayers.currentListPlayers[editingPlayerIndex.value] = {id, ...stateListPlayers.currentListInput, team }
     cancelEdit();
@@ -57,7 +59,8 @@ const DeletePlayer = async (id) => {
 };
 
 onMounted(async () => {
-  const result = await RequestGenericsAPI("/api/v1/player/team",globalStore.getMyTeam.id,"GET");
+  const result = await RequestGenericsAPI("/api/v1/player/team", globalStore.getMyTeam.id, "GET",{});
+  console.log(result);
   stateListPlayers.teamId = globalStore.getMyTeam.id;
   stateListPlayers.currentListPlayers = result;
 });
