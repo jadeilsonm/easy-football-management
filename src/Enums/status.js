@@ -1,5 +1,5 @@
 export const STATUS = {
   1: 'CREATED',
-  2: 'CURRENT',
+  2: 'IN_PROGRESS',
   3: 'FINISHED'
 }

@@ -38,7 +38,7 @@ const login = async () => {
     console.log({email: email.value, password: password.value});
     const responseAPI = await RequestLoginAPI({email: email.value, password: password.value});
     globalStore.setToken(responseAPI.token);
-    router.push('/home');
+    router.push('/home/team/editteam');
   } catch (error) {
     console.error(error);
   }
