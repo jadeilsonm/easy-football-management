@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { jwtDecode } from "jwt-decode";
 import HomeView from '../views/HomeView.vue'
 import ManagerCreated from '@/views/ManagerCreated.vue'
 import LoginView from '../views/LoginView.vue'
@@ -11,7 +12,7 @@ import RegisterView from '@/views/RegisterView.vue'
 import ManagerProfile from '@/views/ManagerProfile.vue'
 import ChampionShipComponent from '@/components/ChampionShipComponent.vue'
 // import CopaView from '@/views/ChampionsShipsView.vue'
-// import ChampionsShipsView from '@/views/ChampionsShipsView.vue'
+import ChampionsShipsView from '@/views/ChampionsShipsView.vue'
 // import CupView from '@/views/CupView.vue'
 // import LeagueComponent from '@/views/LeagueView.vue'
 // import RoundMatchesView from '@/views/RoundMatchesView.vue'
@@ -35,12 +36,12 @@ const router = createRouter({
       component: ManagerCreated,
       // meta: { requiresAuth: true }
     },
-    // {
-    //   path: '/manager',
-    //   name: 'manager',
-    //   component: ChampionsShipsView,
-    //   // meta: { requiresAuth: true }
-    // },
+    {
+      path: '/manager',
+      name: 'manager',
+      component: ChampionsShipsView,
+      // meta: { requiresAuth: true }
+    },
     // {
     //   path: '/manager/cup/:id',
     //   name: 'manager/cup',
@@ -120,23 +121,26 @@ const router = createRouter({
   ]
 })
 
-// router.beforeEach((to, from, next) => {
-//   const auth = getAuth();
-//   const globalStore = PiniaStore();
-//   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+function isTokenExpired(token) {
+  try {
+    const decoded = jwtDecode(token);
+    console.log("Decoded Token:", decoded);
+    return decoded.exp < Date.now() / 1000;
+  } catch {
+    return true;
+  }
+}
 
-//   if (requiresAuth) {
-//     onAuthStateChanged(auth, (user) => {
-//       if (user) {
-//         next();
-//       } else {
-//         globalStore.clearUserData();
-//         next('/login')
-//       }
-//     })
-//   } else {
-//     next();
-//   }
-// })
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token');
+
+  if (to.meta.requiresAuth) {
+    if (!token || isTokenExpired(token)) {
+      return next({ name: 'Login' });
+    }
+  }
+
+  next();
+});
 
 export default router

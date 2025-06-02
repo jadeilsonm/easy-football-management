@@ -2,35 +2,36 @@
 import NavBar from "@/components/NavBar.vue";
 import Input from "@/components/InputGeneric.vue";
 import { STATUS } from "@/Enums/status";
-import { reactive } from "vue";
-// import { getAuth, onAuthStateChanged } from "firebase/auth";
-// import { DAOService } from "@/services/DAOService";
-// import { DAOChanpionShip, DAOClassification } from "@/services";
-import router from "@/router";
+import { onMounted, reactive } from "vue";
+import { createChampionshipsAPI } from "@/services/api/championships/championshipsAPI";
+import { PiniaStore } from '@/stores';
+// import router from "@/router";
+
+const globalStore = PiniaStore();
 
 const reactiveInputManager = reactive({
   inputName: '',
   inputValue: '',
   inputQntTime: '',
   selectValue: '',
-  userAuth: '',
+  userAuth: globalStore.getUser,
   description: ''
 })
 
 // const auth = getAuth();
 
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    reactiveInputManager.userAuth = user;
-    console.log("login", reactive.userAuth);
-  } else {
-    router.push('/login');
-  }
+onMounted(() => {
+  // if (user) {
+    reactiveInputManager.userAuth = globalStore.getUser;
+    console.log("login", globalStore.getUser);
+  // } else {
+  //   router.push('/login');
+  // }
 });
 
 const select = [
-  { text: "COPA", value: "cup" },
-  { text: "LIGA", value: "league" },
+  { text: "COPA", value: "CUP" },
+  { text: "LIGA", value: "LEAGUE" },
 ];
 
 const buttonsValues = [
@@ -44,40 +45,41 @@ const buttonsValues = [
 const createLeague = async () => {
   const payload = {
     name: reactiveInputManager.inputName,
-    value: reactiveInputManager.inputValue,
-    type: reactiveInputManager.selectValue.value,
-    qntTime: reactiveInputManager.inputQntTime,
-    status: STATUS[1],
+    award: reactiveInputManager.inputValue,
+    typeChampionship: reactiveInputManager.selectValue.value,
+    quantityTeams: reactiveInputManager.inputQntTime,
+    statusChampionship: STATUS[1],
     description: reactiveInputManager.description,
-    createdAt: new Date(),
-    userOwner: reactiveInputManager.userAuth.uid,
-    teams: [],
-    matches: [],
+    img: "",
+    userID: reactiveInputManager.userAuth.uid,
   };
 
   if (
     payload.name === "" ||
-    payload.value === "" ||
-    payload.type === "" ||
-    payload.qntTime === ""
+    payload.award === "" ||
+    payload.typeChampionship === "" ||
+    payload.quantityTeams === ""
   ) {
     alert("Preencha todos os campos");
     return;
   }
 
-  if (payload.qntTime < 2) {
+  if (payload.quantityTeams < 2) {
     alert("Quantidade de times deve ser maior que 1");
     return;
   }
 
-  if (payload.userOwner === null) {
+  if (payload.userID === null) {
     alert("Usuário não autenticado");
     return;
   }
 
   try {
-    const chanpionsShipId = await DAOChanpionShip.create(payload);
-    await DAOClassification.create({chanpionsShipId, teams: []})
+    // const chanpionsShipId =
+    console.log("Campeonato criado com sucesso", payload);
+    payload.userID = globalStore.getUser;
+    await createChampionshipsAPI(payload);
+    // await DAOClassification.create({chanpionsShipId, teams: []})
     clearReactive();
   } catch (error) {
     console.error(error);
