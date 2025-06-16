@@ -7,6 +7,24 @@ import { reactive } from "vue";
 // import { DAOService } from "@/services/DAOService";
 // import { DAOChanpionShip, DAOClassification } from "@/services";
 import router from "@/router";
+import { RequestAPI } from "@/services/api/RequestGenericAPI";
+import NotificationAlert from "@/components/NotificationAlert.vue";
+import { PiniaStore } from "@/stores";
+const globalStore = PiniaStore();
+
+
+const notification = reactive({
+  message: '',
+  type: 'info',
+  show: false,
+  duration: 4000
+});
+
+const showNotification = (message, type = 'info') => {
+  notification.message = message;
+  notification.type = type;
+  notification.show = true;
+};
 
 const reactiveInputManager = reactive({
   inputName: '',
@@ -19,18 +37,9 @@ const reactiveInputManager = reactive({
 
 // const auth = getAuth();
 
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    reactiveInputManager.userAuth = user;
-    console.log("login", reactive.userAuth);
-  } else {
-    router.push('/login');
-  }
-});
-
 const select = [
-  { text: "COPA", value: "cup" },
-  { text: "LIGA", value: "league" },
+  { text: "COPA", value: "CUP" },
+  { text: "LIGA", value: "LEAGUE" },
 ];
 
 const buttonsValues = [
@@ -40,6 +49,8 @@ const buttonsValues = [
   { path: "/manager", value: "Campeonatos" },
   { path: "/login", value: "Sair" },
 ];
+
+
 
 const createLeague = async () => {
   const payload = {
@@ -61,26 +72,40 @@ const createLeague = async () => {
     payload.type === "" ||
     payload.qntTime === ""
   ) {
-    alert("Preencha todos os campos");
+    showNotification("Preencha todos os campos", "error");
     return;
   }
 
   if (payload.qntTime < 2) {
-    alert("Quantidade de times deve ser maior que 1");
+    showNotification("Quantidade de times deve ser maior que 1", "error");
     return;
   }
 
   if (payload.userOwner === null) {
-    alert("Usuário não autenticado");
+    showNotification("Usuário não autenticado", "error");
     return;
   }
 
   try {
-    const chanpionsShipId = await DAOChanpionShip.create(payload);
-    await DAOClassification.create({chanpionsShipId, teams: []})
+    const userId = globalStore.getUser;
+    console.log("User ID:", userId);
+    const request = {
+      userID: userId,
+      name: payload.name,
+      award: payload.value,
+      typeChampionship: payload.type,
+      quantityTeams: payload.qntTime,
+      statusChampionship: 'CREATE',
+      description: payload.description
+    }
+    await RequestAPI('/api/v1/championships', { method: 'POST', body: request });
+    
+    showNotification("Campeonato criado com sucesso!", "success");
+      
     clearReactive();
   } catch (error) {
     console.error(error);
+    showNotification("Erro ao criar campeonato", "error");
   }
 };
 
@@ -132,6 +157,12 @@ const clearReactive = () => {
       />
       <button class="button" @click="createLeague">Criar</button>
     </div>
+      <NotificationAlert
+        v-if="notification.show"
+        :message="notification.message"
+        :type="notification.type"
+        :duration="notification.duration"
+      />
   </main>
 </div>
 </template>

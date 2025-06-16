@@ -7,6 +7,7 @@ import { RequestChampionshipsTeamsAPI
 import { useRoute } from 'vue-router'
 import router from "@/router";
 import { PiniaStore } from '@/stores';
+import { RequestAPI } from "@/services/api/RequestGenericAPI";
 
 const globalStore = PiniaStore();
 
@@ -54,8 +55,10 @@ const unsubcribeChanpinsShip = async () => {
 
 const defaultResquest = async () => {
   try {
-    const [responseChampionsShip] = await RequestChampionshipsByIdAPI(route.params.id);
-    // console.log('responseChampionsShip', responseChampionsShip);
+    console.log('route.params.id', route.params.id);
+    let path = '/api/v1/championships/{id}?championshipId='+route.params.id;
+    const responseChampionsShip = await RequestAPI(path);
+    console.log('responseChampionsShip', responseChampionsShip);
     state.chanpionsShip = responseChampionsShip;
     const isSubscribe = await getChampionshipsTeams(({
       teamId: globalStore.myTeam.id,
@@ -98,7 +101,7 @@ onMounted(async () => {
         Tipo: {{ chanpionsShip.type === "cup" ? 'Mata Mata' : 'Pontos Corridos' }}
       </span>
       <span v-if="chanpionsShip.type">
-        Premiação: {{ `R$ ${chanpionsShip.value}` }}
+        Premiação: {{ `R$ ${chanpionsShip.award && 0}` }}
       </span>
     </div>
     <button v-if="isSubscribed"  :class="['btn-red']"

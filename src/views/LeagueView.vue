@@ -47,7 +47,6 @@ import { onMounted, ref } from "vue";
 import { useRoute } from 'vue-router'
 import router from "@/router";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { generateClassification } from "@/services/ServiceClassification";
 import NavBar from '@/components/NavBar.vue'; // Importa a NavBar
 
 const route = useRoute();

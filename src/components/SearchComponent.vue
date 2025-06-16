@@ -3,6 +3,7 @@ import { ref, onMounted } from "vue";
 // import { DAOChanpionShip } from "@/services";
 import router from "@/router";
 import { RequestChampionshipsAPI } from "@/services/api/RequestChampionshipsAPI";
+import { RequestAPI } from "@/services/api/RequestGenericAPI";
 
 const state = ref([]);
 
@@ -12,7 +13,7 @@ const buttonRedirect = (championShipId) => {
 
 onMounted(async () => {
   try {
-    const response = await RequestChampionshipsAPI();
+    const response = await RequestAPI('/api/v1/championships/all', 'GET');
     state.value = response//.filter(chanpionShip => chanpionShip.status === "CREATED");
   } catch (error) {
     console.error('Erro ao carregar os dados:', error);

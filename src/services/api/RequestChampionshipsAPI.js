@@ -12,11 +12,15 @@ export const RequestChampionshipsAPI = async () => {
     }
   });
 
+  console.log("RequestChampionshipsAPI", url, token);
+
   if (!response.ok) {
+    console.error(`Erro: ${response.status} - ${response.statusText}`);
     throw new Error(`Erro: ${response.status} - ${response.statusText}`);
   }
 
   const data = await response.json();
+  console.log(data);
   return data;
 };
 

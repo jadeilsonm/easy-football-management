@@ -19,6 +19,7 @@ const insertPlayers = async () => {
     await RequestGenericPostAPI("/api/v1/player", '', "POST", { ...stateListPlayers.currentListInput, teamId: globalStore.getMyTeam.id }); //Url, Params, Method, Body
     // stateListPlayers.currentListPlayers.push({ ...stateListPlayers.currentListInput, teamId: stateListPlayers.teamId })
     stateListPlayers.currentListInput = { name: '', position: '', number: '' };
+    
     getPlayers();
   } catch (error) {
     console.error('Erro ao inserir os dados:', error);

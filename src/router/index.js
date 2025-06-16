@@ -11,9 +11,9 @@ import RegisterView from '@/views/RegisterView.vue'
 import ManagerProfile from '@/views/ManagerProfile.vue'
 import ChampionShipComponent from '@/components/ChampionShipComponent.vue'
 // import CopaView from '@/views/ChampionsShipsView.vue'
-// import ChampionsShipsView from '@/views/ChampionsShipsView.vue'
-// import CupView from '@/views/CupView.vue'
-// import LeagueComponent from '@/views/LeagueView.vue'
+import ChampionsShipsView from '@/views/ChampionsShipsView.vue'
+import CupView from '@/views/CupView.vue'
+import LeagueComponent from '@/views/LeagueView.vue'
 // import RoundMatchesView from '@/views/RoundMatchesView.vue'
 // import MatchResultView from '@/views/MatchResultView.vue'
 // import { PiniaStore } from '@/stores'
@@ -35,24 +35,24 @@ const router = createRouter({
       component: ManagerCreated,
       // meta: { requiresAuth: true }
     },
-    // {
-    //   path: '/manager',
-    //   name: 'manager',
-    //   component: ChampionsShipsView,
-    //   // meta: { requiresAuth: true }
-    // },
-    // {
-    //   path: '/manager/cup/:id',
-    //   name: 'manager/cup',
-    //   component: CupView,
-    //   // meta: { requiresAuth: true }
-    // },
-    // {
-    //   path: '/manager/league/:id',
-    //   name: 'manager/league',
-    //   component: LeagueComponent,
-    //   // meta: { requiresAuth: true }
-    // },
+    {
+      path: '/manager',
+      name: 'manager',
+      component: ChampionsShipsView,
+      // meta: { requiresAuth: true }
+    },
+    {
+      path: '/manager/cup/:id',
+      name: 'manager/cup',
+      component: CupView,
+      // meta: { requiresAuth: true }
+    },
+    {
+      path: '/manager/league/:id',
+      name: 'manager/league',
+      component: LeagueComponent,
+      // meta: { requiresAuth: true }
+    },
     // {
     //   path: '/manager/league/matches/:id',
     //   name: '/manager/league/matches',
