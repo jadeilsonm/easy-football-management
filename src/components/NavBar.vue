@@ -1,55 +1,57 @@
-<script setup>
-import router from '@/router';
-import { defineProps, ref } from 'vue';
+<script setup lang="ts">
+import router from '@/router'
+import { defineProps, ref } from 'vue'
 // import { AuthService } from '@/services/AuthService';
-import { PiniaStore } from '@/stores';
+import { PiniaStore } from '@/stores'
 
 defineProps({
   buttonsValues: {
     type: Array,
-    required: true
-  }, imgProfile: {
+    required: true,
+  },
+  imgProfile: {
     type: String,
-    required: false
-  }
-});
+    required: false,
+  },
+})
 
-const globalStore = PiniaStore();
+const globalStore = PiniaStore()
 
 // const auth = new AuthService();
 
 const home = () => {
-  router.push('/home/team/editteam');
+  router.push('/home/team/editteam')
 }
 
-const isMenuActive = ref(false);
+const isMenuActive = ref(false)
 
 const toggleMenu = () => {
-  isMenuActive.value = !isMenuActive.value;
-};
+  isMenuActive.value = !isMenuActive.value
+}
 
 const singup = async () => {
   // await auth.logout();
-  globalStore.clearUserData();
-  router.push('/login');
+  globalStore.clearUserData()
+  router.push('/login')
 }
-
 </script>
 
 <template>
   <nav class="navBar">
     <button class="img-bt" @click="home">
-      <img v-if="imgProfile" :src="imgProfile" alt="imagem de perfil do usuario" srcset="">
-      <img v-else src="../assets/profil.png" alt="imagem de perfil do usuario">
+      <img v-if="imgProfile" :src="imgProfile" alt="imagem de perfil do usuario" srcset="" />
+      <img v-else src="../assets/profil.png" alt="imagem de perfil do usuario" />
     </button>
     <div class="hamburger" @click="toggleMenu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
     <ul :class="{ 'nav-active': isMenuActive }">
       <li v-for="item in buttonsValues" :key="item.value">
-        <router-link class="menu-item" :to="item.path" v-if="item.value != 'Sair'">{{ item.value }}</router-link>
+        <router-link class="menu-item" :to="item.path" v-if="item.value != 'Sair'">{{
+          item.value
+        }}</router-link>
         <a class="menu-item" v-else @click="singup">{{ item.value }}</a>
       </li>
     </ul>
@@ -81,7 +83,9 @@ const singup = async () => {
   height: 50px;
   border-radius: 50%;
   object-fit: cover;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .img-bt:hover img {
@@ -104,7 +108,9 @@ ul {
   font-weight: 600;
   position: relative;
   padding: 5px 10px;
-  transition: color 0.3s ease, transform 0.3s ease;
+  transition:
+    color 0.3s ease,
+    transform 0.3s ease;
 }
 
 .menu-item:hover {
@@ -120,7 +126,9 @@ ul {
   width: 0;
   height: 2px;
   background-color: #42b883;
-  transition: width 0.3s ease, left 0.3s ease;
+  transition:
+    width 0.3s ease,
+    left 0.3s ease;
 }
 
 .menu-item:hover::after {
@@ -200,8 +208,4 @@ ul {
     font-size: 16px;
   }
 }
-
-
-
-
 </style>

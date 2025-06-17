@@ -28,17 +28,3 @@ coverage
 *.sw?
 
 *.tsbuildinfo
-
-# dotenv environment variables file
-.env
-.env.test
-.env.local
-
-
-# Build files
-build
-
-# Cache
-.cache
-/cache
-
