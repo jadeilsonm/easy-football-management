@@ -1,6 +1,6 @@
 
 export const RequestChampionshipsAPI = async () => {
-  const url = `http://localhost:8080/api/v1/championships`;
+  const url = `http://localhost:8080/api/v1/championships/all`;
   const { token } = JSON.parse(localStorage.getItem("GlobalStore"));
 
 
@@ -15,6 +15,8 @@ export const RequestChampionshipsAPI = async () => {
   if (!response.ok) {
     throw new Error(`Erro: ${response.status} - ${response.statusText}`);
   }
+
+  console.log("Response from RequestChampionshipsAPI:", response);
 
   const data = await response.json();
   return data;

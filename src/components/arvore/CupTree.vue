@@ -24,6 +24,9 @@
 </template>
 
 <script setup lang="ts">
+// ignore eslint
+// eslint-disable-next-line no-restricted-imports
+// @ts-ignore
 import * as d3 from 'd3'
 import { onMounted, shallowRef } from 'vue'
 import MatchNode from './MatchNode.vue'

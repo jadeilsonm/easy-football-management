@@ -27,12 +27,16 @@ const subcribeChanpinsShip = async () => {
   try {
     console.log('globalStore.getMyTeam', globalStore.myTeam);
     console.log('globalStore.getMyTeam', globalStore.myTeam.id);
-    await RequestChampionshipsTeamsAPI({
+    const championshipsId = route.params.id;
+    console.log('chanpionsShip.value.id', {
       teamId: globalStore.myTeam.id,
       championshipsId: chanpionsShip.value.id
+    });
+    await RequestChampionshipsTeamsAPI({
+      teamId: globalStore.myTeam.id,
+      championshipsId: championshipsId
     })
     state.isSubscribed = true;
-
   } catch (error) {
     state.isSubscribed = true;
     console.error('Erro ao editar os dados:', error);
@@ -43,7 +47,7 @@ const unsubcribeChanpinsShip = async () => {
   try {
     await DeleteChampionshipsTeams({
       teamId: globalStore.myTeam.id,
-      championshipsId: chanpionsShip.value.id
+      championshipsId: route.params.id
     })
     state.isSubscribed = false;
   } catch (error) {
@@ -54,17 +58,15 @@ const unsubcribeChanpinsShip = async () => {
 
 const defaultResquest = async () => {
   try {
-    const [responseChampionsShip] = await RequestChampionshipsByIdAPI(route.params.id);
+    const championshipsId = route.params.id;
+    console.log('route.params.id', championshipsId);
+    const responseChampionsShip = await RequestChampionshipsByIdAPI(championshipsId);
     // console.log('responseChampionsShip', responseChampionsShip);
     state.chanpionsShip = responseChampionsShip;
-    const isSubscribe = await getChampionshipsTeams(({
-      teamId: globalStore.myTeam.id,
-      championshipsId: chanpionsShip.value.id
-    }));
-
-
-
-      state.isSubscribed = true;
+    const isSubscribe = await getChampionshipsTeams(championshipsId,
+      globalStore.myTeam.id
+    );
+    state.isSubscribed = isSubscribe;
 
   } catch (error) {
     state.isSubscribed = false;

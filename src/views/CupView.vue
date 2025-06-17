@@ -1,4 +1,5 @@
 <script setup>
+import CupTree from '@/components/arvore/CupTree.vue';
 import KnockoutStage from '@/components/KnockoutStage.vue';
 import Navbar from '@/components/NavBar.vue';
 
@@ -14,7 +15,7 @@ const buttonsValues = [
 <template>
   <div class="cup-view">
     <Navbar :buttonsValues="buttonsValues"/>
-    <KnockoutStage />
+    <CupTree />
   </div>
 </template>
 

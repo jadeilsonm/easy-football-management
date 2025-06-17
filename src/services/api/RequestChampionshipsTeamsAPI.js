@@ -21,8 +21,9 @@ export const RequestChampionshipsTeamsAPI = async (Body) => {
   return data;
 };
 
-export const getChampionshipsTeams = async ({championshipId, teamId}) => {
-  const url = `http://localhost:8080/api/v1/championshipsteams?championshipId=${championshipId}&teamId=${teamId}`;
+export const getChampionshipsTeams = async (championshipId, teamId) => {
+  const url = `http://localhost:8080/api/v1/championshipsteams/isExists?championshipId=${championshipId}&teamId=${teamId}`;
+  console.log("Constructed URL:", url);
   const { token } = JSON.parse(localStorage.getItem("GlobalStore"));
 
 
@@ -34,13 +35,16 @@ export const getChampionshipsTeams = async ({championshipId, teamId}) => {
     },
   });
 
-  if (!response.ok) {
-    throw new Error(`Erro: ${response.status} - ${response.statusText}`);
+  console.log("Response from getChampionshipsTeams:", response);
+
+  if (response.status === 200) {
+    return true;
   }
 
+  if (response.status === 204)
+    return false;
 
-  // const data = await response.json();
-  return true;
+  throw new Error(`Erro: ${response.status} - ${response.statusText}`);
 };
 
 export const DeleteChampionshipsTeams = async (Body) => {
@@ -56,6 +60,8 @@ export const DeleteChampionshipsTeams = async (Body) => {
     },
     body: JSON.stringify(Body)
   });
+
+  console.log("Response from DeleteChampionshipsTeams:", response);
 
   if (!response.ok) {
     throw new Error(`Erro: ${response.status} - ${response.statusText}`);
