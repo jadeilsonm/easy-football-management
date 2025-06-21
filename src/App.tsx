@@ -9,7 +9,7 @@ function App() {
   return (
     <div>
       <h1>Torneio</h1>
-      <BracketTree />
+      {/* <BracketTree /> */}
     </div>
   );
 }

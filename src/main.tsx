@@ -7,41 +7,35 @@ import {
   RouterProvider,
 } from "react-router";
 import { Title } from './components/Title.tsx';
+import Login from './pages/Login.tsx';
+import Register from './pages/Register.tsx';
+import BracketTree from './components/BracketTree.tsx';
+import { ToastProvider } from './context/ToastContext.tsx';
 
 const router = createBrowserRouter([
   {
     path: "/",
     Component: App,
-    children: [
-      // { path: "about", Component: About },
-      // {
-      //   path: "auth",
-      //   Component: AuthLayout,
-      //   children: [
-      //     { path: "login", Component: Login },
-      //     { path: "register", Component: Register },
-      //   ],
-      // },
-      {
-        path: "home/a",
-        Component: Title,
-        children: [
-          { path: "trending", Component: Title },
-        ],
-      },
-    ],
   },
+  { path: "/login", Component: Login },
+  { path: "/register", Component: Register },
   {
     path: "/title",
     Component: Title,
     children: [
       { path: "trending", Component: Title },
     ],
+  },
+  {
+    path: "/torneio",
+    Component: BracketTree
   }
 ]);
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <RouterProvider router={router} />
-  </StrictMode>,
+  <ToastProvider>
+    <StrictMode>
+      <RouterProvider router={router} />
+    </StrictMode>
+  </ToastProvider>
 )
