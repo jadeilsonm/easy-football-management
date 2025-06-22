@@ -14,7 +14,8 @@
 }
 
 html, body, #root {
-  height: 100%; /* Força a altura a ser 100% da altura do elemento pai */
+  height: 100%;
+  min-width: 100vw; /* Força a altura a ser 100% da altura do elemento pai */
   margin: 0;   /* Remove margens padrão do body, que podem causar espaçamento indesejado */
   padding: 0;  /* Remove paddings padrão, se existirem */
 }

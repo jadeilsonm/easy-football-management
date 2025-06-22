@@ -7,6 +7,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import NotFound from './pages/NotFound';
 import { Title } from './components/Title';
 import { ToastProvider } from './context/ToastContext';
+import { Home } from './pages/Home';
 
 
 const App: React.FC = () => {
@@ -16,7 +17,7 @@ const App: React.FC = () => {
         <AuthProvider>
 
             <Routes>
-              <Route path="/" element={<Title />} />
+              <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
 

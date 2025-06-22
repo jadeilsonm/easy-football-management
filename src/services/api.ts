@@ -1,13 +1,11 @@
 import axios from "axios"
-import { Navigate } from 'react-router-dom';
-
 
 const api = axios.create({
   baseURL: 'http://localhost:8080',
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 10000,
+  timeout: 5000,
 });
 
 api.interceptors.request.use(

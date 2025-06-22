@@ -157,7 +157,7 @@ const Register: React.FC = () => {
                 checked={isManager}
                 onChange={(e) => setIsManager(e.target.checked)}
               />
-              Manager campeonato:
+              Administrador campeonato
             </label>
           </div>
 
