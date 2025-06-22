@@ -97,7 +97,7 @@ const BracketTree: React.FC = () => {
       teamAway: d.data.nameTeamAway,
       homeGoals: d.data.homeTeamGoals,
       awayGoals: d.data.awayTeamGoals,
-      link: d.data.idMatch ? `/jogos/${d.data.idMatch}` : undefined,
+      link: d.data.idMatch ? `/maneger/cup/result/${d.data.idMatch}` : undefined,
     }));
 
     const renderedLinks = root.links().map((d) => {
