@@ -1,7 +1,23 @@
 #root {
-  max-width: 1280px;
   margin: 0 auto;
   text-align: center;
+}
+
+html, body, #root {
+  height: 100%;
+  /* Força a altura a ser 100% da altura do elemento pai */
+  margin: 0;
+  /* Remove margens padrão do body, que podem causar espaçamento indesejado */
+  padding: 0;
+  /* Remove paddings padrão, se existirem */
+}
+
+/* Opcional: Se você quiser que o body use Flexbox para alinhamento geral */
+
+body {
+  display: flex;
+  flex-direction: column;
+  /* Para empilhar o cabeçalho, conteúdo e rodapé em coluna */
 }
 
 *, ::before, ::after {
