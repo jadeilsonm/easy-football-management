@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
 import authService, { type userAuth } from '../services/authService';
+import { useAuth } from '../context/AuthContext';
 
 
 const Login: React.FC = () => {
@@ -12,6 +13,7 @@ const Login: React.FC = () => {
   const [passwordError, setPasswordError] = useState<string>('');
   const [formMessage, setFormMessage] = useState<string>('');
   const { addToast } = useToast();
+  const { login } = useAuth();
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -55,9 +57,7 @@ const Login: React.FC = () => {
         }
         const { token } = await authService.login(payload)
         addToast('Login', 'info', 'Login bem-sucedido!');
-        console.log('Token:', token);
-        localStorage.setItem('token', token || '');
-        navigate('/manager');
+        login(token || "");
       } else {
         addToast('Alert', 'warning', 'Por favor, corrija os erros no formulário.');
       }
