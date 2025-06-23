@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useToast } from '../context/ToastContext';
-import authService, { type user, type userAuth } from '../services/authService';
+import authService, { type user } from '../services/authService';
+import { useNavigate } from 'react-router-dom';
 
 const Register: React.FC = () => {
   const [email, setEmail] = useState<string>('');
@@ -11,6 +12,7 @@ const Register: React.FC = () => {
   const [passwordError, setPasswordError] = useState<string>('');
   const [formMessage, setFormMessage] = useState<string>('');
   const [isManager, setIsManager] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const { addToast } = useToast();
 
@@ -56,10 +58,13 @@ const Register: React.FC = () => {
         const payload: Omit<user, 'id'> = {
           email,
           password,
-          name
+          name,
+          isAdmin: isManager
         }
         await authService.register(payload)
         addToast('Register', 'info', 'Registro inserido com sucesso!');
+        var rota = isManager ? '/manager' : '/';
+        navigate(rota)
       } else {
         addToast('Alerta', 'warning', 'Por favor, corrija os erros no formulário.');
       }

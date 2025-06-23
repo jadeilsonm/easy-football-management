@@ -9,9 +9,11 @@ import React, {
 } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import { jwtDecode } from 'jwt-decode';
 
 interface AuthContextType {
   isAuthenticated: boolean;
+  userId: string;
   login: (token: string) => void;
   logout: () => void;
 }
@@ -22,10 +24,30 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+export interface JwtPayload {
+  iss: string;
+  sub: string;
+  role: 'ADMIN' | 'USER' | string;
+  name: string;
+  email: string;
+  id: string;
+  exp: number;
+}
+
+
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     return !!localStorage.getItem('token');
   });
+
+  const [userId, setUserID] = useState<string>(() => {
+    var token = localStorage.getItem('token');
+    if (token == null)
+      return "";
+    const decoded: JwtPayload = jwtDecode<JwtPayload>(token, { header: false });
+    return decoded.id;
+  });
+
   const navigate = useNavigate();
 
   const login = useCallback((token: string) => {
@@ -61,7 +83,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, [isAuthenticated, logout]);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, userId, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

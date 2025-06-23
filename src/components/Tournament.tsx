@@ -13,6 +13,12 @@ interface TournamentProps {
   status: string;
 }
 
+enum Status{
+  CREATED,
+  IN_PROGRESS,
+  
+}
+
 const EnumStatus = {
   CREATED: <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset">
         Criado
@@ -42,6 +48,7 @@ const Tournament = ({id, name, description, type, startDate, endDate, award, qua
       <p>Tipo: {type == "CUP" ? "MATA-MATA": "PONTOS CORRIDOS"}</p>
       <p>Premiação: {award}</p>
       <p>Quantidade de Times: {quantityTeams}</p>
+      {EnumStatus['CREATED']}
       <p>Status: </p>{EnumStatus[status as keyof typeof EnumStatus]}
     </div>
   );
