@@ -104,7 +104,7 @@ export interface CreateTournamentResponse {
   name: string;
   description: string;
   img: string;
-  StatusChampionship: string;
+  statusChampionship: string;
   typeChampionship: string;
   award: number;
   quantityTeams: number;
@@ -114,11 +114,13 @@ export interface CreateTournamentResponse {
 const tournamentService = {
     getAllByUser: async (): Promise<getAllByUserResponse[]> => {
         const response = await api.get<getAllByUserResponse[]>('/api/v1/championships/all');
+        console.log(response.data);
         return response.data;
     },
 
-    Create: async (TournamentData: CreateTournamentResponse): Promise<CreateTournamentResponse> => {
-        const response = await api.post<CreateTournamentResponse>('/api/v1/championships', TournamentData);
+    Create: async (TournamentData: CreateTournamentResponse): Promise<getAllByUserResponse> => {
+        const response = await api.post<getAllByUserResponse>('/api/v1/championships', TournamentData);
+        console.log(response.data);
         return response.data;
     },
 }

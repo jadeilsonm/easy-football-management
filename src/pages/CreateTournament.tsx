@@ -28,29 +28,26 @@ const CreateTournament = () => {
     setAward('');
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async () => {
     const TournamentData: CreateTournamentResponse = {
       name,
       description,
       img: '',
       quantityTeams: parseInt(quantityTeams, 10),
-      StatusChampionship: 'CREATED',
+      statusChampionship: 'CREATE',
       typeChampionship,
       award: parseFloat(award),
-      userID: '0deaae54-e2b0-49fb-b241-ae9456bfa2eb',
+      userID: 'a093b2ac-e0a8-430a-9e1a-c237f5430d36',
     };
     try {
       await tournamentService.Create(TournamentData);
       addToast('Cadastro', 'info', 'Torneio criado com sucesso!');
-      clearInput();
     } catch (error) {
       addToast('Erro', 'error', 'Erro ao criar torneio. Tente novamente.');
       console.error('Error creating tournament:', error);
+    } finally {
+      clearInput();
     }
-    e.preventDefault();
-
-    addToast('Cadastro', 'info', 'cadastrado com sucesso com sucedido!');
-
   };
 
   return (

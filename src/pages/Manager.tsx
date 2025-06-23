@@ -16,7 +16,7 @@ interface TournamentProps {
 }
 
 const NavItemsAdmin: NavigationItem[] = [
-  { name: 'Gerenciar Campeonatos', href: '/manager', current: false },
+  { name: 'Gerenciar Campeonatos', href: '/manager', current: true },
   { name: 'Criar Campeonatos', href: '/manager/create/tournament', current: false },
   { name: 'Meu perfil', href: '#', current: false },
   { name: 'Sair', href: '#', current: false },
@@ -30,8 +30,7 @@ const Manager: React.FC = () => {
     const fetchTournaments = async () => {
       try {
         const response = await managerService.getAllByUser();
-        const data = await response.json();
-        setTourneaments(data);
+        setTourneaments(response);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching tournaments:', error);
