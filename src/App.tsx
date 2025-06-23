@@ -9,6 +9,7 @@ import { ToastProvider } from './context/ToastContext';
 import { Home } from './pages/Home';
 import Manager from './pages/Manager';
 import Cup from './pages/Cup';
+import CreateTournament from './pages/CreateTournament';
 
 
 const App: React.FC = () => {
@@ -16,14 +17,15 @@ const App: React.FC = () => {
     <Router>
       <ToastProvider>
         <AuthProvider>
-
             <Routes>
+
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/manager" element={<Manager />} />
               <Route path="/manager/cup/:id" element={<Cup />} />
               <Route path="/manager/league/:id" element={<Manager />} />
+              <Route path="/manager/create/tournament" element={<CreateTournament />} />
 
               <Route
                 path="/dashboard"

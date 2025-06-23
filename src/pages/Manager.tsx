@@ -1,5 +1,5 @@
 import React, { useState , useEffect } from 'react';
-import managerService from '../services/managerService';
+import managerService from '../services/tournamentService';
 import Tournament from '../components/Tournament';
 import Navbar, { type NavigationItem } from '../components/Navbar';
 
@@ -16,23 +16,23 @@ interface TournamentProps {
 }
 
 const NavItemsAdmin: NavigationItem[] = [
-  { name: 'Gerenciar Campeonatos', href: '#', current: false },
-  { name: 'Criar Campeonatos', href: '#', current: false },
+  { name: 'Gerenciar Campeonatos', href: '/manager', current: false },
+  { name: 'Criar Campeonatos', href: '/manager/create/tournament', current: false },
   { name: 'Meu perfil', href: '#', current: false },
   { name: 'Sair', href: '#', current: false },
 ]
 
 const Manager: React.FC = () => {
   const [tournaments, setTourneaments] = useState<any>(null);
-  // const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchTournaments = () => {
+    const fetchTournaments = async () => {
       try {
-        const response =  managerService.getAllByUser();
-        // const data = await response.json();
-        setTourneaments(response);
-        // setLoading(false);
+        const response = await managerService.getAllByUser();
+        const data = await response.json();
+        setTourneaments(data);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching tournaments:', error);
       }
@@ -47,15 +47,13 @@ const Manager: React.FC = () => {
     <>
       <Navbar navigationItems={NavItemsAdmin}/>
       <div className="w-full flex flex-col items-center justify-center mt-16 p-4">
-          {/* {loading ? (
+          {loading ? (
             <p>Carregando torneios...</p>
-          ) :  */}
-          {
-            tournaments && tournaments.map((tournament: TournamentProps, idx: number) => 
-              <Tournament key={idx} {...tournament} />
-            )
+          ) : 
+          tournaments && tournaments.map((tournament: TournamentProps, idx: number) => 
+            <Tournament key={idx} {...tournament} />
+          )
           }
-          {/* } */}
       </div>
     </>
   );

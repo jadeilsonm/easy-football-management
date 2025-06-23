@@ -46,7 +46,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       (response) => response,
       (error) => {
         if (error.response && error.response.status === 401) {
-          if (isAuthenticated) {
+          if (!isAuthenticated) {
             console.warn('Sessão expirada ou token inválido. Redirecionando para login.');
             logout(); 
           }

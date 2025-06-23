@@ -43,7 +43,6 @@ const Tournament = ({id, name, description, type, startDate, endDate, award, qua
       <p>Premiação: {award}</p>
       <p>Quantidade de Times: {quantityTeams}</p>
       <p>Status: </p>{EnumStatus[status as keyof typeof EnumStatus]}
-      
     </div>
   );
 }
