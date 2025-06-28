@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
 import authService, { type userAuth } from '../services/authService';
 import { useAuth } from '../context/AuthContext';
+// import UserContext from '../context/UserContext';
+// import { jwtDecode } from "jwt-decode";
 
 
 const Login: React.FC = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [emailError, setEmailError] = useState<string>('');
@@ -57,7 +59,9 @@ const Login: React.FC = () => {
         }
         const { token } = await authService.login(payload)
         addToast('Login', 'info', 'Login bem-sucedido!');
+        
         login(token || "");
+
       } else {
         addToast('Alert', 'warning', 'Por favor, corrija os erros no formulário.');
       }

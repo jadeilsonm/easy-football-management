@@ -1,6 +1,7 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import type { JSX } from 'react/jsx-runtime';
+import { useAuth } from '../context/AuthContext';
 
 export interface NavigationItem {
   name: string;
@@ -18,6 +19,21 @@ function classNames(...classes: (string | boolean | undefined | null)[]): string
 }
 
 export default function Navbar({ navigationItems }: NavbarProps): JSX.Element {
+  // const { user } = useAuth();
+  // const isAdmin = user?.role.includes('admin');
+  // console.log('User role:', user);
+  // const navigationItemsAdmin = [
+  //   { name: 'Gerenciar Campeonatos', href: '/manager', current: true },
+  //   { name: 'Criar Campeonatos', href: '/manager/create/tournament', current: false },
+  //   { name: 'Meu perfil', href: '#', current: false },
+  //   { name: 'Sair', href: '#', current: false },
+  // ]
+  // const navigationItemsClient = [
+  //   { name: 'Editar Time', href: '/client/EditTeam', current: false },
+  //   { name: 'Detalhes dos Campeonatos', href: '#', current: false },
+  //   { name: 'Buscar Campeonatos', href: '/client/SeachTournament', current: false },
+  // ]
+  // const navigationItemsCurrent = isAdmin ? navigationItemsAdmin : navigationItemsClient;
   return (
     <Disclosure as="nav" className="bg-neutral-900 w-full fixed top-0 p-2">
       {({ open }) => (

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Navbar, { type NavigationItem } from '../components/Navbar';
+import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import tournamentService,{ type CreateTournamentResponse } from '../services/tournamentService';
 import { useAuth } from '../context/AuthContext';
@@ -18,7 +19,8 @@ const CreateTournament = () => {
   const [quantityTeams, setQuantityTeams] = useState('');
   const [typeChampionship, setTypeChampionship] = useState('LEAGUE');
   const [award, setAward] = useState('');
-  const { userId } = useAuth();
+  // const img = '';
+  // const statusChampionship= 'IN_PROGRESS';
 
   const clearInput = () => {
     setName('');
@@ -38,12 +40,13 @@ const CreateTournament = () => {
       statusChampionship: 'CREATE',
       typeChampionship,
       award: parseFloat(award),
-      userID: userId,
+      userID: 'a093b2ac-e0a8-430a-9e1a-c237f5430d36',
     };
     try {
       e.preventDefault();
       console.log(TournamentData);
       await tournamentService.Create(TournamentData);
+      console.log('Tournament created successfully:', TournamentData);
       addToast('Cadastro', 'info', 'Torneio criado com sucesso!');
     } catch (error) {
       addToast('Erro', 'error', 'Erro ao criar torneio. Tente novamente.');

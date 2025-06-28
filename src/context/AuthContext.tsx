@@ -11,7 +11,17 @@ import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { jwtDecode } from 'jwt-decode';
 
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  exp: number;
+  role: string[];
+  iss?: string;
+  sub?: string;
+}
 interface AuthContextType {
+  user: User | null;
   isAuthenticated: boolean;
   userId: string;
   login: (token: string) => void;
@@ -36,24 +46,28 @@ export interface JwtPayload {
 
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     return !!localStorage.getItem('token');
   });
 
-  const [userId, setUserID] = useState<string>(() => {
-    var token = localStorage.getItem('token');
-    if (token == null)
-      return "";
-    const decoded: JwtPayload = jwtDecode<JwtPayload>(token, { header: false });
-    return decoded.id;
-  });
+  // const [userId, setUserID] = useState<string>(() => {
+  //   var token = localStorage.getItem('token');
+  //   if (token == null)
+  //     return "";
+  //   const decoded: JwtPayload = jwtDecode<JwtPayload>(token, { header: false });
+  //   return decoded.id;
+  // });
 
   const navigate = useNavigate();
 
   const login = useCallback((token: string) => {
     localStorage.setItem('token', token);
+    const decodedToken = jwtDecode(token);
+    setUser(decodedToken as User);
     setIsAuthenticated(true);
-    navigate('/');
+    console.log('Usuário autenticado:', decodedToken);
+    navigate(`/${decodedToken.role.includes('admin') ? 'maneger' : 'client/seachtournament'}`, { replace: true });
   }, []);
 
   const logout = useCallback(() => {
@@ -83,7 +97,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, [isAuthenticated, logout]);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, userId, login, logout }}>
+
+    <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

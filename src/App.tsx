@@ -1,15 +1,17 @@
-import { AuthProvider } from './context/AuthContext';
 import { Route, Routes, BrowserRouter as Router } from 'react-router';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import BracketTree from './components/BracketTree';
 import ProtectedRoute from './components/ProtectedRoute';
 import NotFound from './pages/NotFound';
+import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
 import { Home } from './pages/Home';
 import Manager from './pages/Manager';
 import Cup from './pages/Cup';
 import CreateTournament from './pages/CreateTournament';
+import { EditTeam } from './pages/EditTeam';
+import { SearchTournament } from './pages/SearchTournament';
 
 
 const App: React.FC = () => {
@@ -26,6 +28,8 @@ const App: React.FC = () => {
               <Route path="/manager/cup/:id" element={<Cup />} />
               <Route path="/manager/league/:id" element={<Manager />} />
               <Route path="/manager/create/tournament" element={<CreateTournament />} />
+              <Route path="/client/editteam" element={<EditTeam />} />
+              <Route path="/client/seachtournament" element={<SearchTournament />} />
 
               <Route
                 path="/dashboard"
@@ -34,7 +38,7 @@ const App: React.FC = () => {
                     <BracketTree />
                   </ProtectedRoute>
                 }
-              />
+                />
               <Route path="*" element={<NotFound />} />
             </Routes>
         </AuthProvider>
