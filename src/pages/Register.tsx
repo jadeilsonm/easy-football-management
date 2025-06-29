@@ -61,9 +61,10 @@ const Register: React.FC = () => {
           name,
           isAdmin: isManager
         }
-        await authService.register(payload)
+        const { token } = await authService.register(payload);
         addToast('Register', 'info', 'Registro inserido com sucesso!');
-        var rota = isManager ? '/manager' : '/';
+        localStorage.setItem('token', token || '');
+        const rota = isManager ? '/manager' : '/';
         navigate(rota)
       } else {
         addToast('Alerta', 'warning', 'Por favor, corrija os erros no formulário.');
@@ -85,7 +86,7 @@ const Register: React.FC = () => {
         <h2 className="text-xl font-bold text-center mb-2 text-green-800">Registrar</h2>
         <h4 className="text-sm font-bold text-center mb-2 text-green-600">Bem vindo!<br />Crie agora a sua conta</h4>
         <form onSubmit={handleSubmit} className='border-gray-300'>
-          <div className="**mb-2**" >
+          <div className="*mb-2*" >
             <label htmlFor="name" className="block text-decoration-color:#8b5cf6 text-sm font-bold mb-2">
               Nome:
             </label>
@@ -98,7 +99,7 @@ const Register: React.FC = () => {
               onChange={(e) => setName(e.target.value)}
             />
           </div>
-          <div className="**mb-2**" >
+          <div className="*mb-2*" >
             <label htmlFor="email" className="block text-decoration-color:#8b5cf6 text-sm font-bold mb-2">
               E-mail:
             </label>
@@ -114,7 +115,7 @@ const Register: React.FC = () => {
             {emailError && <p className="text-red-500 text-xs italic mt-1">{emailError}</p>}
           </div>
 
-          <div className="**mb-2**">
+          <div className="*mb-2*">
             <label htmlFor="password" className="block text-sm font-bold mb-2">
               Senha:
             </label>
@@ -131,7 +132,7 @@ const Register: React.FC = () => {
           </div>
 
 
-          <div className="**mb-4**">
+          <div className="*mb-4*">
             <label htmlFor="confPassword" className="block text-sm font-bold mb-2">
               Confirmar Senha:
             </label>
@@ -153,7 +154,7 @@ const Register: React.FC = () => {
             </p>
           )}
 
-          <div className="**mb-4** flex justify-center items-center">
+          <div className="*mb-4* flex justify-center items-center">
             <label htmlFor="isManager" className="block text-sm font-bold mb-2">
               <input
                 id="isManager"
@@ -168,7 +169,7 @@ const Register: React.FC = () => {
 
 
 
-          <div className="flex items-center justify-between **m-16**">
+          <div className="flex items-center justify-between *m-16*">
             <button
               type="submit"
               className="bg-green-600 hover:bg-green-300 hover:border-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline border-gray-400 w-full"

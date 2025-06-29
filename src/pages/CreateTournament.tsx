@@ -3,7 +3,6 @@ import Navbar, { type NavigationItem } from '../components/Navbar';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import tournamentService,{ type CreateTournamentResponse } from '../services/tournamentService';
-import { useAuth } from '../context/AuthContext';
 
 const NavItemsAdmin: NavigationItem[] = [
   { name: 'Gerenciar Campeonatos', href: '/manager', current: false },
@@ -21,6 +20,7 @@ const CreateTournament = () => {
   const [award, setAward] = useState('');
   // const img = '';
   // const statusChampionship= 'IN_PROGRESS';
+  const { user } = useAuth();
 
   const clearInput = () => {
     setName('');
@@ -40,7 +40,7 @@ const CreateTournament = () => {
       statusChampionship: 'CREATE',
       typeChampionship,
       award: parseFloat(award),
-      userID: 'a093b2ac-e0a8-430a-9e1a-c237f5430d36',
+      userID: user.id || '',
     };
     try {
       e.preventDefault();

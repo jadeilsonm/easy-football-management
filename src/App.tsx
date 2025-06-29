@@ -12,6 +12,7 @@ import Cup from './pages/Cup';
 import CreateTournament from './pages/CreateTournament';
 import { EditTeam } from './pages/EditTeam';
 import { SearchTournament } from './pages/SearchTournament';
+import TournamentClientDetails from './pages/TournamentClientDetails';
 
 
 const App: React.FC = () => {
@@ -21,8 +22,9 @@ const App: React.FC = () => {
         <AuthProvider>
             <Routes>
 
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
+              <Route path="/" element={<Login />} />
+
+              <Route path="/home" element={<Home />} />
               <Route path="/register" element={<Register />} />
               <Route path="/manager" element={<Manager />} />
               <Route path="/manager/cup/:id" element={<Cup />} />
@@ -30,6 +32,7 @@ const App: React.FC = () => {
               <Route path="/manager/create/tournament" element={<CreateTournament />} />
               <Route path="/client/editteam" element={<EditTeam />} />
               <Route path="/client/seachtournament" element={<SearchTournament />} />
+              <Route path="/client/tournament/:tournamentId" element={<TournamentClientDetails />} />
 
               <Route
                 path="/dashboard"

@@ -111,30 +111,24 @@ export interface CreateTournamentResponse {
   userID: string;
 }   
 
-const tournamentService = {
+const tournamentTeamService = {
     getAll: async (): Promise<getAllByUserResponse[]> => {
         const response = await api.get<getAllByUserResponse[]>('/api/v1/championships/all');
-        // console.log(response.data);
-        return response.data;
-    },
-
-    getAllByUser: async (): Promise<getAllByUserResponse[]> => {
-        const response = await api.get<getAllByUserResponse[]>('/api/v1/championships');
-        // console.log(response.data);
-        return response.data;
-    },
-
-    getById: async (id: string): Promise<getAllByUserResponse> => {
-        const response = await api.get<getAllByUserResponse>(`/api/v1/championships/${id}`);
         console.log(response.data);
         return response.data;
     },
 
-    Create: async (TournamentData: CreateTournamentResponse): Promise<getAllByUserResponse> => {
-        const response = await api.post<getAllByUserResponse>('/api/v1/championships', TournamentData);
-        // console.log(response.data);
-        return response.data;
-    },
+//     getAllByUser: async (): Promise<getAllByUserResponse[]> => {
+//         const response = await api.get<getAllByUserResponse[]>('/api/v1/championships');
+//         console.log(response.data);
+//         return response.data;
+//     },
+
+//     Create: async (TournamentData: CreateTournamentResponse): Promise<getAllByUserResponse> => {
+//         const response = await api.post<getAllByUserResponse>('/api/v1/championships', TournamentData);
+//         console.log(response.data);
+//         return response.data;
+//     },
 }
 
-export default tournamentService;
+export default tournamentTeamService;

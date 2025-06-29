@@ -1,7 +1,6 @@
 import React, { useState , useEffect } from 'react';
 import managerService from '../services/tournamentService';
 import Tournament from '../components/Tournament';
-import Navbar, { type NavigationItem } from '../components/Navbar';
 
 interface TournamentProps {
   id: string;
@@ -14,13 +13,6 @@ interface TournamentProps {
   quantityTeams: number;
   status: string;
 }
-
-const NavItemsAdmin: NavigationItem[] = [
-  { name: 'Gerenciar Campeonatos', href: '/manager', current: true },
-  { name: 'Criar Campeonatos', href: '/manager/create/tournament', current: false },
-  { name: 'Meu perfil', href: '#', current: false },
-  { name: 'Sair', href: '#', current: false },
-]
 
 const Manager: React.FC = () => {
   const [tournaments, setTourneaments] = useState<any>(null);
@@ -44,7 +36,7 @@ const Manager: React.FC = () => {
 
   return (
     <>
-      <Navbar navigationItems={NavItemsAdmin}/>
+      <Navbar />
       <div className="w-full flex flex-col items-center justify-center mt-16 p-4">
           {loading ? (
             <p>Carregando torneios...</p>

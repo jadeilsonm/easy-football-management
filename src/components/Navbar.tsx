@@ -9,31 +9,34 @@ export interface NavigationItem {
   current: boolean;
 }
 
-interface NavbarProps {
-  imageProfile?: string;
-  navigationItems: NavigationItem[];
-}
+// interface NavbarProps {
+//   imageProfile?: string;
+//   navigationItems: NavigationItem[];
+// }
 
 function classNames(...classes: (string | boolean | undefined | null)[]): string {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function Navbar({ navigationItems }: NavbarProps): JSX.Element {
-  // const { user } = useAuth();
-  // const isAdmin = user?.role.includes('admin');
-  // console.log('User role:', user);
-  // const navigationItemsAdmin = [
-  //   { name: 'Gerenciar Campeonatos', href: '/manager', current: true },
-  //   { name: 'Criar Campeonatos', href: '/manager/create/tournament', current: false },
-  //   { name: 'Meu perfil', href: '#', current: false },
-  //   { name: 'Sair', href: '#', current: false },
-  // ]
-  // const navigationItemsClient = [
-  //   { name: 'Editar Time', href: '/client/EditTeam', current: false },
-  //   { name: 'Detalhes dos Campeonatos', href: '#', current: false },
-  //   { name: 'Buscar Campeonatos', href: '/client/SeachTournament', current: false },
-  // ]
-  // const navigationItemsCurrent = isAdmin ? navigationItemsAdmin : navigationItemsClient;
+export default function Navbar(
+  // { navigationItems }: NavbarProps
+): JSX.Element {
+  const { user, logout } = useAuth();
+  
+  const isAdmin = user ? user.role === "ADMIN" : false;
+  const navigationItemsAdmin = [
+    { name: 'Gerenciar Campeonatos', href: '/manager', current: true },
+    { name: 'Criar Campeonatos', href: '/manager/create/tournament', current: false },
+    { name: 'Meu perfil', href: '#', current: false },
+    { name: 'Sair', href: '#', current: false },
+  ]
+  const navigationItemsClient = [
+    { name: 'Editar Time', href: '/client/EditTeam', current: false },
+    { name: 'Detalhes dos Campeonatos', href: '#', current: false },
+    { name: 'Buscar Campeonatos', href: '/client/SeachTournament', current: false },
+    { name: 'Sair', href: '#', current: false },
+  ]
+  const navigationItemsCurrent = isAdmin ? navigationItemsAdmin : navigationItemsClient;
   return (
     <Disclosure as="nav" className="bg-neutral-900 w-full fixed top-0 p-2">
       {({ open }) => (
@@ -58,8 +61,9 @@ export default function Navbar({ navigationItems }: NavbarProps): JSX.Element {
                 </div>
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
-                    {navigationItems.map((item: NavigationItem) => (
+                    {navigationItemsCurrent.map((item: NavigationItem) => (
                       <a
+                        onClick={() => item.name === "Sair" ? logout(): null}
                         key={item.name}
                         href={item.href}
                         aria-current={item.current ? 'page' : undefined}
@@ -147,7 +151,7 @@ export default function Navbar({ navigationItems }: NavbarProps): JSX.Element {
 
           <DisclosurePanel className="sm:hidden">
             <div className="space-y-1 px-2 pt-2 pb-3">
-              {navigationItems.map((item: NavigationItem) => (
+              {navigationItemsCurrent.map((item: NavigationItem) => (
                 <DisclosureButton
                   key={item.name}
                   as="a"

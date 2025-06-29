@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 interface TournamentProps {
   id: string;
@@ -33,8 +34,14 @@ const EnumStatus = {
 
 const Tournament = ({id, name, description, type, startDate, endDate, award, quantityTeams, status }: TournamentProps ) => {
   const navigate = useNavigate();
+  const local = useLocation();
+  console.log(local);
 
   function redirectToTournament () {
+    if (local.pathname.includes("client")) {
+      navigate(`/client/tournament/${id}`);
+      return;
+    }
     navigate(`/manager/${type.trim()}/${id}`);
   }
 

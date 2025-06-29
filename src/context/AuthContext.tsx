@@ -16,7 +16,7 @@ export interface User {
   name: string;
   email: string;
   exp: number;
-  role: string[];
+  role: string;
   iss?: string;
   sub?: string;
 }
@@ -37,7 +37,7 @@ interface AuthProviderProps {
 export interface JwtPayload {
   iss: string;
   sub: string;
-  role: 'ADMIN' | 'USER' | string;
+  role: 'ADMIN' | 'USER' ;
   name: string;
   email: string;
   id: string;
@@ -46,34 +46,40 @@ export interface JwtPayload {
 
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  // const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     return !!localStorage.getItem('token');
   });
 
-  // const [userId, setUserID] = useState<string>(() => {
-  //   var token = localStorage.getItem('token');
+  // const [, setUser] = useState<JwtPayload | null>(() => {
+  //   const token = localStorage.getItem('token');
   //   if (token == null)
-  //     return "";
+  //     return null;
   //   const decoded: JwtPayload = jwtDecode<JwtPayload>(token, { header: false });
-  //   return decoded.id;
+  //   return decoded;
   // });
+
+  const [user, setUser] = useState<JwtPayload | null>(() => {
+    const token = localStorage.getItem('token');
+    if (token == null)
+      return null;
+    const decoded: JwtPayload = jwtDecode<JwtPayload>(token, { header: false });
+    return decoded;
+  });
 
   const navigate = useNavigate();
 
   const login = useCallback((token: string) => {
     localStorage.setItem('token', token);
-    const decodedToken = jwtDecode(token);
-    setUser(decodedToken as User);
+    
     setIsAuthenticated(true);
-    console.log('Usuário autenticado:', decodedToken);
-    navigate(`/${decodedToken.role.includes('admin') ? 'maneger' : 'client/seachtournament'}`, { replace: true });
+    navigate(`/${user?.role === "ADMIN" ? 'manager' : 'client/seachtournament'}`, { replace: true });
   }, []);
 
   const logout = useCallback(() => {
     localStorage.removeItem('token');
     setIsAuthenticated(false);
-    navigate('/login', { replace: true });
+    navigate('/', { replace: true });
   }, [navigate]);
 
   
