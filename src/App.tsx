@@ -14,13 +14,16 @@ import { EditTeam } from './pages/EditTeam';
 import { SearchTournament } from './pages/SearchTournament';
 import TournamentClientDetails from './pages/TournamentClientDetails';
 import EditProfile from './pages/EditProfile';
+import { ApolloProvider } from '@apollo/client';
+import { client } from './services/graphqlClient';
 
 
 const App: React.FC = () => {
   return (
-    <Router>
-      <ToastProvider>
-        <AuthProvider>
+    <ApolloProvider client={client}>
+      <Router>
+        <ToastProvider>
+          <AuthProvider>
             <Routes>
 
               <Route path="/" element={<Login />} />
@@ -35,13 +38,13 @@ const App: React.FC = () => {
               <Route path="/client/editteam" element={<EditTeam />} />
               <Route path="/client/seachtournament" element={<SearchTournament />} />
               <Route path="/client/tournament/:tournamentId" element={<TournamentClientDetails />} />
-              <Route 
-                path="/profile/edit" 
+              <Route
+                path="/profile/edit"
                 element={
                   <ProtectedRoute>
                     <EditProfile />
                   </ProtectedRoute>
-                } 
+                }
               />
 
 
@@ -52,12 +55,13 @@ const App: React.FC = () => {
                     <BracketTree />
                   </ProtectedRoute>
                 }
-                />
+              />
               <Route path="*" element={<NotFound />} />
             </Routes>
-        </AuthProvider>
-      </ToastProvider>
-    </Router>
+          </AuthProvider>
+        </ToastProvider>
+      </Router>
+    </ApolloProvider>
   );
 }
 

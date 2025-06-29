@@ -21,11 +21,15 @@ const tournamentService = {
         return response.data;
     },
 
-    create: async (player: IPlayer): Promise<IPlayer> => {
+    create: async (player: Omit<IPlayer, 'id'>): Promise<IPlayer> => {
         const response = await api.post<IPlayer>('/api/v1/player', player);
-        // console.log(response.data);
         return response.data;
-    }
+    },
+
+    delete: async (id: string): Promise<void> => {
+        await api.delete(`/api/v1/player/${id}`);
+
+    },
 }
 
 export default tournamentService;

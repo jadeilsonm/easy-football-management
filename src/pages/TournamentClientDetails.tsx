@@ -3,7 +3,7 @@ import { useParams } from "react-router"
 import tournamentService from '../services/tournamentService';
 import Navbar from '../components/Navbar';
 
-
+// junior TO-DO
 const TournamentClientDetails = () => {
   const [tournamentDetails, setTournamentDetails] = useState<getAllByUserResponse | null>(null);
   // const [loading, setLoading] = useState<boolean>(true);

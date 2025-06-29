@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
@@ -12,12 +11,6 @@ interface TournamentProps {
   award: number;
   quantityTeams: number;
   status: string;
-}
-
-enum Status{
-  CREATED,
-  IN_PROGRESS,
-  FINISH
 }
 
 const EnumStatus = {
