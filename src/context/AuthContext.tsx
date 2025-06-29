@@ -23,7 +23,6 @@ export interface User {
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
-  userId: string;
   login: (token: string) => void;
   logout: () => void;
 }
@@ -46,20 +45,11 @@ export interface JwtPayload {
 
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  // const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     return !!localStorage.getItem('token');
   });
 
-  // const [, setUser] = useState<JwtPayload | null>(() => {
-  //   const token = localStorage.getItem('token');
-  //   if (token == null)
-  //     return null;
-  //   const decoded: JwtPayload = jwtDecode<JwtPayload>(token, { header: false });
-  //   return decoded;
-  // });
-
-  const [user, setUser] = useState<JwtPayload | null>(() => {
+  const [user] = useState<JwtPayload | null>(() => {
     const token = localStorage.getItem('token');
     if (token == null)
       return null;

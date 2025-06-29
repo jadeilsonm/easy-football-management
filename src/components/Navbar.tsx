@@ -2,6 +2,8 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import type { JSX } from 'react/jsx-runtime';
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+
 
 export interface NavigationItem {
   name: string;
@@ -9,14 +11,11 @@ export interface NavigationItem {
   current: boolean;
 }
 
-// interface NavbarProps {
-//   imageProfile?: string;
-//   navigationItems: NavigationItem[];
-// }
 
 function classNames(...classes: (string | boolean | undefined | null)[]): string {
   return classes.filter(Boolean).join(' ');
 }
+
 
 export default function Navbar(
   // { navigationItems }: NavbarProps
@@ -37,9 +36,20 @@ export default function Navbar(
     { name: 'Sair', href: '#', current: false },
   ]
   const navigationItemsCurrent = isAdmin ? navigationItemsAdmin : navigationItemsClient;
+
+  const navigate = useNavigate();
+
+  const handleProfileClick = () => {
+    navigate('/profile/edit');
+  };
+
+  const handleLogout = () => {
+    logout();
+  };
+
   return (
     <Disclosure as="nav" className="bg-neutral-900 w-full fixed top-0 p-2">
-      {({ open }) => (
+      {() => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
@@ -106,15 +116,15 @@ export default function Navbar(
                   >
                     <MenuItem>
                       {({ focus }) => (
-                        <a
-                          href="#"
+                        <button
+                          onClick={handleProfileClick}
                           className={classNames(
                             focus ? 'bg-gray-100' : '',
-                            'block px-4 py-2 text-sm text-gray-700',
+                            'block w-full text-left px-4 py-2 text-sm text-gray-700',
                           )}
                         >
-                          Perfil
-                        </a>
+                          Editar Perfil
+                        </button>
                       )}
                     </MenuItem>
                     <MenuItem>
@@ -126,21 +136,21 @@ export default function Navbar(
                             'block px-4 py-2 text-sm text-gray-700',
                           )}
                         >
-                          Configuração
+                          Configurações
                         </a>
                       )}
                     </MenuItem>
                     <MenuItem>
                       {({ focus }) => (
-                        <a
-                          href="#"
+                        <button
+                          onClick={handleLogout}
                           className={classNames(
                             focus ? 'bg-gray-100' : '',
-                            'block px-4 py-2 text-sm text-gray-700',
+                            'block w-full text-left px-4 py-2 text-sm text-gray-700',
                           )}
                         >
                           Sair
-                        </a>
+                        </button>
                       )}
                     </MenuItem>
                   </MenuItems>

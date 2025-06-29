@@ -13,6 +13,7 @@ import CreateTournament from './pages/CreateTournament';
 import { EditTeam } from './pages/EditTeam';
 import { SearchTournament } from './pages/SearchTournament';
 import TournamentClientDetails from './pages/TournamentClientDetails';
+import EditProfile from './pages/EditProfile';
 
 
 const App: React.FC = () => {
@@ -30,9 +31,19 @@ const App: React.FC = () => {
               <Route path="/manager/cup/:id" element={<Cup />} />
               <Route path="/manager/league/:id" element={<Manager />} />
               <Route path="/manager/create/tournament" element={<CreateTournament />} />
+
               <Route path="/client/editteam" element={<EditTeam />} />
               <Route path="/client/seachtournament" element={<SearchTournament />} />
               <Route path="/client/tournament/:tournamentId" element={<TournamentClientDetails />} />
+              <Route 
+                path="/profile/edit" 
+                element={
+                  <ProtectedRoute>
+                    <EditProfile />
+                  </ProtectedRoute>
+                } 
+              />
+
 
               <Route
                 path="/dashboard"

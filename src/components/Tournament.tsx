@@ -17,7 +17,7 @@ interface TournamentProps {
 enum Status{
   CREATED,
   IN_PROGRESS,
-  
+  FINISH
 }
 
 const EnumStatus = {
@@ -55,7 +55,6 @@ const Tournament = ({id, name, description, type, startDate, endDate, award, qua
       <p>Tipo: {type == "CUP" ? "MATA-MATA": "PONTOS CORRIDOS"}</p>
       <p>Premiação: {award}</p>
       <p>Quantidade de Times: {quantityTeams}</p>
-      {EnumStatus['CREATED']}
       <p>Status: </p>{EnumStatus[status as keyof typeof EnumStatus]}
     </div>
   );

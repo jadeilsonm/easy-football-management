@@ -1,6 +1,7 @@
 import React, { useState , useEffect } from 'react';
 import managerService from '../services/tournamentService';
 import Tournament from '../components/Tournament';
+import Navbar from '../components/Navbar';
 
 interface TournamentProps {
   id: string;
