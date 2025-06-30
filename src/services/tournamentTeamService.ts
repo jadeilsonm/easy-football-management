@@ -109,7 +109,12 @@ export interface CreateTournamentResponse {
   award: number;
   quantityTeams: number;
   userID: string;
-}   
+}
+
+interface CreateTournamentTeamRequest {
+  championshipId: string;
+  teamId: string;
+}
 
 const tournamentTeamService = {
     getAll: async (): Promise<getAllByUserResponse[]> => {
@@ -118,17 +123,39 @@ const tournamentTeamService = {
         return response.data;
     },
 
-//     getAllByUser: async (): Promise<getAllByUserResponse[]> => {
-//         const response = await api.get<getAllByUserResponse[]>('/api/v1/championships');
-//         console.log(response.data);
-//         return response.data;
-//     },
+    checkUserRegistration: async (tournamentId: string): Promise<boolean> => {
+        try {
+            const response = await api.get(`/api/v1/championships/${tournamentId}/check-registration`);
+            console.log(response.data);
+            return response.data.registered; // Supondo que a resposta tenha um campo 'registered'
+        } catch (error) {
+            console.error('Erro ao verificar inscrição do usuário:', error);
+            return false; // Retorna false em caso de erro
+        }
+    },
 
-//     Create: async (TournamentData: CreateTournamentResponse): Promise<getAllByUserResponse> => {
-//         const response = await api.post<getAllByUserResponse>('/api/v1/championships', TournamentData);
-//         console.log(response.data);
-//         return response.data;
-//     },
+    registerToTournament: async (tournamentData: CreateTournamentTeamRequest): Promise<string> => {
+        try {
+            const response = await api.post('/api/v1/championshipsteams', tournamentData);
+            console.log(response.data);
+            return response.data.message; // Supondo que a resposta tenha um campo 'message'
+        } catch (error) {
+            console.error('Erro ao registrar no torneio:', error);
+            throw error; // Repassa o erro para ser tratado pelo chamador
+        }
+    }
+
+    unregisterFromTournament: async (tournamentData: CreateTournamentTeamRequest): Promise<string> => {
+        try {
+            const response = await api.delete(`/api/v1/championshipsteams/${tournamentData.championshipId}/${tournamentData.teamId}`);
+            console.log(response.data);
+            return response.data.message; // Supondo que a resposta tenha um campo 'message'
+        } catch (error) {
+            console.error('Erro ao cancelar inscrição no torneio:', error);
+            throw error; // Repassa o erro para ser tratado pelo chamador
+        }
+    }
+//     
 }
 
 export default tournamentTeamService;

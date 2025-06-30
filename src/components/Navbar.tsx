@@ -22,7 +22,7 @@ export default function Navbar(
 ): JSX.Element {
   const { user, logout } = useAuth();
   
-  const isAdmin = user ? user.role === "ADMIN" : false;
+  const isAdmin = user.role === "ADMIN" ? true : false;
   const navigationItemsAdmin = [
     { name: 'Gerenciar Campeonatos', href: '/manager', current: true },
     { name: 'Criar Campeonatos', href: '/manager/create/tournament', current: false },
