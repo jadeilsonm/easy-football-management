@@ -100,7 +100,6 @@ interface getAllByUserResponse {
 }
 
 export interface CreateTournamentResponse {
-  // id: string;
   name: string;
   description: string;
   img: string;
@@ -111,28 +110,45 @@ export interface CreateTournamentResponse {
   userID: string;
 }   
 
+export interface TournamentResponse {
+  id: string;
+  name: string;
+  description: string;
+  img: string;
+  status: string;
+  type: string;
+  award: number;
+  quantityTeams: number;
+}   
+
 const tournamentService = {
+
+    filter: async (name: string, status: string | null): Promise<getAllByUserResponse[]> => {
+      if (name == null && status == null) {
+        return await tournamentService.getAll();
+      }
+      const response = await api.get<getAllByUserResponse[]>(`/api/v1/championships/filter?status=${status || ''}&name=${name || ''}`);
+      return response.data;
+    },
+
     getAll: async (): Promise<getAllByUserResponse[]> => {
         const response = await api.get<getAllByUserResponse[]>('/api/v1/championships/all');
-        // console.log(response.data);
         return response.data;
     },
 
     getAllByUser: async (): Promise<getAllByUserResponse[]> => {
         const response = await api.get<getAllByUserResponse[]>('/api/v1/championships');
-        // console.log(response.data);
         return response.data;
     },
 
-    getById: async (id: string): Promise<getAllByUserResponse> => {
-        const response = await api.get<getAllByUserResponse>(`/api/v1/championships/${id}`);
+    getById: async (id: string): Promise<TournamentResponse> => {
+        const response = await api.get<TournamentResponse>(`/api/v1/championships/${id}`);
         console.log(response.data);
         return response.data;
     },
 
     Create: async (TournamentData: CreateTournamentResponse): Promise<getAllByUserResponse> => {
         const response = await api.post<getAllByUserResponse>('/api/v1/championships', TournamentData);
-        // console.log(response.data);
         return response.data;
     },
 }

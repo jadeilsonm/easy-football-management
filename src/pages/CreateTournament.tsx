@@ -40,7 +40,7 @@ const CreateTournament = () => {
       statusChampionship: 'CREATE',
       typeChampionship,
       award: parseFloat(award),
-      userID: user.id || '',
+      userID: user?.id || '',
     };
     try {
       e.preventDefault();
@@ -58,7 +58,7 @@ const CreateTournament = () => {
 
   return (
   <>
-    <Navbar navigationItems={NavItemsAdmin}/>
+    <Navbar />
     <form className="max-w-md mx-auto" onSubmit={handleSubmit}>
       {/* Championship Name */}
       <div className="relative z-0 w-full mb-5 group">

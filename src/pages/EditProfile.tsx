@@ -22,12 +22,6 @@ const EditProfile: React.FC = () => {
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const navigationItems: NavigationItem[] = [
-    { name: 'Home', href: '/', current: false },
-    { name: 'Gerenciar', href: '/manager', current: false },
-    { name: 'Editar Perfil', href: '/profile/edit', current: true },
-  ];
-
   useEffect(() => {
     fetchUserProfile();
   }, [user]);

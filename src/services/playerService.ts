@@ -27,7 +27,7 @@ const tournamentService = {
     },
 
     update: async (id: string, player: IPlayerRequest): Promise<IPlayer> => {
-        const response = await api.put<IPlayerRequest>(`/api/v1/player/${id}`, player);
+        const response = await api.put<IPlayer>(`/api/v1/player/${id}`, player);
         return response.data;
     },
 

@@ -14,6 +14,9 @@ import { EditTeam } from './pages/EditTeam';
 import { SearchTournament } from './pages/SearchTournament';
 import TournamentClientDetails from './pages/TournamentClientDetails';
 import EditProfile from './pages/EditProfile';
+import LeagueStandings from './pages/LeagueStandings';
+import LeagueRounds from './pages/LeagueRounds';
+import LeagueDashboard from './pages/LeagueDashboard';
 import { ApolloProvider } from '@apollo/client';
 import { client } from './services/graphqlClient';
 
@@ -38,6 +41,32 @@ const App: React.FC = () => {
               <Route path="/client/editteam" element={<EditTeam />} />
               <Route path="/client/seachtournament" element={<SearchTournament />} />
               <Route path="/client/tournament/:tournamentId" element={<TournamentClientDetails />} />
+              
+              <Route 
+                path="/league/:id" 
+                element={
+                  <ProtectedRoute>
+                    <LeagueDashboard />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/league/:id/standings" 
+                element={
+                  <ProtectedRoute>
+                    <LeagueStandings />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/league/:id/rounds" 
+                element={
+                  <ProtectedRoute>
+                    <LeagueRounds />
+                  </ProtectedRoute>
+                } 
+              />
+              
               <Route
                 path="/profile/edit"
                 element={
