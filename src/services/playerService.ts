@@ -26,6 +26,11 @@ const tournamentService = {
         return response.data;
     },
 
+    update: async (id: string, player: IPlayerRequest): Promise<IPlayer> => {
+        const response = await api.put<IPlayerRequest>(`/api/v1/player/${id}`, player);
+        return response.data;
+    },
+
     delete: async (id: string): Promise<void> => {
         await api.delete(`/api/v1/player/${id}`);
 

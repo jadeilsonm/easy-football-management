@@ -3,6 +3,7 @@ import playerService from "../services/playerService";
 import { gql, useQuery } from "@apollo/client";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
+import Navbar from "../components/Navbar";
 
 interface Player {
   id: string;
@@ -31,14 +32,11 @@ export const EditTeam = () => {
         }
 }`);
 
-  // const [name, setName] = useState<string>("");//3f65f1e8-0f6c-4471-9851-accdadb40f5b
-  // const [number, setNumber] = useState<number>(0);
-  // const [position, setPosition] = useState<string>("");
+  
   const { user } = useAuth();
   const [teamId, SetTeamId] = useState<string>('');
   const [players, setPlayers] = useState<Player[]>([]);
   const [form, setForm] = useState({ name: '', position: '', number: '' });
-  const [formEdit, setFormEdit] = useState({ name: '', position: '', number: '' });
   const [editIndex, setEditIndex] = useState(null);
   const { addToast } = useToast();
   const { loading, data } = useQuery(
@@ -47,6 +45,7 @@ export const EditTeam = () => {
   );
 
   useEffect(() => {
+    console.log("Data fetched:", data);
     if (data && data.user && data.user.team) {
       SetTeamId(data.user.team.id);
       setPlayers(data.user.team.players);
@@ -81,17 +80,31 @@ export const EditTeam = () => {
     }
   };
 
-  const initEdit = (id: string) => {
+  const initEdit = (index: number) => {
     setEditIndex(index);
     setForm(players[index]);
   };
 
   const salvarEdicao = () => {
     if (editIndex === null) return;
-    const newList = [...players];
-    newList[editIndex] = form;
-    setPlayers(newList);
-    cancelEdit();
+    if (!form.name || !form.position || !form.number) {
+      addToast("Alert","warning", "Preencha todos os campos!");
+      return;
+    }
+    try {
+      const newList = [...players];
+      newList[editIndex] = form;
+      playerService.update(players[editIndex].id, { teamId, name: form.name, position: form.position, number: parseInt(form.number, 10) });
+      setPlayers(newList);
+      cancelEdit();
+      addToast("Info", "info", "Atualizado com sucesso!");
+    } catch (error) {
+      console.error('Error saving player:', error);
+      addToast("Error", "error", "Erro ao salvar o jogador");
+      return;
+      
+    }
+    
   };
 
   const cancelEdit = () => {
@@ -107,6 +120,9 @@ export const EditTeam = () => {
   };
 
   return (
+    <>
+      <Navbar />
+    
     <div className="max-w-4xl mx-auto p-6">
       <div className="mb-6 flex flex-wrap gap-4 items-end">
         <input
@@ -184,7 +200,7 @@ export const EditTeam = () => {
               <td className="border px-4 py-2">{player.number}</td>
               <td className="border px-4 py-2 space-x-2">
                 <button
-                  onClick={() => initEdit(player.id)}
+                  onClick={() => initEdit(index)}
                   className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded"
                 >
                   Editar
@@ -208,5 +224,6 @@ export const EditTeam = () => {
         </tbody>
       </table>
     </div>
+    </>
   );
 }
